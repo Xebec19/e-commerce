@@ -1,8 +1,8 @@
-import { SITE_NAME } from "@/lib/environment";
 import { Menu, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import { Sidebar } from "./sidebar";
 import { Button } from "@/components/ui/button";
+import { environment } from "@/lib";
 
 export default function MobileHeader() {
   return (
@@ -14,9 +14,9 @@ export default function MobileHeader() {
           src="/icons8-shopaholic-48.png"
           width={30}
           height={30}
-          alt={SITE_NAME + ""}
+          alt={environment.SITE_NAME + ""}
         />
-        <span className="font-medium">E commerce</span>
+        <span className="font-medium">{environment.SITE_NAME}</span>
       </span>
       <Button variant="outline">
         <ShoppingCart />
