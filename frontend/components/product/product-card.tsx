@@ -9,6 +9,16 @@ export interface IProductDetails {
   size: "full" | "half";
 }
 
+function Label({ payload }: { payload: IProductDetails }) {
+  return (
+    <div className="absolute bottom-0 left-0 flex w-full px-4 pb-4">
+      <div className="flex dark:bg-black/70 bg-white/70 items-center rounded-full border p-1 text-xs font-semibold text-black  dark:border-neutral-800 dark:text-white">
+        {payload.name}
+      </div>
+    </div>
+  );
+}
+
 export default function ProductCard({ payload }: { payload: IProductDetails }) {
   return (
     <div
@@ -29,6 +39,7 @@ export default function ProductCard({ payload }: { payload: IProductDetails }) {
             : "(min-width: 700px) 33vw, 100vw"
         }
       />
+      <Label payload={payload} />
     </div>
   );
 }

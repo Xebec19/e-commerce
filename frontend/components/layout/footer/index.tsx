@@ -23,7 +23,7 @@ export default function Footer() {
           <span className="text-md cursor-pointer hover:underline">FAQ</span>
         </div>
 
-        <div className="col-span-2 flex flex-col justify-start items-center md:items-end">
+        <div className="col-span-2 flex flex-col justify-start items-start md:items-end">
           <span>+91 9898998989</span>
           <address>123, Ice Area, new Yorkshire, Westwood</address>
         </div>
