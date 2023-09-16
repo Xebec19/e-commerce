@@ -6,7 +6,7 @@ import { environment } from "@/lib";
 
 export default function MobileHeader() {
   return (
-    <div className="flex justify-between p-4 items-center">
+    <nav className="flex justify-between p-4 items-center">
       <Sidebar />
       <span className="flex items-center justify-center space-x-4">
         <Image
@@ -21,6 +21,6 @@ export default function MobileHeader() {
       <Button variant="outline">
         <ShoppingCart />
       </Button>
-    </div>
+    </nav>
   );
 }

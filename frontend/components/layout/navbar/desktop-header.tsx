@@ -1,9 +1,12 @@
+import SearchInput from "@/components/search/search-input";
+import { Button } from "@/components/ui/button";
 import { environment } from "@/lib";
+import { ShoppingCart } from "lucide-react";
 import Image from "next/image";
 
 export default function DesktopHeader() {
   return (
-    <div className="flex justify-between p-4 items-center">
+    <nav className="flex justify-between p-4 items-center">
       <span className="flex items-center space-x-4">
         <Image
           priority
@@ -13,9 +16,15 @@ export default function DesktopHeader() {
           alt={environment.SITE_NAME + ""}
         />
         <span className="text-lg font-bold">{environment.SITE_NAME}</span>
+        <span className="space-x-2">
+          <span className="text-md cursor-pointer">Category 1</span>
+          <span className="text-md cursor-pointer">Category 1</span>
+        </span>
       </span>
-      <span className="text-md">Category 1</span>
-      <span className="text-md">Category 1</span>
-    </div>
+      <SearchInput />
+      <Button variant="outline">
+        <ShoppingCart />
+      </Button>
+    </nav>
   );
 }
