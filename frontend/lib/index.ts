@@ -1,4 +1,5 @@
 import * as environment from "./environment";
 import { cn } from "./utils";
+import { DUMMY_PRODUCT_v1, DUMMY_PRODUCT_v2 } from "./dummy-payloads";
 
-export { environment, cn };
+export { environment, cn, DUMMY_PRODUCT_v1, DUMMY_PRODUCT_v2 };

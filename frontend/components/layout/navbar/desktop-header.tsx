@@ -1,4 +1,5 @@
 import SearchInput from "@/components/search/search-input";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { environment } from "@/lib";
 import { ShoppingCart } from "lucide-react";
@@ -22,9 +23,12 @@ export default function DesktopHeader() {
         </span>
       </span>
       <SearchInput />
-      <Button variant="outline">
-        <ShoppingCart />
-      </Button>
+      <span className="space-x-2">
+        <ThemeToggle />
+        <Button variant="outline" size="icon">
+          <ShoppingCart />
+        </Button>
+      </span>
     </nav>
   );
 }
