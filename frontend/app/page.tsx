@@ -1,7 +1,7 @@
 import Carousel from "@/components/carousel";
 import ThreeGridItems from "@/components/grid/three-grid-items";
 import { IProductDetails } from "@/components/product/product-card";
-import { DUMMY_PRODUCT_v1, DUMMY_PRODUCT_v2 } from "@/lib";
+import { DUMMY_PRODUCT_v1 } from "@/lib";
 import { Suspense } from "react";
 
 export const metadata = {
