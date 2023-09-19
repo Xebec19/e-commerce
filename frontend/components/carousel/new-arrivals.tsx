@@ -1,6 +1,8 @@
 "use client";
 
-import ProductCard, { IProductDetails } from "./product/product-card";
+import ProductCard, {
+  IProductDetails,
+} from "@/components/product/product-card";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { register } from "swiper/element-bundle";
 import "swiper/swiper-bundle.css";
@@ -29,7 +31,7 @@ const slidesProps = {
   },
 };
 
-export default function Carousel({
+export default function NewArrivals({
   products,
 }: {
   products: IProductDetails[];

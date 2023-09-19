@@ -1,4 +1,4 @@
-import Carousel from "@/components/carousel";
+import NewArrivals from "@/components/carousel/new-arrivals";
 import ThreeGridItems from "@/components/grid/three-grid-items";
 import { IProductDetails } from "@/components/product/product-card";
 import { DUMMY_PRODUCT_v1 } from "@/lib";
@@ -15,11 +15,11 @@ const PRODUCTS: IProductDetails[] = Array(15).fill(DUMMY_PRODUCT_v1);
 
 export default function Home() {
   return (
-    <main>
+    <>
       <ThreeGridItems />
       <Suspense>
-        <Carousel products={PRODUCTS} />
+        <NewArrivals products={PRODUCTS} />
       </Suspense>
-    </main>
+    </>
   );
 }

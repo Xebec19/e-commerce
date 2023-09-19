@@ -7,7 +7,7 @@ import Image from "next/image";
 
 export default function DesktopHeader() {
   return (
-    <nav className="flex justify-between p-4 items-center">
+    <nav className="flex justify-between p-4 items-center container">
       <span className="flex items-center space-x-4">
         <Image
           priority
