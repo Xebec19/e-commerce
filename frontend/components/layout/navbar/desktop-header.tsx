@@ -17,13 +17,13 @@ export default function DesktopHeader() {
           alt={environment.SITE_NAME + ""}
         />
         <span className="text-lg font-bold">{environment.SITE_NAME}</span>
-        <span className="space-x-2">
+        <span className="space-x-2 flex">
           <span className="text-md cursor-pointer">Category 1</span>
           <span className="text-md cursor-pointer">Category 1</span>
         </span>
       </span>
       <SearchInput />
-      <span className="space-x-2">
+      <span className="space-x-2 flex">
         <ThemeToggle />
         <Button variant="outline" size="icon">
           <ShoppingCart />
