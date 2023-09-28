@@ -1,4 +1,5 @@
 import Image from "next/image";
+import ProductLabel from "../labels/product-label";
 
 export interface IProductDetails {
   name: string;
@@ -7,19 +8,7 @@ export interface IProductDetails {
   currency: string;
   currencyCode: string;
   size: "full" | "half";
-}
-
-function Label({ payload }: { payload: IProductDetails }) {
-  return (
-    <div className="absolute bottom-0 left-0 flex w-full px-4 pb-4">
-      <div className="flex dark:bg-black/70 bg-white/70 items-center rounded-full border p-1 text-xs font-semibold text-black  dark:border-neutral-800 dark:text-white">
-        {payload.name}
-        <div className="flex bg-blue-700 ml-1 items-center rounded-full border px-2 py-1 text-white text-xs font-semibold dark:border-neutral-800">
-          {`${payload.currencyCode} ${payload.price}`}
-        </div>
-      </div>
-    </div>
-  );
+  description?: string;
 }
 
 export default function ProductCard({
@@ -44,7 +33,9 @@ export default function ProductCard({
         alt={payload.name}
         sizes={sizes}
       />
-      <Label payload={payload} />
+      <div className="absolute bottom-0 left-0 flex w-full px-4 pb-4">
+        <ProductLabel payload={payload} />
+      </div>
     </div>
   );
 }
