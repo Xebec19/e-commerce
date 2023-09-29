@@ -6,7 +6,7 @@ export default function CartList() {
   return (
     <>
       <div className="flex justify-between items-center">
-        <h1 className="text-xl prose font-bold">Your cart</h1>
+        <h1 className="text-2xl prose font-bold">Your cart</h1>
         <span>
           <Badge variant="default">
             <span className="text-xl">4</span>
@@ -47,7 +47,7 @@ export default function CartList() {
           <span className="text-xl">$12</span>
         </li>
 
-        <li className="flex justify-between items center px-2 py-4">
+        <li className="flex justify-between items center px-2 py-4 text-lime-500">
           <div className="flex flex-col">
             <span className="text-md font-bold">Promo Code</span>
             <span className="text-md">EXAMPLECODE</span>
