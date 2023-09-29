@@ -30,19 +30,31 @@ export default function ProductDescription() {
 
   const incrementQuantity = () => {
     if (quantity > MAX_QUANTITY) {
-      setError(errorMessage.AboveQuantityLimit);
+      showError(errorMessage.AboveQuantityLimit);
       return;
+    } else {
+      removeError();
     }
     setQuantity(quantity + 1);
   };
 
   const decrementQuantity = () => {
     if (quantity === 0) {
-      setError(errorMessage.BelowQuantityLimit);
+      showError(errorMessage.BelowQuantityLimit);
       return;
+    } else {
+      removeError();
     }
     setQuantity(quantity - 1);
   };
+
+  function showError(message: string) {
+    setError(message);
+  }
+
+  function removeError() {
+    setError("");
+  }
 
   return (
     <article role="product description">
@@ -59,6 +71,8 @@ export default function ProductDescription() {
             <Separator />
           </div>
           <p className="py-4 prose">{PRODUCT.description}</p>
+
+          <span className="text-red-500 text-sm prose my-1">{error}</span>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-2 w-full py-4">
             <div className="flex justify-between items-center">

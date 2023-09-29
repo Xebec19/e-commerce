@@ -68,14 +68,10 @@ export default function ProductPage() {
       <ProductDescription />
       <div className="py-4">
         <h3 className="prose text-xl font-bold mb-2">Similar Products</h3>
-        <div className="flex space-x-2 overflow-x-auto w-full">
-          {/* {SIMILAR_PRODUCTS.map((product, index: number) => (
-            <ProductCard
-              key={product.url + index}
-              payload={DUMMY_PRODUCT_v2}
-              sizes="(min-width: 768px) 33vw, 80vw"
-            />
-          ))} */}
+        <section
+          role="similar products"
+          className="flex space-x-2 overflow-x-auto w-full"
+        >
           {SIMILAR_PRODUCTS.map((product, index) => (
             <div
               key={product.url + index}
@@ -87,7 +83,7 @@ export default function ProductPage() {
               />
             </div>
           ))}
-        </div>
+        </section>
       </div>
     </>
   );
