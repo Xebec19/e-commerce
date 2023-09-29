@@ -1,4 +1,6 @@
 import ProductDescription from "@/components/grid/product-description";
+import ProductCard from "@/components/product/product-card";
+import { DUMMY_PRODUCT_v1, DUMMY_PRODUCT_v2 } from "@/lib";
 import { Metadata } from "next";
 
 // TODO add json ld
@@ -58,10 +60,35 @@ export async function generateMetadata({
   };
 }
 
+const SIMILAR_PRODUCTS = new Array(15).fill(DUMMY_PRODUCT_v2);
+
 export default function ProductPage() {
   return (
     <>
       <ProductDescription />
+      <div className="py-4">
+        <h3 className="prose text-xl font-bold mb-2">Similar Products</h3>
+        <div className="flex space-x-2 overflow-x-auto w-full">
+          {/* {SIMILAR_PRODUCTS.map((product, index: number) => (
+            <ProductCard
+              key={product.url + index}
+              payload={DUMMY_PRODUCT_v2}
+              sizes="(min-width: 768px) 33vw, 80vw"
+            />
+          ))} */}
+          {SIMILAR_PRODUCTS.map((product, index) => (
+            <div
+              key={product.url + index}
+              className="aspect-square w-[80vw] md:w-[33vw] h-[400px] border"
+            >
+              <ProductCard
+                payload={DUMMY_PRODUCT_v1}
+                sizes="(min-width: 768px) 33vw, 80vw"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
     </>
   );
 }
