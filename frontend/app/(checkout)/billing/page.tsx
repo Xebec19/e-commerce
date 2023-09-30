@@ -1,5 +1,5 @@
 import BillingForm from "@/components/forms/billing-form";
-import CartForm from "@/components/forms/cart-form";
+import CouponForm from "@/components/forms/coupon-form";
 import CartList from "@/components/lists/cart-list";
 
 export default function CartPage() {
@@ -10,7 +10,7 @@ export default function CartPage() {
       </section>
       <section role="cart details">
         <CartList />
-        <CartForm />
+        <CouponForm />
       </section>
     </div>
   );

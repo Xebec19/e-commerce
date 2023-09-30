@@ -11,7 +11,7 @@ const validationSchema = Yup.object({
   couponCode: Yup.string().required("Invalid Coupon Code"),
 });
 
-export default function CartForm() {
+export default function CouponForm() {
   const formik = useFormik({
     initialValues: {
       couponCode: "",

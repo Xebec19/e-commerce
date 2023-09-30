@@ -1,4 +1,4 @@
-import CartForm from "@/components/forms/cart-form";
+import CouponForm from "@/components/forms/coupon-form";
 import ShippingForm from "@/components/forms/shipping-form";
 import CartList from "@/components/lists/cart-list";
 
@@ -10,7 +10,7 @@ export default function CartPage() {
       </section>
       <section role="cart details">
         <CartList />
-        <CartForm />
+        <CouponForm />
       </section>
     </div>
   );
