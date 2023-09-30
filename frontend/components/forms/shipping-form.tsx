@@ -29,7 +29,7 @@ const initialValues = {
   zip: "",
 };
 
-export default function BillingForm() {
+export default function ShippingForm() {
   const formik = useFormik({
     initialValues,
     validationSchema,
@@ -40,7 +40,7 @@ export default function BillingForm() {
 
   return (
     <>
-      <div className="text-2xl prose font-bold">Billing Form</div>
+      <div className="text-2xl prose font-bold">Shipping Form</div>
       <form
         className="grid grid-cols-1 md:grid-cols-2 gap-4 my-4 max-w-[768px]"
         onSubmit={formik.handleSubmit}
@@ -156,21 +156,9 @@ export default function BillingForm() {
           )}
         </div>
 
-        <div className="md:col-span-2 py-4">
-          <div className="flex items-center space-x-2">
-            <Checkbox id="sameBillingAddress" />
-            <Label
-              htmlFor="sameBillingAddress"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              Shipping address is the same as my billing address
-            </Label>
-          </div>
-        </div>
-
         <div className="md:col-span-2">
           <Button type="submit" className="w-full uppercase">
-            Checkout
+            Continue to Payment
           </Button>
         </div>
       </form>

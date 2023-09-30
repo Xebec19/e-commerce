@@ -32,7 +32,7 @@ export default function CartForm() {
           value={formik.values.couponCode}
         />
 
-        <Button variant={"secondary"} type="submit">
+        <Button variant={"secondary"} type="submit" className="uppercase">
           Redeem
         </Button>
       </div>

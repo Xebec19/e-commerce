@@ -2,11 +2,10 @@
 
 import { Card } from "@/components/ui/card";
 import ProductImages from "../carousel/product-images";
-import ProductLabel from "../labels/product-label";
 import { IProductDetails } from "../product/product-card";
 import PriceLabel from "../labels/price-label";
 import { Separator } from "../ui/separator";
-import { PlusCircle, ShoppingCart, Trash, XCircle } from "lucide-react";
+import { Plus, ShoppingCart, Trash, X } from "lucide-react";
 import { useState } from "react";
 import { errorMessage } from "@/lib/messages";
 import { Button } from "../ui/button";
@@ -74,14 +73,14 @@ export default function ProductDescription() {
 
           <span className="text-red-500 text-sm prose my-1">{error}</span>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 w-full py-4">
-            <div className="flex justify-between items-center">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 w-full py-4 items-center">
+            <div className="flex justify-between items-center rounded-full border py-1">
               <Button
                 size={"icon"}
                 variant={"ghost"}
                 onClick={incrementQuantity}
               >
-                <PlusCircle size={"lg"} />
+                <Plus />
               </Button>
               <span className="text-2xl prose">{quantity}</span>
               <Button
@@ -89,7 +88,7 @@ export default function ProductDescription() {
                 variant={"ghost"}
                 onClick={decrementQuantity}
               >
-                <XCircle size={"lg"} />
+                <X />
               </Button>
             </div>
             <Button variant={"default"}>
