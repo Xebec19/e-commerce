@@ -26,7 +26,12 @@ function CartItem() {
   return (
     <li className="flex justify-between items-start space-x-4 py-4 px-2">
       <div className="w-[80px] h-[80px] relative overflow-hidden rounded-md">
-        <Image fill src={"/dummy-t-shirt.jpg"} alt="some awesome product" />
+        <Image
+          src={"/dummy-t-shirt.jpg"}
+          alt="some awesome product"
+          height={100}
+          width={100}
+        />
         <RemoveFromCartIcon />
       </div>
 
