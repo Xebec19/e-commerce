@@ -22,7 +22,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Navbar />
-          <main className="px-4 container">{children}</main>
+          <main className="px-4 container min-h-[60vh] my-4">{children}</main>
           <Footer />
         </ThemeProvider>
       </body>

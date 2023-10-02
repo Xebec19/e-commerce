@@ -8,13 +8,14 @@ import { Textarea } from "../ui/textarea";
 import { Select, SelectContent, SelectItem, SelectValue } from "../ui/select";
 import { SelectTrigger } from "@radix-ui/react-select";
 import { Button } from "../ui/button";
-import { Separator } from "../ui/separator";
-import { Checkbox } from "../ui/checkbox";
 
 const validationSchema = Yup.object({
   firstName: Yup.string().required("Required"),
   lastName: Yup.string(),
   email: Yup.string().email("Email is invalid").required("Required"),
+  phoneNum: Yup.string()
+    .matches(/^[0-9]{10}$/, "Phone number must be 10 digits")
+    .required("Required"),
   address: Yup.string().required("Required"),
   state: Yup.string().required("Required"),
   zip: Yup.number().required("Required"),
@@ -24,6 +25,7 @@ const initialValues = {
   firstName: "",
   lastName: "",
   email: "",
+  phoneNum: "",
   address: "",
   state: "New Delhi",
   zip: "",
@@ -90,6 +92,23 @@ export default function ShippingForm() {
           {formik.touched.email && formik.errors.email ? (
             <span className="text-rose-500 text-sm my-1">
               {formik.errors.email}
+            </span>
+          ) : (
+            <></>
+          )}
+        </div>
+
+        <div className="flex flex-col space-y-2 md:col-span-2">
+          <Label htmlFor="phoneNum">Phone Number</Label>
+          <Input
+            id="phoneNum"
+            placeholder="98XXX XXXXX"
+            onChange={formik.handleChange}
+            value={formik.values.phoneNum}
+          />
+          {formik.touched.phoneNum && formik.errors.phoneNum ? (
+            <span className="text-rose-500 text-sm my-1">
+              {formik.errors.phoneNum}
             </span>
           ) : (
             <></>

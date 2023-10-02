@@ -8,11 +8,15 @@ import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 
 const validationSchema = Yup.object({
+  firstName: Yup.string().required("Required"),
+  lastName: Yup.string(),
   email: Yup.string().email("Email is invalid!").required("Email is required!"),
   password: Yup.string().required("Password can not be empty"),
 });
 
 const initialValues = {
+  firstName: "",
+  lastName: "",
   email: "",
   password: "",
 };
@@ -28,11 +32,44 @@ export default function LoginForm() {
 
   return (
     <div>
-      <h1 className="text-2xl prose font-bold">Login</h1>
+      <h1 className="text-2xl prose font-bold">Register</h1>
       <form
         className="flex flex-col space-y-4 max-w-[768px] my-4"
         onSubmit={formik.handleSubmit}
       >
+        <div className="flex flex-col space-y-2">
+          <Label htmlFor="firstName">First Name</Label>
+          <Input
+            id="firstName"
+            placeholder="John"
+            onChange={formik.handleChange}
+            value={formik.values.firstName}
+          />
+          {formik.touched.firstName && formik.errors.firstName ? (
+            <span className="text-rose-500 text-sm my-1">
+              {formik.errors.firstName}
+            </span>
+          ) : (
+            <></>
+          )}
+        </div>
+
+        <div className="flex flex-col space-y-2">
+          <Label htmlFor="lastName">Last Name</Label>
+          <Input
+            id="lastName"
+            placeholder="Doe"
+            onChange={formik.handleChange}
+            value={formik.values.lastName}
+          />
+          {formik.touched.lastName && formik.errors.lastName ? (
+            <span className="text-rose-500 text-sm my-1">
+              {formik.errors.lastName}
+            </span>
+          ) : (
+            <></>
+          )}
+        </div>
         <div className="flex flex-col space-y-2">
           <Label htmlFor="email">Email</Label>
           <Input
@@ -69,7 +106,7 @@ export default function LoginForm() {
 
         <div className="flex justify-end">
           <Button type="submit" className="uppercase">
-            Login
+            Register
           </Button>
         </div>
       </form>
@@ -80,7 +117,7 @@ export default function LoginForm() {
         </Button>
 
         <Button variant={"link"} className="uppercase">
-          Register
+          Login
         </Button>
       </div>
     </div>
