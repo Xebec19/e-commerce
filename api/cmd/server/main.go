@@ -1,13 +1,30 @@
 package server
 
-import "github.com/gofiber/fiber/v2"
+import (
+	db "github.com/Xebec19/e-commerce/api/db/sqlc"
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/logger"
+)
 
-func main() {
-	app := fiber.New()
+type Server struct {
+	store  *db.Queries
+	router *fiber.App
+}
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World!")
-	})
+func NewServer(store *db.Queries) *Server {
+	server := &Server{store: store}
+	router := fiber.New()
 
-	app.Listen(":8080")
+	router.Use(cors.New())
+	router.Use(logger.New())
+
+	api := router.Group("/api")
+
+	server.router = router
+	return server
+}
+
+func (server *Server) Start(address string) error {
+	return server.router.Listen(address)
 }
