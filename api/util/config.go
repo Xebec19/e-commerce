@@ -5,9 +5,11 @@ import (
 )
 
 type Config struct {
-	DB_DRIVER      string `mapstructure:"DB_DRIVER"`
-	DB_SOURCE      string `mapstructure:"DB_SOURCE"`
-	SERVER_ADDRESS string `mapstructure:"SERVER_ADDRESS"`
+	DBDriver      string `mapstructure:"DB_DRIVER"`
+	DBSource      string `mapstructure:"DB_SOURCE"`
+	ServerAddress string `mapstructure:"SERVER_ADDRESS"`
+	JwtSecret     string `mapstructure:"JWT_SECRET"`
+	Env           string `mapstructure:"ENV"`
 }
 
 func LoadConfig(path string) (config Config, err error) {

@@ -1,0 +1,44 @@
+{
+    "schemes": [
+        "http"
+    ],
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a Go application having JWT authentication, Unit tests,etc using postgresql as database",
+        "title": "khushi-backend",
+        "contact": {
+            "name": "Rohan Kumar Thakur",
+            "email": "rohandeveloper106@gmail.com"
+        },
+        "license": {
+            "name": "GNU GENERAL PUBLIC LICENSE"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/category/v1/details/:id": {
+            "get": {
+                "summary": "read one category",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Category ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": ""
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,30 @@
+basePath: /
+host: localhost:8080
+info:
+  contact:
+    email: rohandeveloper106@gmail.com
+    name: Rohan Kumar Thakur
+  description: This is a Go application having JWT authentication, Unit tests,etc
+    using postgresql as database
+  license:
+    name: GNU GENERAL PUBLIC LICENSE
+  title: khushi-backend
+  version: "1.0"
+paths:
+  /category/v1/details/:id:
+    get:
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: ""
+      summary: read one category
+schemes:
+- http
+swagger: "2.0"
