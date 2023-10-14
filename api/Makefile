@@ -1,4 +1,7 @@
 sqlc:
 	sqlc generate
 
-.PHONY: sqlc
+debug: 
+	air
+
+.PHONY: sqlc debug
