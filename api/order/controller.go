@@ -6,7 +6,8 @@ import (
 	"github.com/gofiber/fiber"
 )
 
-// @Summary get list of orders in paginated way
+//	@Summary	get list of orders in paginated way
+//	@Router		/order/read-order [get]
 func listOrders(c *fiber.Ctx) error {
 	userId := c.Locals("userid").(int64)
 
@@ -19,8 +20,9 @@ func listOrders(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusFound).JSON(util.SuccessResponse(orders, "Orders Fetched"))
 }
 
-// @Summary It sends list of items included in an order
-// @Router /order/order-details
+//	@Summary	It sends list of items included in an order
+//
+//	@Router		/order/order-details [get]
 func listOrderItems(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusFound).JSON(util.SuccessResponse(nil, "Order Items Fetched"))
 }

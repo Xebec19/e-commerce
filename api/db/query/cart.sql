@@ -1,6 +1,9 @@
 -- name: UpdateCartItemQuantity :exec
 update cart_details set quantity = $1 + quantity where product_id = $2 and cart_id = $3;
 
+-- name: CountCartId :one
+select count(cart_id) from carts c where user_id = $1;
+
 -- name: GetCartID :one
 select cart_id from carts where user_id = $1;
 
@@ -21,3 +24,6 @@ update cart_details set quantity = quantity - $1 where cart_id = $2 and product_
 
 -- name: ReadCartItemQuantity :one
 select quantity from cart_details where cart_id = $1 and product_id = $2;
+
+-- name: CreateCart :exec
+insert into carts (user_id) values ($1);

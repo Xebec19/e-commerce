@@ -8,23 +8,29 @@ info:
     using postgresql as database
   license:
     name: GNU GENERAL PUBLIC LICENSE
-  title: khushi-backend
+  title: e-commerce api
   version: "1.0"
 paths:
-  /category/v1/details/:id:
+  /cart/add-product:
+    post:
+      responses: {}
+      summary: Add a product to user's cart
+  /cart/delete-product:
+    post:
+      responses: {}
+      summary: Delete a product from user's cart
+  /cart/remove-product:
+    post:
+      responses: {}
+      summary: Remove a product from user's cart
+  /order/order-details:
     get:
-      parameters:
-      - description: Category ID
-        in: path
-        name: id
-        required: true
-        type: string
-      responses:
-        "201":
-          description: Created
-          schema:
-            type: ""
-      summary: read one category
+      responses: {}
+      summary: It sends list of items included in an order
+  /order/read-order:
+    get:
+      responses: {}
+      summary: get list of orders in paginated way
 schemes:
 - http
 swagger: "2.0"

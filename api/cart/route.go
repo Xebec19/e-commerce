@@ -8,4 +8,5 @@ func SetRoute(app *fiber.App) {
 	router := app.Group("/cart")
 	router.Post("/add-product", addProductIntoCart)
 	router.Post("/remove-product", removeProductFromCart)
+	router.Post("/delete-product", deleteProduct)
 }

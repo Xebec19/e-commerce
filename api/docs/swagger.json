@@ -5,7 +5,7 @@
     "swagger": "2.0",
     "info": {
         "description": "This is a Go application having JWT authentication, Unit tests,etc using postgresql as database",
-        "title": "khushi-backend",
+        "title": "e-commerce api",
         "contact": {
             "name": "Rohan Kumar Thakur",
             "email": "rohandeveloper106@gmail.com"
@@ -18,26 +18,34 @@
     "host": "localhost:8080",
     "basePath": "/",
     "paths": {
-        "/category/v1/details/:id": {
+        "/cart/add-product": {
+            "post": {
+                "summary": "Add a product to user's cart",
+                "responses": {}
+            }
+        },
+        "/cart/delete-product": {
+            "post": {
+                "summary": "Delete a product from user's cart",
+                "responses": {}
+            }
+        },
+        "/cart/remove-product": {
+            "post": {
+                "summary": "Remove a product from user's cart",
+                "responses": {}
+            }
+        },
+        "/order/order-details": {
             "get": {
-                "summary": "read one category",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Category ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "type": ""
-                        }
-                    }
-                }
+                "summary": "It sends list of items included in an order",
+                "responses": {}
+            }
+        },
+        "/order/read-order": {
+            "get": {
+                "summary": "get list of orders in paginated way",
+                "responses": {}
             }
         }
     }

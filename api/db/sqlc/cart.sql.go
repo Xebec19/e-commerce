@@ -27,6 +27,26 @@ func (q *Queries) CheckCartDetail(ctx context.Context, arg CheckCartDetailParams
 	return product_quantity, err
 }
 
+const countCartId = `-- name: CountCartId :one
+select count(cart_id) from carts c where user_id = $1
+`
+
+func (q *Queries) CountCartId(ctx context.Context, userID sql.NullInt32) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countCartId, userID)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
+const createCart = `-- name: CreateCart :exec
+insert into carts (user_id) values ($1)
+`
+
+func (q *Queries) CreateCart(ctx context.Context, userID sql.NullInt32) error {
+	_, err := q.db.ExecContext(ctx, createCart, userID)
+	return err
+}
+
 const deleteCartItem = `-- name: DeleteCartItem :exec
 delete from cart_details where cart_id = $1 and product_id = $2
 `

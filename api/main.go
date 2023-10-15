@@ -18,7 +18,7 @@ import (
 	"github.com/gofiber/swagger"
 )
 
-// @title			khushi-backend
+// @title			e-commerce api
 // @version		1.0
 // @description	This is a Go application having JWT authentication, Unit tests,etc using postgresql as database
 // @host			localhost:8080
