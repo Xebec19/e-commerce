@@ -6,6 +6,7 @@ require (
 	github.com/gofiber/fiber/v2 v2.41.0
 	github.com/gofiber/swagger v0.1.8
 	github.com/golang-jwt/jwt/v4 v4.4.3
+	github.com/google/uuid v1.1.2
 	github.com/lib/pq v1.10.7
 	github.com/spf13/viper v1.14.0
 	github.com/stretchr/testify v1.8.1

@@ -608,3 +608,9 @@ references discounts(discount_id) on delete cascade;
 
 alter table orders add column discount_id uuid references discounts(discount_id) on delete no action;
 alter table orders add column discount_amount integer default 0;
+
+alter table orders drop column discount_id;
+alter table orders add column discount_code varchar(20);
+
+alter table carts drop column discount_id;
+alter table carts add column discount_code varchar(20);

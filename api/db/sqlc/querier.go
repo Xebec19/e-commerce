@@ -7,8 +7,6 @@ package db
 import (
 	"context"
 	"database/sql"
-
-	"github.com/google/uuid"
 )
 
 type Querier interface {
@@ -19,8 +17,11 @@ type Querier interface {
 	CreateUser(ctx context.Context, arg CreateUserParams) (int32, error)
 	DeleteCartItem(ctx context.Context, arg DeleteCartItemParams) error
 	FindUserOne(ctx context.Context, email string) (FindUserOneRow, error)
+	GetCartDetails(ctx context.Context, userID sql.NullInt32) (GetCartDetailsRow, error)
 	GetCartID(ctx context.Context, userID sql.NullInt32) (int32, error)
-	GetDiscount(ctx context.Context, lower string) (uuid.UUID, error)
+	GetCartItems(ctx context.Context, cartID sql.NullInt32) ([]GetCartItemsRow, error)
+	GetDiscount(ctx context.Context, lower string) (string, error)
+	GetDiscountCount(ctx context.Context, discountCode sql.NullString) (int64, error)
 	GetOrderDetails(ctx context.Context, orderID sql.NullString) ([]OrderDetail, error)
 	InsertCartItem(ctx context.Context, arg InsertCartItemParams) error
 	ListOrder(ctx context.Context, userID int32) ([]ListOrderRow, error)
@@ -33,6 +34,7 @@ type Querier interface {
 	ReadOneProduct(ctx context.Context, productID int32) (ReadOneProductRow, error)
 	ReadProductQuantity(ctx context.Context, productID int32) (sql.NullInt32, error)
 	RemoveCartItem(ctx context.Context, arg RemoveCartItemParams) error
+	RemoveDiscount(ctx context.Context, arg RemoveDiscountParams) error
 	UpdateCartItemQuantity(ctx context.Context, arg UpdateCartItemQuantityParams) error
 }
 

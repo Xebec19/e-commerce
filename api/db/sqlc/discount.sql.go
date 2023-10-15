@@ -7,17 +7,15 @@ package db
 
 import (
 	"context"
-
-	"github.com/google/uuid"
 )
 
 const getDiscount = `-- name: GetDiscount :one
-select discount_id from public.discounts where lower(code) = lower($1) and status = 'active' and expired_on > current_timestamp
+select code from public.discounts where lower(code) = lower($1) and status = 'active' and expired_on > current_timestamp
 `
 
-func (q *Queries) GetDiscount(ctx context.Context, lower string) (uuid.UUID, error) {
+func (q *Queries) GetDiscount(ctx context.Context, lower string) (string, error) {
 	row := q.db.QueryRowContext(ctx, getDiscount, lower)
-	var discount_id uuid.UUID
-	err := row.Scan(&discount_id)
-	return discount_id, err
+	var code string
+	err := row.Scan(&code)
+	return code, err
 }

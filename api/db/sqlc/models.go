@@ -97,11 +97,11 @@ func (ns NullType) Value() (driver.Value, error) {
 }
 
 type Cart struct {
-	CartID     int32         `json:"cart_id"`
-	UserID     sql.NullInt32 `json:"user_id"`
-	CreatedOn  sql.NullTime  `json:"created_on"`
-	UpdatedOn  sql.NullTime  `json:"updated_on"`
-	DiscountID uuid.NullUUID `json:"discount_id"`
+	CartID       int32          `json:"cart_id"`
+	UserID       sql.NullInt32  `json:"user_id"`
+	CreatedOn    sql.NullTime   `json:"created_on"`
+	UpdatedOn    sql.NullTime   `json:"updated_on"`
+	DiscountCode sql.NullString `json:"discount_code"`
 }
 
 type CartDetail struct {
@@ -142,14 +142,16 @@ type Discount struct {
 }
 
 type Order struct {
-	OrderID       string       `json:"order_id"`
-	UserID        int32        `json:"user_id"`
-	Price         string       `json:"price"`
-	DeliveryPrice string       `json:"delivery_price"`
-	Total         string       `json:"total"`
-	CreatedOn     sql.NullTime `json:"created_on"`
-	Email         string       `json:"email"`
-	Address       string       `json:"address"`
+	OrderID        string         `json:"order_id"`
+	UserID         int32          `json:"user_id"`
+	Price          string         `json:"price"`
+	DeliveryPrice  string         `json:"delivery_price"`
+	Total          string         `json:"total"`
+	CreatedOn      sql.NullTime   `json:"created_on"`
+	Email          string         `json:"email"`
+	Address        string         `json:"address"`
+	DiscountAmount sql.NullInt32  `json:"discount_amount"`
+	DiscountCode   sql.NullString `json:"discount_code"`
 }
 
 type OrderDetail struct {

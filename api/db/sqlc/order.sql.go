@@ -10,6 +10,17 @@ import (
 	"database/sql"
 )
 
+const getDiscountCount = `-- name: GetDiscountCount :one
+select count(order_id) from orders where discount_code = $1
+`
+
+func (q *Queries) GetDiscountCount(ctx context.Context, discountCode sql.NullString) (int64, error) {
+	row := q.db.QueryRowContext(ctx, getDiscountCount, discountCode)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const getOrderDetails = `-- name: GetOrderDetails :many
 select od_id, order_id, product_id, product_price, quantity, delivery_price
 from order_details od where order_id = $1

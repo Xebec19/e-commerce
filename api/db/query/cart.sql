@@ -29,4 +29,16 @@ select quantity from cart_details where cart_id = $1 and product_id = $2;
 insert into carts (user_id) values ($1);
 
 -- name: AddDiscount :exec
-update carts set discount_id = $2 where cart_id = $1;
+update carts set discount_code = $2 where cart_id = $1;
+
+-- name: RemoveDiscount :exec
+update carts set discount_code = null where cart_id = $1 and user_id = $2;
+
+-- name: GetCartDetails :one
+select cart_id, discount_code from carts where user_id = $1;
+
+-- name: GetCartItems :many
+select cd.cd_id, cd.cart_id, cd.product_id, cd.quantity, p.product_name, 
+p.product_image, p.price, p.product_desc, p.delivery_price  
+from cart_details cd 
+left join products p on p.product_id = cd.product_id where cd.cart_id = $1;
