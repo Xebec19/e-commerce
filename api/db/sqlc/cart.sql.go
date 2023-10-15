@@ -8,7 +8,23 @@ package db
 import (
 	"context"
 	"database/sql"
+
+	"github.com/google/uuid"
 )
+
+const addDiscount = `-- name: AddDiscount :exec
+update carts set discount_id = $2 where cart_id = $1
+`
+
+type AddDiscountParams struct {
+	CartID     int32         `json:"cart_id"`
+	DiscountID uuid.NullUUID `json:"discount_id"`
+}
+
+func (q *Queries) AddDiscount(ctx context.Context, arg AddDiscountParams) error {
+	_, err := q.db.ExecContext(ctx, addDiscount, arg.CartID, arg.DiscountID)
+	return err
+}
 
 const checkCartDetail = `-- name: CheckCartDetail :one
 select case when count(quantity) > 0 then 1 else 0 end as product_quantity from cart_details cd 

@@ -11,7 +11,7 @@ migrate:
 	atlas schema inspect -u 'postgres://root:root@localhost:5432/khushidb?sslmode=disable' > schema.hcl --log "{{ sql . }}"
 
 new-migration:
-	atlas migrate new --dir "file://db/migration/"
+	atlas migrate new --dir "file://db/migration/" --var "destructive=true"
 
 apply-migrate:
 	 sudo atlas schema apply --url "postgres://root:root@localhost:5432/khushidb?sslmode=disable" --to "file://db/migration/20230215165719.sql" --dev-url "docker://postgres/12/khushi"
@@ -32,6 +32,6 @@ swag-fmt:
 	exec ~/go/bin/swag fmt
 
 debug:
-	exec ~/go/bin/air
+	air
 
 .PHONY: postgres createdb dropdb test sqlc server migrate new-migration apply-migrate swag swag-fmt debug

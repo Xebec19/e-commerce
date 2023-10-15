@@ -576,3 +576,35 @@ join carts c on c.cart_id = cd.cart_id
 join products p on cd.product_id = p.product_id;
 
 ALTER TABLE public."order" RENAME TO orders;
+
+alter table carts drop column total;
+
+alter table carts drop column price;
+
+alter table carts drop column delivery_price;
+
+alter table carts add column discount_id uuid;
+
+create type status as enum ('active','inactive');
+create type "type" as enum ('voucher','coupon');
+
+create table discounts (
+	discount_id uuid default uuid_generate_v4() primary key,
+	code varchar(20) not null unique,
+	"status" status default 'active',
+	"type" type default 'voucher',
+	value integer default 10,
+	created_on timestamp default current_timestamp,
+	updated_on timestamp default current_timestamp,
+	created_by integer references users(user_id),
+	updated_by integer references users(user_id),
+	expired_on timestamp default current_timestamp + interval '1 day'
+);
+
+insert into discounts (code, created_by, updated_by) values ('WELCOME10',1,1);
+
+alter table carts add constraint fk_discount foreign key (discount_id) 
+references discounts(discount_id) on delete cascade;
+
+alter table orders add column discount_id uuid references discounts(discount_id) on delete no action;
+alter table orders add column discount_amount integer default 0;

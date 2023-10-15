@@ -6,16 +6,102 @@ package db
 
 import (
 	"database/sql"
+	"database/sql/driver"
+	"fmt"
+
+	"github.com/google/uuid"
 )
 
+type Status string
+
+const (
+	StatusActive   Status = "active"
+	StatusInactive Status = "inactive"
+)
+
+func (e *Status) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = Status(s)
+	case string:
+		*e = Status(s)
+	default:
+		return fmt.Errorf("unsupported scan type for Status: %T", src)
+	}
+	return nil
+}
+
+type NullStatus struct {
+	Status Status `json:"status"`
+	Valid  bool   `json:"valid"` // Valid is true if Status is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullStatus) Scan(value interface{}) error {
+	if value == nil {
+		ns.Status, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.Status.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullStatus) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.Status), nil
+}
+
+type Type string
+
+const (
+	TypeVoucher Type = "voucher"
+	TypeCoupon  Type = "coupon"
+)
+
+func (e *Type) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = Type(s)
+	case string:
+		*e = Type(s)
+	default:
+		return fmt.Errorf("unsupported scan type for Type: %T", src)
+	}
+	return nil
+}
+
+type NullType struct {
+	Type  Type `json:"type"`
+	Valid bool `json:"valid"` // Valid is true if Type is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullType) Scan(value interface{}) error {
+	if value == nil {
+		ns.Type, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.Type.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullType) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.Type), nil
+}
+
 type Cart struct {
-	CartID        int32          `json:"cart_id"`
-	UserID        sql.NullInt32  `json:"user_id"`
-	Price         sql.NullString `json:"price"`
-	DeliveryPrice sql.NullString `json:"delivery_price"`
-	CreatedOn     sql.NullTime   `json:"created_on"`
-	UpdatedOn     sql.NullTime   `json:"updated_on"`
-	Total         sql.NullString `json:"total"`
+	CartID     int32         `json:"cart_id"`
+	UserID     sql.NullInt32 `json:"user_id"`
+	CreatedOn  sql.NullTime  `json:"created_on"`
+	UpdatedOn  sql.NullTime  `json:"updated_on"`
+	DiscountID uuid.NullUUID `json:"discount_id"`
 }
 
 type CartDetail struct {
@@ -40,6 +126,19 @@ type Country struct {
 	CountryName    sql.NullString `json:"country_name"`
 	Currency       sql.NullString `json:"currency"`
 	CurrencySymbol sql.NullString `json:"currency_symbol"`
+}
+
+type Discount struct {
+	DiscountID uuid.UUID     `json:"discount_id"`
+	Code       string        `json:"code"`
+	Status     NullStatus    `json:"status"`
+	Type       NullType      `json:"type"`
+	Value      sql.NullInt32 `json:"value"`
+	CreatedOn  sql.NullTime  `json:"created_on"`
+	UpdatedOn  sql.NullTime  `json:"updated_on"`
+	CreatedBy  sql.NullInt32 `json:"created_by"`
+	UpdatedBy  sql.NullInt32 `json:"updated_by"`
+	ExpiredOn  sql.NullTime  `json:"expired_on"`
 }
 
 type Order struct {

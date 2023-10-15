@@ -27,3 +27,6 @@ select quantity from cart_details where cart_id = $1 and product_id = $2;
 
 -- name: CreateCart :exec
 insert into carts (user_id) values ($1);
+
+-- name: AddDiscount :exec
+update carts set discount_id = $2 where cart_id = $1;
