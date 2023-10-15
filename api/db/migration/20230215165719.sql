@@ -614,3 +614,5 @@ alter table orders add column discount_code varchar(20);
 
 alter table carts drop column discount_id;
 alter table carts add column discount_code varchar(20);
+
+update products set status = 'inactive' where status = 'unactive';
