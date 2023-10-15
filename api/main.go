@@ -11,7 +11,6 @@ import (
 	"github.com/Xebec19/e-commerce/api/product"
 	util "github.com/Xebec19/e-commerce/api/util"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/cache"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -68,7 +67,7 @@ func main() {
 	}))
 
 	// set up cache
-	app.Use(cache.New())
+	// app.Use(cache.New())
 
 	// Connect to database
 	db.Connect()
