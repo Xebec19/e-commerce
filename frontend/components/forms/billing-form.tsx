@@ -8,7 +8,6 @@ import { Textarea } from "../ui/textarea";
 import { Select, SelectContent, SelectItem, SelectValue } from "../ui/select";
 import { SelectTrigger } from "@radix-ui/react-select";
 import { Button } from "../ui/button";
-import { Separator } from "../ui/separator";
 import { Checkbox } from "../ui/checkbox";
 
 const validationSchema = Yup.object({
