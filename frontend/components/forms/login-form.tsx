@@ -6,9 +6,10 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
+import Link from "next/link";
 
 const validationSchema = Yup.object({
-  email: Yup.string().email("Email is invalid!").required("Email is required!"),
+  email: Yup.string().email("Email is invalid").required("Email is required"),
   password: Yup.string().required("Password can not be empty"),
 });
 
@@ -79,9 +80,9 @@ export default function LoginForm() {
           Forgot Password
         </Button>
 
-        <Button variant={"link"} className="uppercase">
+        <Link href={"/auth/register"} className="uppercase">
           Register
-        </Button>
+        </Link>
       </div>
     </div>
   );
