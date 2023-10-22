@@ -34,6 +34,9 @@ func register(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
 	}
 
+	// descript md5 hash
+	req.Password = util.DecryptMD5(req.Password)
+
 	passwordHash, err := util.HashPassword(req.Password)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
@@ -70,6 +73,9 @@ func login(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(util.ErrorResponse(err))
 	}
+
+	// descript md5 hash
+	req.Password = util.DecryptMD5(req.Password)
 
 	// check user password
 	err = util.CheckPassword(req.Password, user.Password)

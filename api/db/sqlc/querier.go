@@ -33,6 +33,7 @@ type Querier interface {
 	ReadOneCategory(ctx context.Context, categoryID int32) (ReadOneCategoryRow, error)
 	ReadOneProduct(ctx context.Context, productID int32) (ReadOneProductRow, error)
 	ReadProductQuantity(ctx context.Context, productID int32) (sql.NullInt32, error)
+	ReadUser(ctx context.Context, userID int32) (User, error)
 	RemoveCartItem(ctx context.Context, arg RemoveCartItemParams) error
 	RemoveDiscount(ctx context.Context, arg RemoveDiscountParams) error
 	UpdateCartItemQuantity(ctx context.Context, arg UpdateCartItemQuantityParams) error

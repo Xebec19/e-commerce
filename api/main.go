@@ -9,6 +9,7 @@ import (
 	db "github.com/Xebec19/e-commerce/api/db/sqlc"
 	_ "github.com/Xebec19/e-commerce/api/docs"
 	"github.com/Xebec19/e-commerce/api/product"
+	"github.com/Xebec19/e-commerce/api/user"
 	util "github.com/Xebec19/e-commerce/api/util"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -75,6 +76,7 @@ func main() {
 	// Public Routes
 	auth.SetRoute(app)
 	product.SetRoute(app)
+	user.SetRoute(app)
 
 	app.Use(util.JwtValidate)
 

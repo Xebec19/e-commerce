@@ -59,3 +59,26 @@ func (q *Queries) FindUserOne(ctx context.Context, email string) (FindUserOneRow
 	)
 	return i, err
 }
+
+const readUser = `-- name: ReadUser :one
+SELECT user_id, first_name, last_name, email, phone, "password", created_on, updated_on, status, "access"
+FROM public.users WHERE user_id = $1
+`
+
+func (q *Queries) ReadUser(ctx context.Context, userID int32) (User, error) {
+	row := q.db.QueryRowContext(ctx, readUser, userID)
+	var i User
+	err := row.Scan(
+		&i.UserID,
+		&i.FirstName,
+		&i.LastName,
+		&i.Email,
+		&i.Phone,
+		&i.Password,
+		&i.CreatedOn,
+		&i.UpdatedOn,
+		&i.Status,
+		&i.Access,
+	)
+	return i, err
+}

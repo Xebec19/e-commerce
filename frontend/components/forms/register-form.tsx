@@ -7,27 +7,63 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import Link from "next/link";
+import useSWRMutation from "swr/mutation";
+import { sendRequest } from "@/lib/http";
+import md5 from "md5";
+import { Eye, EyeOff, Loader } from "lucide-react";
+import { useState } from "react";
 
 const validationSchema = Yup.object({
   firstName: Yup.string().required("Required"),
   lastName: Yup.string(),
   email: Yup.string().email("Email is invalid!").required("Email is required!"),
-  password: Yup.string().required("Password can not be empty"),
+  phone: Yup.string().matches(
+    /^(?:\+[0-9]{1,3}[-.\s]?)?\(?[0-9]{3}\)?[-.\s]?[0-9]{3}[-.\s]?[0-9]{4}$/,
+    "Invalid phone number"
+  ),
+  password: Yup.string()
+    .required("Password can not be empty")
+    .min(6, "Password must be at least 6 characters long"),
+  confirmPassword: Yup.string()
+    .required("Confirm Password is required")
+    .oneOf([Yup.ref("password")], "Passwords must match"),
 });
 
 const initialValues = {
   firstName: "",
   lastName: "",
   email: "",
+  phone: "",
   password: "",
+  confirmPassword: "",
 };
 
 export default function LoginForm() {
+  const [passwordType, setPasswordType] = useState<"text" | "password">(
+    "password"
+  );
+  const [confirmPasswordType, setConfirmPasswordType] = useState<
+    "text" | "password"
+  >("password");
+
+  const { trigger: loginHttp, isMutating } = useSWRMutation(
+    "/auth/register",
+    sendRequest,
+    () => {}
+  );
+
   const formik = useFormik({
     initialValues,
     validationSchema,
     onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+      let payload = {
+        firstName: values.firstName,
+        lastName: values.lastName,
+        email: values.email,
+        phone: values.phone,
+        password: md5(values.password),
+      };
+      loginHttp(payload);
     },
   });
 
@@ -89,13 +125,42 @@ export default function LoginForm() {
         </div>
 
         <div className="flex flex-col space-y-2">
-          <Label htmlFor="password">Password</Label>
+          <Label htmlFor="phone">Phone Number</Label>
           <Input
-            id="password"
-            type="password"
+            id="phone"
+            placeholder="+1 (123) 456-7890"
             onChange={formik.handleChange}
-            value={formik.values.password}
+            value={formik.values.phone}
           />
+          {formik.touched.phone && formik.errors.phone ? (
+            <span className="text-rose-500 text-sm my-1">
+              {formik.errors.phone}
+            </span>
+          ) : (
+            <></>
+          )}
+        </div>
+
+        <div className="flex flex-col space-y-2">
+          <Label htmlFor="password">Password</Label>
+          <div className="relative flex items-center">
+            <Input
+              id="password"
+              type={passwordType}
+              onChange={formik.handleChange}
+              value={formik.values.password}
+            />
+            <div className="cursor-pointer absolute right-2">
+              {passwordType == "password" ? (
+                <Eye size={"20"} onClick={() => setPasswordType("text")} />
+              ) : (
+                <EyeOff
+                  size={"20"}
+                  onClick={() => setPasswordType("password")}
+                />
+              )}
+            </div>
+          </div>
           {formik.touched.password && formik.errors.password ? (
             <span className="text-rose-500 text-sm my-1">
               {formik.errors.password}
@@ -105,10 +170,48 @@ export default function LoginForm() {
           )}
         </div>
 
+        <div className="flex flex-col space-y-2">
+          <Label htmlFor="confirmPassword">Confirm Password</Label>
+          <div className="relative flex items-center">
+            <Input
+              id="confirmPassword"
+              type={confirmPasswordType}
+              onChange={formik.handleChange}
+              value={formik.values.confirmPassword}
+            />
+            <div className="cursor-pointer absolute right-2">
+              {confirmPasswordType == "password" ? (
+                <Eye
+                  size={"20"}
+                  onClick={() => setConfirmPasswordType("text")}
+                />
+              ) : (
+                <EyeOff
+                  size={"20"}
+                  onClick={() => setConfirmPasswordType("password")}
+                />
+              )}
+            </div>
+          </div>
+          {formik.touched.confirmPassword && formik.errors.confirmPassword ? (
+            <span className="text-rose-500 text-sm my-1">
+              {formik.errors.confirmPassword}
+            </span>
+          ) : (
+            <></>
+          )}
+        </div>
+
         <div className="flex justify-end">
-          <Button type="submit" className="uppercase">
-            Register
-          </Button>
+          {isMutating ? (
+            <Button disabled size={"icon"}>
+              <Loader size={20} />
+            </Button>
+          ) : (
+            <Button type="submit" className="uppercase">
+              Register
+            </Button>
+          )}
         </div>
       </form>
       <Separator className="max-w-[768px] my-4" />
