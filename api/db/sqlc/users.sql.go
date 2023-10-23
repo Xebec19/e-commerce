@@ -19,7 +19,7 @@ type CreateUserParams struct {
 	FirstName string         `json:"first_name"`
 	LastName  sql.NullString `json:"last_name"`
 	Email     string         `json:"email"`
-	Phone     sql.NullInt64  `json:"phone"`
+	Phone     sql.NullString `json:"phone"`
 	Password  string         `json:"password"`
 }
 
@@ -65,9 +65,22 @@ SELECT user_id, first_name, last_name, email, phone, "password", created_on, upd
 FROM public.users WHERE user_id = $1
 `
 
-func (q *Queries) ReadUser(ctx context.Context, userID int32) (User, error) {
+type ReadUserRow struct {
+	UserID    int32          `json:"user_id"`
+	FirstName string         `json:"first_name"`
+	LastName  sql.NullString `json:"last_name"`
+	Email     string         `json:"email"`
+	Phone     sql.NullString `json:"phone"`
+	Password  string         `json:"password"`
+	CreatedOn sql.NullTime   `json:"created_on"`
+	UpdatedOn sql.NullTime   `json:"updated_on"`
+	Status    sql.NullString `json:"status"`
+	Access    sql.NullString `json:"access"`
+}
+
+func (q *Queries) ReadUser(ctx context.Context, userID int32) (ReadUserRow, error) {
 	row := q.db.QueryRowContext(ctx, readUser, userID)
-	var i User
+	var i ReadUserRow
 	err := row.Scan(
 		&i.UserID,
 		&i.FirstName,

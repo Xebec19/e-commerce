@@ -192,12 +192,12 @@ type User struct {
 	FirstName string         `json:"first_name"`
 	LastName  sql.NullString `json:"last_name"`
 	Email     string         `json:"email"`
-	Phone     sql.NullInt64  `json:"phone"`
 	Password  string         `json:"password"`
 	CreatedOn sql.NullTime   `json:"created_on"`
 	UpdatedOn sql.NullTime   `json:"updated_on"`
 	Status    sql.NullString `json:"status"`
 	Access    sql.NullString `json:"access"`
+	Phone     sql.NullString `json:"phone"`
 }
 
 type VCart struct {

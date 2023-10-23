@@ -12,9 +12,9 @@ import (
 
 type registerSchema struct {
 	FirstName string `json:"first_name" binding:"required"`
-	LastName  string `json:"last_name" binding:"required"`
+	LastName  string `json:"last_name"`
 	Email     string `json:"email" binding:"required,email"`
-	Phone     int64  `json:"phone" binding:"e164"`
+	Phone     string `json:"phone"`
 	Password  string `json:"password" binding:"required,min=8"`
 }
 
@@ -46,7 +46,7 @@ func register(c *fiber.Ctx) error {
 		FirstName: req.FirstName,
 		LastName:  sql.NullString{String: req.LastName, Valid: true},
 		Email:     req.Email,
-		Phone:     sql.NullInt64{Int64: req.Phone, Valid: true},
+		Phone:     sql.NullString{String: req.Phone, Valid: true},
 		Password:  passwordHash,
 	}
 	// save user in db

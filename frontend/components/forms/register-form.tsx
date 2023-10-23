@@ -9,9 +9,9 @@ import { Separator } from "../ui/separator";
 import Link from "next/link";
 import useSWRMutation from "swr/mutation";
 import { sendRequest } from "@/lib/http";
-import md5 from "md5";
 import { Eye, EyeOff, Loader } from "lucide-react";
 import { useState } from "react";
+import { registerHttp } from "@/lib/http/auth.http";
 
 const validationSchema = Yup.object({
   firstName: Yup.string().required("Required"),
@@ -46,12 +46,6 @@ export default function LoginForm() {
     "text" | "password"
   >("password");
 
-  const { trigger: loginHttp, isMutating } = useSWRMutation(
-    "/auth/register",
-    sendRequest,
-    () => {}
-  );
-
   const formik = useFormik({
     initialValues,
     validationSchema,
@@ -61,11 +55,13 @@ export default function LoginForm() {
         lastName: values.lastName,
         email: values.email,
         phone: values.phone,
-        password: md5(values.password),
+        password: values.password,
       };
-      loginHttp(payload);
+      registerHttp(payload);
     },
   });
+
+  // TODO fix register button
 
   return (
     <div>
@@ -203,7 +199,7 @@ export default function LoginForm() {
         </div>
 
         <div className="flex justify-end">
-          {isMutating ? (
+          {false ? (
             <Button disabled size={"icon"}>
               <Loader size={20} />
             </Button>
