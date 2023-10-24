@@ -4,7 +4,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import "@/styles/globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { SWRProvider } from "../store/swr.provider";
+import { QueryProvider } from "../store/query.provider";
 import { Toaster } from "@/components/ui/toaster";
 import { environment } from "@/lib";
 
@@ -24,12 +24,12 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <SWRProvider>
+          <QueryProvider>
             <Navbar />
             <Toaster />
             <main className="px-4 container min-h-[60vh] my-4">{children}</main>
             <Footer />
-          </SWRProvider>
+          </QueryProvider>
         </ThemeProvider>
       </body>
     </html>

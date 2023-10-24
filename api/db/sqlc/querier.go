@@ -13,10 +13,11 @@ type Querier interface {
 	AddDiscount(ctx context.Context, arg AddDiscountParams) error
 	CheckCartDetail(ctx context.Context, arg CheckCartDetailParams) (int32, error)
 	CountCartId(ctx context.Context, userID sql.NullInt32) (int64, error)
+	CountUser(ctx context.Context, lower string) (int64, error)
 	CreateCart(ctx context.Context, userID sql.NullInt32) error
 	CreateUser(ctx context.Context, arg CreateUserParams) (int32, error)
 	DeleteCartItem(ctx context.Context, arg DeleteCartItemParams) error
-	FindUserOne(ctx context.Context, email string) (FindUserOneRow, error)
+	FindUserOne(ctx context.Context, lower string) (FindUserOneRow, error)
 	GetCartDetails(ctx context.Context, userID sql.NullInt32) (GetCartDetailsRow, error)
 	GetCartID(ctx context.Context, userID sql.NullInt32) (int32, error)
 	GetCartItems(ctx context.Context, cartID sql.NullInt32) ([]GetCartItemsRow, error)

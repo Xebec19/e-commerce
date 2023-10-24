@@ -7,11 +7,11 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import Link from "next/link";
-import useSWRMutation from "swr/mutation";
-import { sendRequest } from "@/lib/http";
 import { Eye, EyeOff, Loader } from "lucide-react";
 import { useState } from "react";
 import { registerHttp } from "@/lib/http/auth.http";
+import { useMutation } from "@tanstack/react-query";
+import { useToast } from "../ui/use-toast";
 
 const validationSchema = Yup.object({
   firstName: Yup.string().required("Required"),
@@ -46,10 +46,36 @@ export default function LoginForm() {
     "text" | "password"
   >("password");
 
+  const { toast } = useToast();
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: registerHttp,
+    onSuccess: (response) => {
+      if (response.status) {
+        toast({
+          title: "Registered successfully!",
+        });
+        formik.resetForm();
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Something went wrong!",
+          description: response.message,
+        });
+      }
+    },
+    onError: (error) => {
+      toast({
+        variant: "destructive",
+        title: error.message,
+      });
+    },
+  });
+
   const formik = useFormik({
     initialValues,
     validationSchema,
-    onSubmit: (values) => {
+    onSubmit: (values, { resetForm }) => {
       let payload = {
         firstName: values.firstName,
         lastName: values.lastName,
@@ -57,11 +83,9 @@ export default function LoginForm() {
         phone: values.phone,
         password: values.password,
       };
-      registerHttp(payload);
+      mutate(payload);
     },
   });
-
-  // TODO fix register button
 
   return (
     <div>
@@ -199,7 +223,7 @@ export default function LoginForm() {
         </div>
 
         <div className="flex justify-end">
-          {false ? (
+          {isPending ? (
             <Button disabled size={"icon"}>
               <Loader size={20} />
             </Button>

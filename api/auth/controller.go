@@ -3,6 +3,8 @@ package auth
 import (
 	"context"
 	"database/sql"
+	"errors"
+	"strings"
 	"time"
 
 	db "github.com/Xebec19/e-commerce/api/db/sqlc"
@@ -34,8 +36,21 @@ func register(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
 	}
 
-	// descript md5 hash
-	req.Password = util.DecryptMD5(req.Password)
+	count, err := db.DBQuery.CountUser(context.Background(), strings.ToLower(req.Email))
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
+	}
+
+	if count > 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(errors.New("user already exists")))
+	}
+
+	// decrypt md5 hash
+	req.Password, err = util.DecryptBase64(req.Password)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
+	}
 
 	passwordHash, err := util.HashPassword(req.Password)
 	if err != nil {
@@ -45,7 +60,7 @@ func register(c *fiber.Ctx) error {
 	args := db.CreateUserParams{
 		FirstName: req.FirstName,
 		LastName:  sql.NullString{String: req.LastName, Valid: true},
-		Email:     req.Email,
+		Email:     strings.ToLower(req.Email),
 		Phone:     sql.NullString{String: req.Phone, Valid: true},
 		Password:  passwordHash,
 	}
@@ -69,18 +84,21 @@ func login(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
 	}
 	// Find a user with given email
-	user, err := db.DBQuery.FindUserOne(context.Background(), req.Email)
+	user, err := db.DBQuery.FindUserOne(context.Background(), strings.ToLower(req.Email))
+	if err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(util.ErrorResponse(errors.New("no user found")))
+	}
+
+	// decode base64 hash
+	req.Password, err = util.DecryptBase64(req.Password)
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(util.ErrorResponse(err))
 	}
 
-	// descript md5 hash
-	req.Password = util.DecryptMD5(req.Password)
-
 	// check user password
 	err = util.CheckPassword(req.Password, user.Password)
 	if err != nil {
-		return c.Status(fiber.StatusNotFound).JSON(util.ErrorResponse(err))
+		return c.Status(fiber.StatusNotFound).JSON(util.ErrorResponse(errors.New("invalid password")))
 	}
 
 	// generate token to user

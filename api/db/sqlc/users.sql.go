@@ -10,6 +10,17 @@ import (
 	"database/sql"
 )
 
+const countUser = `-- name: CountUser :one
+SELECT count(user_id) from USERS u WHERE lower(u.EMAIL) = lower($1)
+`
+
+func (q *Queries) CountUser(ctx context.Context, lower string) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countUser, lower)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const createUser = `-- name: CreateUser :one
 INSERT INTO USERS (first_name, last_name, email, phone, password)
 values ($1,$2,$3,$4,$5) RETURNING user_id
@@ -38,7 +49,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (int32, 
 
 const findUserOne = `-- name: FindUserOne :one
 SELECT user_id, email, CONCAT(first_name, ' ', last_name) AS user_name, password FROM USERS u 
-WHERE u.EMAIL = $1
+WHERE lower(u.EMAIL) = lower($1)
 `
 
 type FindUserOneRow struct {
@@ -48,8 +59,8 @@ type FindUserOneRow struct {
 	Password string      `json:"password"`
 }
 
-func (q *Queries) FindUserOne(ctx context.Context, email string) (FindUserOneRow, error) {
-	row := q.db.QueryRowContext(ctx, findUserOne, email)
+func (q *Queries) FindUserOne(ctx context.Context, lower string) (FindUserOneRow, error) {
+	row := q.db.QueryRowContext(ctx, findUserOne, lower)
 	var i FindUserOneRow
 	err := row.Scan(
 		&i.UserID,

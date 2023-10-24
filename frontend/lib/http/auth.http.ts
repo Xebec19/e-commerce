@@ -1,6 +1,4 @@
-import md5 from "md5";
-
-import { IRegisterPayload } from "@/interfaces/auth.interface";
+import { ILoginPayload, IRegisterPayload } from "@/interfaces/auth.interface";
 import { environment } from "@/lib";
 
 export async function registerHttp({
@@ -13,7 +11,7 @@ export async function registerHttp({
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
-  let hashedPassword = md5(password);
+  let hashedPassword = btoa(password);
 
   var raw = JSON.stringify({
     first_name: firstName,
@@ -31,10 +29,25 @@ export async function registerHttp({
 
   let url = `${environment.BASE_URL}/auth/register`;
 
-  console.log({ url });
+  return fetch(url, requestOptions).then((response) => response.json());
+}
 
-  fetch(url, requestOptions)
-    .then((response) => response.text())
-    .then((result) => console.log(result))
-    .catch((error) => console.log("error", error));
+export async function loginHttp({ email, password }: ILoginPayload) {
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+
+  var raw = JSON.stringify({
+    email: email,
+    password: btoa(password),
+  });
+
+  var requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+  };
+
+  let url = `${environment.BASE_URL}/auth/login`;
+
+  return fetch(url, requestOptions).then((response) => response.json());
 }

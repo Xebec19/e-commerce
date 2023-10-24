@@ -7,6 +7,11 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import Link from "next/link";
+import { useState } from "react";
+import { Eye, EyeOff, Loader } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import { loginHttp } from "@/lib/http/auth.http";
+import { useToast } from "../ui/use-toast";
 
 const validationSchema = Yup.object({
   email: Yup.string().email("Email is invalid").required("Email is required"),
@@ -19,11 +24,48 @@ const initialValues = {
 };
 
 export default function LoginForm() {
+  const [passwordType, setPasswordType] = useState<"text" | "password">(
+    "password"
+  );
+
+  const { toast } = useToast();
+
+  const { mutate: login, isPending } = useMutation({
+    mutationFn: loginHttp,
+    onSuccess: (response) => {
+      if (response.status) {
+        toast({
+          title: "Logged in successfully!",
+        });
+        let token = response.payload;
+
+        localStorage.setItem("token", token);
+        formik.resetForm();
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Something went wrong!",
+          description: response.message,
+        });
+      }
+    },
+    onError: (error) => {
+      toast({
+        variant: "destructive",
+        title: error.message,
+      });
+    },
+  });
+
   const formik = useFormik({
     initialValues,
     validationSchema,
     onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+      let payload = {
+        email: values.email.trim().toLowerCase(),
+        password: values.password,
+      };
+      login(payload);
     },
   });
 
@@ -53,12 +95,24 @@ export default function LoginForm() {
 
         <div className="flex flex-col space-y-2">
           <Label htmlFor="password">Password</Label>
-          <Input
-            id="password"
-            type="password"
-            onChange={formik.handleChange}
-            value={formik.values.password}
-          />
+          <div className="relative flex items-center">
+            <Input
+              id="password"
+              type={passwordType}
+              onChange={formik.handleChange}
+              value={formik.values.password}
+            />
+            <div className="cursor-pointer absolute right-2">
+              {passwordType == "password" ? (
+                <Eye size={"20"} onClick={() => setPasswordType("text")} />
+              ) : (
+                <EyeOff
+                  size={"20"}
+                  onClick={() => setPasswordType("password")}
+                />
+              )}
+            </div>
+          </div>
           {formik.touched.password && formik.errors.password ? (
             <span className="text-rose-500 text-sm my-1">
               {formik.errors.password}
@@ -69,9 +123,15 @@ export default function LoginForm() {
         </div>
 
         <div className="flex justify-end">
-          <Button type="submit" className="uppercase">
-            Login
-          </Button>
+          {isPending ? (
+            <Button disabled size={"icon"}>
+              <Loader size={20} />
+            </Button>
+          ) : (
+            <Button type="submit" className="uppercase">
+              Login
+            </Button>
+          )}
         </div>
       </form>
       <Separator className="max-w-[768px] my-4" />
