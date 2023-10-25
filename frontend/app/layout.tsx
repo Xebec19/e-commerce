@@ -7,6 +7,7 @@ import { Inter } from "next/font/google";
 import { QueryProvider } from "../store/query.provider";
 import { Toaster } from "@/components/ui/toaster";
 import { environment } from "@/lib";
+import { ReduxProvider } from "@/store/redux.provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,12 +25,18 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <QueryProvider>
-            <Navbar />
-            <Toaster />
-            <main className="px-4 container min-h-[60vh] my-4">{children}</main>
-            <Footer />
-          </QueryProvider>
+          <ReduxProvider>
+            <QueryProvider>
+              <>
+                <Navbar />
+                <Toaster />
+                <main className="px-4 container min-h-[60vh] my-4">
+                  {children}
+                </main>
+                <Footer />
+              </>
+            </QueryProvider>
+          </ReduxProvider>
         </ThemeProvider>
       </body>
     </html>

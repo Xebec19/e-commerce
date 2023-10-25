@@ -1,8 +1,11 @@
 -- name: ReadCategoryProduct :many
 SELECT * FROM v_products WHERE category_id = $1;
 
+-- name: ReadNewProducts :many
+SELECT product_id, product_name, product_image, quantity, product_desc, price, delivery_price from v_products order by created_on desc limit $1 offset $2;
+
 -- name: ReadAllProducts :many
-SELECT product_id, product_name, product_image, quantity, product_desc from v_products limit $1 offset $2;
+SELECT product_id, product_name, product_image, quantity, product_desc, price, delivery_price from v_products limit $1 offset $2;
 
 -- name: ReadCategoryItems :many
 SELECT product_id, product_name, product_image, quantity, product_desc from v_products where category_id = $1 limit $2 offset $3;

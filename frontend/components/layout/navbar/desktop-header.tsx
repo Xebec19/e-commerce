@@ -4,8 +4,13 @@ import { Button } from "@/components/ui/button";
 import { environment } from "@/lib";
 import { ShoppingCart } from "lucide-react";
 import Image from "next/image";
+import { fetchCategories } from "@/lib/http/product.http";
+import Link from "next/link";
+import { ICategoryPayload } from "@/interfaces/product.interface";
 
-export default function DesktopHeader() {
+export default async function DesktopHeader() {
+  const { payload } = await fetchCategories();
+
   return (
     <nav className="flex justify-between p-4 items-center container">
       <span className="flex items-center space-x-4">
@@ -18,8 +23,14 @@ export default function DesktopHeader() {
         />
         <span className="text-lg font-bold">{environment.SITE_NAME}</span>
         <span className="space-x-2 flex">
-          <span className="text-md cursor-pointer">Category 1</span>
-          <span className="text-md cursor-pointer">Category 1</span>
+          {payload.slice(0, 2).map((category: ICategoryPayload) => (
+            <Link
+              key={category.category_id}
+              href={`search?category=${category.category_id}`}
+            >
+              {category.category_name}
+            </Link>
+          ))}
         </span>
       </span>
       <SearchInput />

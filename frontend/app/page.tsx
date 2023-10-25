@@ -1,12 +1,12 @@
 import NewArrivals from "@/components/carousel/new-arrivals";
 import ThreeGridItems from "@/components/grid/three-grid-items";
-import { IProductDetails } from "@/components/product/product-card";
-import { DUMMY_PRODUCT_v1 } from "@/lib";
+import { environment } from "@/lib";
+import { fetchNewProducts, fetchTopProducts } from "@/lib/http/product.http";
 import { Suspense } from "react";
 
 export const metadata = {
-  title: process.env.NEXT_PUBLIC_SITE_NAME,
-  description: `Discover a world of endless shopping possibilities with our ${process.env.NEXT_PUBLIC_SITE_NAME} Shop the latest trends, find exclusive deals, and explore a vast selection of products from the comfort of your device.`,
+  title: environment.SITE_NAME,
+  description: `Discover a world of endless shopping possibilities with our ${environment.SITE_NAME} Shop the latest trends, find exclusive deals, and explore a vast selection of products from the comfort of your device.`,
   robots: {
     index: true,
     follow: true,
@@ -27,14 +27,24 @@ export const metadata = {
   },
 };
 
-const PRODUCTS: IProductDetails[] = Array(15).fill(DUMMY_PRODUCT_v1);
+export default async function Home() {
+  const products = await fetchNewProducts();
 
-export default function Home() {
+  let featuredProducts = products.slice(0, 3).map((product, index) => {
+    if (index == 0) {
+      product.is_featured = true;
+    }
+
+    return product;
+  });
+
+  let newProducts = products.slice(3);
+
   return (
     <>
-      <ThreeGridItems />
+      <ThreeGridItems products={featuredProducts} />
       <Suspense>
-        <NewArrivals products={PRODUCTS} />
+        <NewArrivals products={newProducts} />
       </Suspense>
     </>
   );
