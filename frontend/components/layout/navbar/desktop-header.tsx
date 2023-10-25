@@ -7,7 +7,7 @@ import Image from "next/image";
 
 export default function DesktopHeader() {
   return (
-    <nav className="flex justify-between p-4 items-center">
+    <nav className="flex justify-between p-4 items-center container">
       <span className="flex items-center space-x-4">
         <Image
           priority
@@ -17,13 +17,13 @@ export default function DesktopHeader() {
           alt={environment.SITE_NAME + ""}
         />
         <span className="text-lg font-bold">{environment.SITE_NAME}</span>
-        <span className="space-x-2">
+        <span className="space-x-2 flex">
           <span className="text-md cursor-pointer">Category 1</span>
           <span className="text-md cursor-pointer">Category 1</span>
         </span>
       </span>
       <SearchInput />
-      <span className="space-x-2">
+      <span className="space-x-2 flex">
         <ThemeToggle />
         <Button variant="outline" size="icon">
           <ShoppingCart />

@@ -3,8 +3,8 @@ import Image from "next/image";
 
 export default function Footer() {
   return (
-    <footer>
-      <div className="w-full grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
+    <footer className="container px-4">
+      <div className="w-full grid grid-cols-2 md:grid-cols-4 gap-4 py-4">
         <Image
           src="/icons8-shopaholic-48.png"
           width={40}

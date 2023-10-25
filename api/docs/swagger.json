@@ -1,0 +1,52 @@
+{
+    "schemes": [
+        "http"
+    ],
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a Go application having JWT authentication, Unit tests,etc using postgresql as database",
+        "title": "e-commerce api",
+        "contact": {
+            "name": "Rohan Kumar Thakur",
+            "email": "rohandeveloper106@gmail.com"
+        },
+        "license": {
+            "name": "GNU GENERAL PUBLIC LICENSE"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/cart/add-product": {
+            "post": {
+                "summary": "Add a product to user's cart",
+                "responses": {}
+            }
+        },
+        "/cart/delete-product": {
+            "post": {
+                "summary": "Delete a product from user's cart",
+                "responses": {}
+            }
+        },
+        "/cart/remove-product": {
+            "post": {
+                "summary": "Remove a product from user's cart",
+                "responses": {}
+            }
+        },
+        "/order/order-details": {
+            "get": {
+                "summary": "It sends list of items included in an order",
+                "responses": {}
+            }
+        },
+        "/order/read-order": {
+            "get": {
+                "summary": "get list of orders in paginated way",
+                "responses": {}
+            }
+        }
+    }
+}

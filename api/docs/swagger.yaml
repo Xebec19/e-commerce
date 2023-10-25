@@ -1,0 +1,36 @@
+basePath: /
+host: localhost:8080
+info:
+  contact:
+    email: rohandeveloper106@gmail.com
+    name: Rohan Kumar Thakur
+  description: This is a Go application having JWT authentication, Unit tests,etc
+    using postgresql as database
+  license:
+    name: GNU GENERAL PUBLIC LICENSE
+  title: e-commerce api
+  version: "1.0"
+paths:
+  /cart/add-product:
+    post:
+      responses: {}
+      summary: Add a product to user's cart
+  /cart/delete-product:
+    post:
+      responses: {}
+      summary: Delete a product from user's cart
+  /cart/remove-product:
+    post:
+      responses: {}
+      summary: Remove a product from user's cart
+  /order/order-details:
+    get:
+      responses: {}
+      summary: It sends list of items included in an order
+  /order/read-order:
+    get:
+      responses: {}
+      summary: get list of orders in paginated way
+schemes:
+- http
+swagger: "2.0"
