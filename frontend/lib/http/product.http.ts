@@ -8,7 +8,9 @@ export const fetchCategories = () => {
 
   let url = `${environment.BASE_URL}/product/v1/category-list`;
 
-  return fetch(url, requestOptions).then((response) => response.json());
+  return fetch(url, requestOptions)
+    .then((response) => response.json())
+    .then((response) => response.payload);
 };
 
 export const fetchNewProducts = (): Promise<IProductPayload[]> => {

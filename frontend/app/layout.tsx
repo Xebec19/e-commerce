@@ -8,6 +8,8 @@ import { QueryProvider } from "../store/query.provider";
 import { Toaster } from "@/components/ui/toaster";
 import { environment } from "@/lib";
 import { ReduxProvider } from "@/store/redux.provider";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistor } from "@/store/redux.store";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,16 +28,18 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ReduxProvider>
-            <QueryProvider>
-              <>
-                <Navbar />
-                <Toaster />
-                <main className="px-4 container min-h-[60vh] my-4">
-                  {children}
-                </main>
-                <Footer />
-              </>
-            </QueryProvider>
+            <PersistGate loading={null} persistor={persistor}>
+              <QueryProvider>
+                <>
+                  <Navbar />
+                  <Toaster />
+                  <main className="px-4 container min-h-[60vh] my-4">
+                    {children}
+                  </main>
+                  <Footer />
+                </>
+              </QueryProvider>
+            </PersistGate>
           </ReduxProvider>
         </ThemeProvider>
       </body>
