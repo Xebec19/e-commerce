@@ -24,14 +24,16 @@ export default function DesktopHeader() {
   return (
     <nav className="flex justify-between p-4 items-center container">
       <span className="flex items-center space-x-4">
-        <Image
-          priority
-          src="/icons8-shopaholic-48.png"
-          width={40}
-          height={40}
-          alt={environment.SITE_NAME + ""}
-        />
-        <span className="text-lg font-bold">{environment.SITE_NAME}</span>
+        <Link href={"/"} className="flex space-x-4 items-center">
+          <Image
+            priority
+            src="/icons8-shopaholic-48.png"
+            width={40}
+            height={40}
+            alt={environment.SITE_NAME + ""}
+          />
+          <span className="text-lg font-bold">{environment.SITE_NAME}</span>
+        </Link>
         <span className="space-x-2 flex">
           {categories?.slice(0, 2).map((category: ICategoryPayload) => (
             <Link
@@ -47,9 +49,11 @@ export default function DesktopHeader() {
       <span className="space-x-2 flex">
         <ThemeToggle />
         {auth.authenticated ? (
-          <Button variant="outline" size="icon">
-            <ShoppingCart />
-          </Button>
+          <Link href={"/cart"}>
+            <Button variant="outline" size="icon">
+              <ShoppingCart />
+            </Button>
+          </Link>
         ) : (
           <Link href={"/auth/login"}>
             <Button variant="outline" size="icon">

@@ -1,4 +1,3 @@
-import { DUMMY_PRODUCT_v1, DUMMY_PRODUCT_v2 } from "@/lib";
 import ProductCard from "../product/product-card";
 import { IProductPayload } from "@/interfaces/product.interface";
 
