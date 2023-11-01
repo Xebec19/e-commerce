@@ -23,3 +23,8 @@ export interface CartIdOrProductIdOrQuantity {
   Int32: number;
   Valid: boolean;
 }
+
+export interface IUpdateCart {
+  product_id: number;
+  quantity: number;
+}
