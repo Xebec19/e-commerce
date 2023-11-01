@@ -12,6 +12,10 @@ import { Eye, EyeOff, Loader } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { loginHttp } from "@/lib/http/auth.http";
 import { useToast } from "../ui/use-toast";
+import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { updateAuth } from "@/store/auth.slice";
+import { IAuthState } from "@/interfaces/auth.interface";
 
 const validationSchema = Yup.object({
   email: Yup.string().email("Email is invalid").required("Email is required"),
@@ -28,6 +32,9 @@ export default function LoginForm() {
     "password"
   );
 
+  const router = useRouter();
+  const dispatch = useDispatch();
+
   const { toast } = useToast();
 
   const { mutate: login, isPending } = useMutation({
@@ -39,8 +46,17 @@ export default function LoginForm() {
         });
         let token = response.payload;
 
+        let authPayload: IAuthState = {
+          authenticated: true,
+          token,
+          updatedOn: new Date(),
+        };
+
+        dispatch(updateAuth(authPayload));
+
         localStorage.setItem("token", token);
-        formik.resetForm();
+        router.push("/");
+        loginFormHook.resetForm();
       } else {
         toast({
           variant: "destructive",
@@ -57,7 +73,7 @@ export default function LoginForm() {
     },
   });
 
-  const formik = useFormik({
+  const loginFormHook = useFormik({
     initialValues,
     validationSchema,
     onSubmit: (values) => {
@@ -74,19 +90,19 @@ export default function LoginForm() {
       <h1 className="text-2xl prose font-bold">Login</h1>
       <form
         className="flex flex-col space-y-4 max-w-[768px] my-4"
-        onSubmit={formik.handleSubmit}
+        onSubmit={loginFormHook.handleSubmit}
       >
         <div className="flex flex-col space-y-2">
           <Label htmlFor="email">Email</Label>
           <Input
             id="email"
             placeholder="you@domain.com"
-            onChange={formik.handleChange}
-            value={formik.values.email}
+            onChange={loginFormHook.handleChange}
+            value={loginFormHook.values.email}
           />
-          {formik.touched.email && formik.errors.email ? (
+          {loginFormHook.touched.email && loginFormHook.errors.email ? (
             <span className="text-rose-500 text-sm my-1">
-              {formik.errors.email}
+              {loginFormHook.errors.email}
             </span>
           ) : (
             <></>
@@ -99,8 +115,8 @@ export default function LoginForm() {
             <Input
               id="password"
               type={passwordType}
-              onChange={formik.handleChange}
-              value={formik.values.password}
+              onChange={loginFormHook.handleChange}
+              value={loginFormHook.values.password}
             />
             <div className="cursor-pointer absolute right-2">
               {passwordType == "password" ? (
@@ -113,9 +129,9 @@ export default function LoginForm() {
               )}
             </div>
           </div>
-          {formik.touched.password && formik.errors.password ? (
+          {loginFormHook.touched.password && loginFormHook.errors.password ? (
             <span className="text-rose-500 text-sm my-1">
-              {formik.errors.password}
+              {loginFormHook.errors.password}
             </span>
           ) : (
             <></>

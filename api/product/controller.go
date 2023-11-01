@@ -90,3 +90,29 @@ func readOneProduct(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusFound).JSON(util.SuccessResponse(product, "Product fetched"))
 }
+
+func readNewProducts(c *fiber.Ctx) error {
+	page, err := strconv.Atoi(c.Query("page", "0"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
+	}
+
+	size, err := strconv.Atoi(c.Query("size", "0"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
+	}
+
+	args := db.ReadNewProductsParams{
+		Limit:  int32(size),
+		Offset: int32(page * size),
+	}
+
+	products, err := db.DBQuery.ReadNewProducts(context.Background(), args)
+
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
+	}
+
+	c.Status(fiber.StatusOK).JSON(util.SuccessResponse(products, "Products fetched successfully"))
+	return nil
+}

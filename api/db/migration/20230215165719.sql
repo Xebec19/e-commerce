@@ -620,3 +620,5 @@ update products set status = 'inactive' where status = 'unactive';
 alter table users drop column phone;
 
 alter table users add column phone varchar(20);
+
+alter table products add column is_featured boolean default false;

@@ -1,26 +1,45 @@
-import { Menu, ShoppingCart } from "lucide-react";
+"use client";
+
+import { LogIn, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import { Sidebar } from "./sidebar";
 import { Button } from "@/components/ui/button";
 import { environment } from "@/lib";
+import Link from "next/link";
+import { RootState } from "@/store/redux.store";
+import { useSelector } from "react-redux";
 
 export default function MobileHeader() {
+  const auth = useSelector((state: RootState) => state.auth);
+
   return (
     <nav className="flex justify-between p-4 items-center">
       <Sidebar />
       <span className="flex items-center justify-center space-x-4">
-        <Image
-          priority
-          src="/icons8-shopaholic-48.png"
-          width={30}
-          height={30}
-          alt={environment.SITE_NAME + ""}
-        />
-        <span className="font-medium">{environment.SITE_NAME}</span>
+        <Link href={"/"} className="flex space-x-4 items-center">
+          <Image
+            priority
+            src="/icons8-shopaholic-48.png"
+            width={30}
+            height={30}
+            alt={environment.SITE_NAME + ""}
+          />
+          <span className="font-medium">{environment.SITE_NAME}</span>
+        </Link>
       </span>
-      <Button variant="outline">
-        <ShoppingCart />
-      </Button>
+      {auth.authenticated ? (
+        <Link href={"/cart"}>
+          <Button variant="outline" size="icon">
+            <ShoppingCart />
+          </Button>
+        </Link>
+      ) : (
+        <Link href={"/auth/login"}>
+          <Button variant="outline" size="icon">
+            <LogIn />
+          </Button>
+        </Link>
+      )}
     </nav>
   );
 }

@@ -11,7 +11,6 @@ export default function ProductImages() {
   const [selectedImage, setSelectedImage] = useState(0);
 
   function handleNext() {
-    console.log({ selectedImage });
     if (selectedImage < IMAGES.length - 1) {
       setSelectedImage(selectedImage + 1);
     } else {

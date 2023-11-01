@@ -1,11 +1,10 @@
 "use client";
 
-import ProductCard, {
-  IProductDetails,
-} from "@/components/product/product-card";
+import ProductCard from "@/components/product/product-card";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { register } from "swiper/element-bundle";
 import "swiper/swiper-bundle.css";
+import { IProductPayload } from "@/interfaces/product.interface";
 
 register();
 
@@ -34,13 +33,13 @@ const slidesProps = {
 export default function NewArrivals({
   products,
 }: {
-  products: IProductDetails[];
+  products: IProductPayload[];
 }) {
   return (
     <div className="pb-6 pt-1">
       <Swiper {...slidesProps}>
         {products.map((product, i) => (
-          <SwiperSlide key={product.name + i}>
+          <SwiperSlide key={product.product_id}>
             <ProductCard
               payload={product}
               sizes="(min-width: 768px) 33vw, 80vw"
