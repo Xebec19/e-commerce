@@ -21,7 +21,7 @@ type Querier interface {
 	GetCartDetails(ctx context.Context, userID sql.NullInt32) (GetCartDetailsRow, error)
 	GetCartID(ctx context.Context, userID sql.NullInt32) (int32, error)
 	GetCartItems(ctx context.Context, cartID sql.NullInt32) ([]GetCartItemsRow, error)
-	GetDiscount(ctx context.Context, lower string) (string, error)
+	GetDiscount(ctx context.Context, lower string) (GetDiscountRow, error)
 	GetDiscountCount(ctx context.Context, discountCode sql.NullString) (int64, error)
 	GetOrderDetails(ctx context.Context, orderID sql.NullString) ([]OrderDetail, error)
 	InsertCartItem(ctx context.Context, arg InsertCartItemParams) error

@@ -7,15 +7,22 @@ package db
 
 import (
 	"context"
+	"database/sql"
 )
 
 const getDiscount = `-- name: GetDiscount :one
-select code from public.discounts where lower(code) = lower($1) and status = 'active' and expired_on > current_timestamp
+select code, type, value from public.discounts where lower(code) = lower($1) and status = 'active' and expired_on > current_timestamp
 `
 
-func (q *Queries) GetDiscount(ctx context.Context, lower string) (string, error) {
+type GetDiscountRow struct {
+	Code  string        `json:"code"`
+	Type  NullType      `json:"type"`
+	Value sql.NullInt32 `json:"value"`
+}
+
+func (q *Queries) GetDiscount(ctx context.Context, lower string) (GetDiscountRow, error) {
 	row := q.db.QueryRowContext(ctx, getDiscount, lower)
-	var code string
-	err := row.Scan(&code)
-	return code, err
+	var i GetDiscountRow
+	err := row.Scan(&i.Code, &i.Type, &i.Value)
+	return i, err
 }
