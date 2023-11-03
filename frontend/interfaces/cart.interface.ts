@@ -28,3 +28,8 @@ export interface ItemsEntity {
   product_desc: INullableString;
   delivery_price: INullableString;
 }
+
+export interface IUpdateCart {
+  product_id: number;
+  quantity: number;
+}

@@ -1,5 +1,11 @@
-import { IProductPayload } from "@/interfaces/product.interface";
+import {
+  ICategoryResponse,
+  IProductPayload,
+  IProductResponse,
+} from "@/interfaces/product.interface";
 import { environment } from "..";
+import requestAPI from "./request";
+import { AxiosResponse } from "axios";
 
 export const fetchCategories = () => {
   var requestOptions = {
@@ -35,4 +41,24 @@ export const fetchTopProducts = () => {
   return fetch(url, requestOptions)
     .then((response) => response.json())
     .then((response) => response.payload);
+};
+
+export const getProduct = ({
+  slug,
+}: {
+  slug: string;
+}): Promise<AxiosResponse<IProductResponse>> => {
+  let url = `/product/v1/details/${slug}`;
+
+  return requestAPI.get(url);
+};
+
+export const getCategoryItems = ({
+  categoryId,
+}: {
+  categoryId: number;
+}): Promise<AxiosResponse<ICategoryResponse>> => {
+  let url = `/product/v1/category/${categoryId}?page=0&size=15`;
+
+  return requestAPI.get(url);
 };

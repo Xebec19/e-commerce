@@ -202,7 +202,7 @@ func addDiscount(c *fiber.Ctx) error {
 	discountCode, err := db.DBQuery.GetDiscount(context.Background(), req.DiscountCode)
 
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
+		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(errors.New("invalid code")))
 	}
 
 	// check if given discount has been applied previously

@@ -4,12 +4,39 @@ import { CartPayload } from "@/interfaces/cart.interface";
 import { Button } from "../ui/button";
 import CouponForm from "./coupon-form";
 import { environment } from "@/lib";
+import { X } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import { removeCoupon } from "@/lib/http/coupon.http";
+import { useToast } from "../ui/use-toast";
+import { queryClient } from "@/store/query.provider";
 
 export default function CartSummary({
   cartDetails,
 }: {
   cartDetails: CartPayload;
 }) {
+  const { toast } = useToast();
+
+  const { mutate: remove } = useMutation({
+    mutationFn: removeCoupon,
+    onSuccess: (response) => {
+      if (!response?.status) {
+        toast({
+          variant: "destructive",
+          title: "Coupon could not be removed",
+        });
+
+        return;
+      }
+
+      toast({
+        title: "Coupon removed",
+      });
+
+      queryClient.invalidateQueries({ queryKey: ["/cart"] });
+    },
+  });
+
   return (
     <div>
       <div>
@@ -33,8 +60,18 @@ export default function CartSummary({
         </div>
 
         {cartDetails?.DiscountCode && (
-          <div className="flex justify-between py-4 px-2 text-green-500 font-bold">
-            <span>{cartDetails?.DiscountCode}</span>
+          <div className="flex justify-between py-4 px-2 text-green-500 font-bold items-center">
+            <div className="flex items-center">
+              {cartDetails?.DiscountCode}&nbsp;
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-red-500"
+                onClick={() => remove()}
+              >
+                <X />
+              </Button>
+            </div>
             <span>
               {" "}
               -{" "}

@@ -199,7 +199,7 @@ func (q *Queries) ReadNewProducts(ctx context.Context, arg ReadNewProductsParams
 }
 
 const readOneProduct = `-- name: ReadOneProduct :one
-SELECT product_id, product_name, product_image, product_desc, price, delivery_price, category_id, category_name from v_products where product_id = $1
+SELECT product_id, product_name, product_image, product_desc, price, quantity, delivery_price, category_id, category_name from v_products where product_id = $1
 `
 
 type ReadOneProductRow struct {
@@ -208,6 +208,7 @@ type ReadOneProductRow struct {
 	ProductImage  sql.NullString `json:"product_image"`
 	ProductDesc   sql.NullString `json:"product_desc"`
 	Price         string         `json:"price"`
+	Quantity      sql.NullInt32  `json:"quantity"`
 	DeliveryPrice sql.NullString `json:"delivery_price"`
 	CategoryID    int32          `json:"category_id"`
 	CategoryName  string         `json:"category_name"`
@@ -222,6 +223,7 @@ func (q *Queries) ReadOneProduct(ctx context.Context, productID int32) (ReadOneP
 		&i.ProductImage,
 		&i.ProductDesc,
 		&i.Price,
+		&i.Quantity,
 		&i.DeliveryPrice,
 		&i.CategoryID,
 		&i.CategoryName,

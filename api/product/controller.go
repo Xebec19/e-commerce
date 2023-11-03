@@ -3,6 +3,7 @@ package product
 import (
 	"context"
 	"strconv"
+	"strings"
 
 	db "github.com/Xebec19/e-commerce/api/db/sqlc"
 	"github.com/Xebec19/e-commerce/api/util"
@@ -76,7 +77,9 @@ func readCategoryItems(c *fiber.Ctx) error {
 }
 
 func readOneProduct(c *fiber.Ctx) error {
-	productId, err := strconv.Atoi(c.Params("pid", "0"))
+	slug := c.Params("slug", "0")
+	entities := strings.Split(slug, "_")
+	productId, err := strconv.Atoi(entities[len(entities)-1])
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
@@ -88,7 +91,7 @@ func readOneProduct(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
 	}
 
-	return c.Status(fiber.StatusFound).JSON(util.SuccessResponse(product, "Product fetched"))
+	return c.Status(fiber.StatusOK).JSON(util.SuccessResponse(product, "Product fetched"))
 }
 
 func readNewProducts(c *fiber.Ctx) error {
@@ -114,5 +117,14 @@ func readNewProducts(c *fiber.Ctx) error {
 	}
 
 	c.Status(fiber.StatusOK).JSON(util.SuccessResponse(products, "Products fetched successfully"))
+	return nil
+}
+
+func readSimilarProduct(c *fiber.Ctx) error {
+
+	// todo add logic to fetch similar products
+
+	c.Status(fiber.StatusOK).JSON(util.SuccessResponse(nil, "Similar Products fetched"))
+
 	return nil
 }

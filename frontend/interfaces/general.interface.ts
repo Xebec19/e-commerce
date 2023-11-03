@@ -7,3 +7,8 @@ export interface INullableInt32 {
   Int32: number;
   Valid: boolean;
 }
+
+export interface IResponse {
+  message: string;
+  status: boolean;
+}
