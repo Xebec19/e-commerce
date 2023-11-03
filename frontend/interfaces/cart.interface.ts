@@ -1,12 +1,21 @@
 import { INullableInt32, INullableString } from "./general.interface";
 
 export interface ICartPayload {
-  cart: Cart;
+  message: string;
+  payload: Payload;
+  status: boolean;
+}
+export interface Payload {
+  cartPayload: CartPayload;
   items?: ItemsEntity[] | null;
 }
-export interface Cart {
-  cart_id: number;
-  discount_code: INullableString;
+export interface CartPayload {
+  CartId: number;
+  Price: number;
+  DiscountCode: string;
+  DeliveryPrice: number;
+  Discount: number;
+  Total: number;
 }
 export interface ItemsEntity {
   cd_id: number;
@@ -18,13 +27,4 @@ export interface ItemsEntity {
   price: INullableString;
   product_desc: INullableString;
   delivery_price: INullableString;
-}
-export interface CartIdOrProductIdOrQuantity {
-  Int32: number;
-  Valid: boolean;
-}
-
-export interface IUpdateCart {
-  product_id: number;
-  quantity: number;
 }

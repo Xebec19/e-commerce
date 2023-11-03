@@ -312,12 +312,14 @@ func getCartDetails(c *fiber.Ctx) error {
 		"cartPayload": struct {
 			CartId        int
 			Price         float64
+			DiscountCode  string
 			DeliveryPrice float64
 			Discount      float64
 			Total         float64
 		}{
 			CartId:        int(cartDetails.CartID),
 			Price:         subTotal,
+			DiscountCode:  cartDetails.DiscountCode.String,
 			DeliveryPrice: deliveryPriceTotal,
 			Discount:      discountTotal,
 			Total:         subTotal + deliveryPriceTotal - discountTotal,
