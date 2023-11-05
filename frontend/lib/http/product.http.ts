@@ -1,5 +1,5 @@
 import {
-  ICategoryResponse,
+  ISimilarProductResponse,
   IProductPayload,
   IProductResponse,
 } from "@/interfaces/product.interface";
@@ -53,12 +53,16 @@ export const getProduct = ({
   return requestAPI.get(url);
 };
 
-export const getCategoryItems = ({
-  categoryId,
+export const getSimilarItems = ({
+  slug,
+  page = 0,
+  size = 15,
 }: {
-  categoryId: number;
-}): Promise<AxiosResponse<ICategoryResponse>> => {
-  let url = `/product/v1/category/${categoryId}?page=0&size=15`;
+  slug: string;
+  page: number;
+  size: number;
+}): Promise<AxiosResponse<ISimilarProductResponse>> => {
+  let url = `/product/v1/similar-products/${slug}?page=${page}&size=${size}`;
 
   return requestAPI.get(url);
 };

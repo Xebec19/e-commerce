@@ -36,6 +36,6 @@ export interface IProductPayload {
   category_name: string;
 }
 
-export interface ICategoryResponse extends IResponse {
+export interface ISimilarProductResponse extends IResponse {
   payload: IProductPayload[];
 }

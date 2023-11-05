@@ -29,12 +29,14 @@ type Querier interface {
 	ReadAllCategories(ctx context.Context) ([]ReadAllCategoriesRow, error)
 	ReadAllProducts(ctx context.Context, arg ReadAllProductsParams) ([]ReadAllProductsRow, error)
 	ReadCartItemQuantity(ctx context.Context, arg ReadCartItemQuantityParams) (sql.NullInt32, error)
+	ReadCategory(ctx context.Context, productID int32) (int32, error)
 	ReadCategoryItems(ctx context.Context, arg ReadCategoryItemsParams) ([]ReadCategoryItemsRow, error)
 	ReadCategoryProduct(ctx context.Context, categoryID int32) ([]VProduct, error)
 	ReadNewProducts(ctx context.Context, arg ReadNewProductsParams) ([]ReadNewProductsRow, error)
 	ReadOneCategory(ctx context.Context, categoryID int32) (ReadOneCategoryRow, error)
 	ReadOneProduct(ctx context.Context, productID int32) (ReadOneProductRow, error)
 	ReadProductQuantity(ctx context.Context, productID int32) (sql.NullInt32, error)
+	ReadSimilarItems(ctx context.Context, arg ReadSimilarItemsParams) ([]ReadSimilarItemsRow, error)
 	ReadUser(ctx context.Context, userID int32) (ReadUserRow, error)
 	RemoveCartItem(ctx context.Context, arg RemoveCartItemParams) error
 	RemoveDiscount(ctx context.Context, arg RemoveDiscountParams) error

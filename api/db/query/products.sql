@@ -15,3 +15,9 @@ SELECT product_id, product_name, product_image, product_desc, price, quantity, d
 
 -- name: ReadProductQuantity :one
 SELECT quantity from v_products where product_id = $1;
+
+-- name: ReadCategory :one
+select category_id from v_products where product_id = $1;
+
+-- name: ReadSimilarItems :many
+SELECT product_id, product_name, product_image, quantity, product_desc from v_products where category_id = $1 and product_id != $2 limit $3 offset $4;

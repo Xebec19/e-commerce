@@ -2,6 +2,7 @@ package product
 
 import (
 	"context"
+	"errors"
 	"strconv"
 	"strings"
 
@@ -120,11 +121,53 @@ func readNewProducts(c *fiber.Ctx) error {
 	return nil
 }
 
+// @Summary: returns same category products of given slug
+//
+// @Route: /product/v1/similar-products/:slug [get]
 func readSimilarProduct(c *fiber.Ctx) error {
 
-	// todo add logic to fetch similar products
+	slug := c.Params("slug", "0")
+	entities := strings.Split(slug, "_")
+	productId, err := strconv.Atoi(entities[len(entities)-1])
 
-	c.Status(fiber.StatusOK).JSON(util.SuccessResponse(nil, "Similar Products fetched"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
+	}
+
+	page, err := strconv.Atoi(c.Query("page", "0"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
+	}
+
+	size, err := strconv.Atoi(c.Query("size", "0"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
+	}
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
+	}
+
+	categoryId, err := db.DBQuery.ReadCategory(context.Background(), int32(productId))
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(errors.New("could not find product")))
+	}
+
+	categoryParams := db.ReadSimilarItemsParams{
+		CategoryID: categoryId,
+		ProductID:  int32(productId),
+		Limit:      int32(size),
+		Offset:     int32(page * size),
+	}
+
+	categoryItems, err := db.DBQuery.ReadSimilarItems(context.Background(), categoryParams)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(errors.New("could not find category items")))
+	}
+
+	c.Status(fiber.StatusOK).JSON(util.SuccessResponse(categoryItems, "similar products fetched"))
 
 	return nil
 }

@@ -4,7 +4,7 @@ import CartActions from "@/components/product/cart-actions.component";
 import ProductCard from "@/components/product/product-card";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { getCategoryItems, getProduct } from "@/lib/http/product.http";
+import { getProduct, getSimilarItems } from "@/lib/http/product.http";
 import { Metadata } from "next";
 
 // TODO add json ld
@@ -38,8 +38,10 @@ export default async function ProductPage({
   params: { slug: string };
 }) {
   const { data: productResponse } = await getProduct({ slug: params.slug });
-  const { data: categoryResponse } = await getCategoryItems({
-    categoryId: productResponse.payload.category_id ?? 0,
+  const { data: categoryResponse } = await getSimilarItems({
+    slug: params.slug,
+    page: 0,
+    size: 15,
   });
 
   return (
