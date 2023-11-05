@@ -60,6 +60,17 @@ func (q *Queries) ReadAllProducts(ctx context.Context, arg ReadAllProductsParams
 	return items, nil
 }
 
+const readCategory = `-- name: ReadCategory :one
+select category_id from v_products where product_id = $1
+`
+
+func (q *Queries) ReadCategory(ctx context.Context, productID int32) (int32, error) {
+	row := q.db.QueryRowContext(ctx, readCategory, productID)
+	var category_id int32
+	err := row.Scan(&category_id)
+	return category_id, err
+}
+
 const readCategoryItems = `-- name: ReadCategoryItems :many
 SELECT product_id, product_name, product_image, quantity, product_desc from v_products where category_id = $1 limit $2 offset $3
 `
@@ -199,7 +210,7 @@ func (q *Queries) ReadNewProducts(ctx context.Context, arg ReadNewProductsParams
 }
 
 const readOneProduct = `-- name: ReadOneProduct :one
-SELECT product_id, product_name, product_image, product_desc, price, delivery_price, category_id, category_name from v_products where product_id = $1
+SELECT product_id, product_name, product_image, product_desc, price, quantity, delivery_price, category_id, category_name from v_products where product_id = $1
 `
 
 type ReadOneProductRow struct {
@@ -208,6 +219,7 @@ type ReadOneProductRow struct {
 	ProductImage  sql.NullString `json:"product_image"`
 	ProductDesc   sql.NullString `json:"product_desc"`
 	Price         string         `json:"price"`
+	Quantity      sql.NullInt32  `json:"quantity"`
 	DeliveryPrice sql.NullString `json:"delivery_price"`
 	CategoryID    int32          `json:"category_id"`
 	CategoryName  string         `json:"category_name"`
@@ -222,6 +234,7 @@ func (q *Queries) ReadOneProduct(ctx context.Context, productID int32) (ReadOneP
 		&i.ProductImage,
 		&i.ProductDesc,
 		&i.Price,
+		&i.Quantity,
 		&i.DeliveryPrice,
 		&i.CategoryID,
 		&i.CategoryName,
@@ -238,4 +251,57 @@ func (q *Queries) ReadProductQuantity(ctx context.Context, productID int32) (sql
 	var quantity sql.NullInt32
 	err := row.Scan(&quantity)
 	return quantity, err
+}
+
+const readSimilarItems = `-- name: ReadSimilarItems :many
+SELECT product_id, product_name, product_image, quantity, product_desc from v_products where category_id = $1 and product_id != $2 limit $3 offset $4
+`
+
+type ReadSimilarItemsParams struct {
+	CategoryID int32 `json:"category_id"`
+	ProductID  int32 `json:"product_id"`
+	Limit      int32 `json:"limit"`
+	Offset     int32 `json:"offset"`
+}
+
+type ReadSimilarItemsRow struct {
+	ProductID    int32          `json:"product_id"`
+	ProductName  string         `json:"product_name"`
+	ProductImage sql.NullString `json:"product_image"`
+	Quantity     sql.NullInt32  `json:"quantity"`
+	ProductDesc  sql.NullString `json:"product_desc"`
+}
+
+func (q *Queries) ReadSimilarItems(ctx context.Context, arg ReadSimilarItemsParams) ([]ReadSimilarItemsRow, error) {
+	rows, err := q.db.QueryContext(ctx, readSimilarItems,
+		arg.CategoryID,
+		arg.ProductID,
+		arg.Limit,
+		arg.Offset,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ReadSimilarItemsRow
+	for rows.Next() {
+		var i ReadSimilarItemsRow
+		if err := rows.Scan(
+			&i.ProductID,
+			&i.ProductName,
+			&i.ProductImage,
+			&i.Quantity,
+			&i.ProductDesc,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }

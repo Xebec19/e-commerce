@@ -6,19 +6,51 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import * as Yup from "yup";
+import { useToast } from "../ui/use-toast";
+import { useMutation } from "@tanstack/react-query";
+import { addCoupon } from "@/lib/http/coupon.http";
+import { queryClient } from "@/store/query.provider";
 
 const validationSchema = Yup.object({
   couponCode: Yup.string().required("Invalid Coupon Code"),
 });
 
 export default function CouponForm() {
+  const { toast } = useToast();
+
+  const { mutate: apply } = useMutation({
+    mutationFn: addCoupon,
+    onSuccess: (response) => {
+      if (!response?.status) {
+        toast({
+          variant: "destructive",
+          title: "Coupon could not be added",
+        });
+        return;
+      }
+
+      toast({
+        title: "Coupon added successfully",
+      });
+
+      queryClient.invalidateQueries({ queryKey: ["/cart"] });
+    },
+    onError: (error) => {
+      toast({
+        variant: "destructive",
+        title: error.message,
+      });
+    },
+  });
+
   const formik = useFormik({
     initialValues: {
       couponCode: "",
     },
     validationSchema,
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: (values, { resetForm }) => {
+      apply({ code: values.couponCode });
+      resetForm();
     },
   });
 

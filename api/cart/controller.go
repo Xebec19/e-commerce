@@ -4,6 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"strconv"
+	"strings"
 
 	db "github.com/Xebec19/e-commerce/api/db/sqlc"
 	"github.com/Xebec19/e-commerce/api/util"
@@ -200,11 +202,11 @@ func addDiscount(c *fiber.Ctx) error {
 	discountCode, err := db.DBQuery.GetDiscount(context.Background(), req.DiscountCode)
 
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
+		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(errors.New("invalid code")))
 	}
 
 	// check if given discount has been applied previously
-	discountCount, err := db.DBQuery.GetDiscountCount(context.Background(), sql.NullString{String: discountCode, Valid: true})
+	discountCount, err := db.DBQuery.GetDiscountCount(context.Background(), sql.NullString{String: discountCode.Code, Valid: true})
 
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
@@ -222,7 +224,7 @@ func addDiscount(c *fiber.Ctx) error {
 	}
 
 	addDiscountParams := db.AddDiscountParams{
-		DiscountCode: sql.NullString{String: discountCode, Valid: true},
+		DiscountCode: sql.NullString{String: discountCode.Code, Valid: true},
 		CartID:       cartId,
 	}
 
@@ -274,10 +276,56 @@ func getCartDetails(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
 	}
 
-	result := make(map[string]interface{})
+	subTotal := 0.0
+	deliveryPriceTotal := 0.0
+	discountTotal := 0.0
 
-	result["cart"] = cartDetails
-	result["items"] = cartItems
+	for _, item := range cartItems {
+		price, err := strconv.ParseFloat(item.Price.String, 64)
+		if err != nil {
+			c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
+			return err
+		}
+
+		deliveryPrice, err := strconv.ParseFloat(item.Price.String, 64)
+		if err != nil {
+			c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
+			return err
+		}
+
+		subTotal += float64(item.Quantity.Int32) * price
+		deliveryPriceTotal += deliveryPrice
+	}
+
+	if cartDetails.DiscountCode.String != "" {
+		discount, _ := db.DBQuery.GetDiscount(context.Background(), strings.ToLower(cartDetails.DiscountCode.String))
+
+		if discount.Type.Type == "voucher" {
+			discountTotal = float64(discount.Value.Int32)
+		} else {
+			total := subTotal + deliveryPriceTotal
+			discountTotal = (float64(discount.Value.Int32) * 100) / total
+		}
+	}
+
+	result := map[string]interface{}{
+		"cartPayload": struct {
+			CartId        int
+			Price         float64
+			DiscountCode  string
+			DeliveryPrice float64
+			Discount      float64
+			Total         float64
+		}{
+			CartId:        int(cartDetails.CartID),
+			Price:         subTotal,
+			DiscountCode:  cartDetails.DiscountCode.String,
+			DeliveryPrice: deliveryPriceTotal,
+			Discount:      discountTotal,
+			Total:         subTotal + deliveryPriceTotal - discountTotal,
+		},
+		"items": cartItems,
+	}
 
 	c.Status(fiber.StatusOK).JSON(util.SuccessResponse(result, "Cart Fetched"))
 	return nil

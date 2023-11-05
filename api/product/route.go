@@ -8,5 +8,6 @@ func SetRoute(app *fiber.App) {
 	router.Get("/v1/category-list", readCategories)
 	router.Get("/v1/new-products", readNewProducts)
 	router.Get("/v1/category/:cid", readCategoryItems)
-	router.Get("/v1/details/:pid", readOneProduct)
+	router.Get("/v1/details/:slug", readOneProduct)
+	router.Get("/v1/similar-products/:slug", readSimilarProduct)
 }

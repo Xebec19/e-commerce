@@ -1,42 +1,26 @@
-import ProductDescription from "@/components/grid/product-description";
+import ProductImages from "@/components/carousel/product-images";
+import PriceLabel from "@/components/labels/price-label";
+import CartActions from "@/components/product/cart-actions.component";
 import ProductCard from "@/components/product/product-card";
-import { DUMMY_PRODUCT_v1, DUMMY_PRODUCT_v2 } from "@/lib";
+import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { getProduct, getSimilarItems } from "@/lib/http/product.http";
 import { Metadata } from "next";
 
 // TODO add json ld
 
-const HIDDEN_PRODUCT_TAG = "hidden";
-
 export async function generateMetadata({
   params,
 }: {
-  params: { handle: string };
+  params: { slug: string };
 }): Promise<Metadata> {
-  // const product = await getProduct(params.handle);
+  const { data: product } = await getProduct({ slug: params.slug });
 
-  // if (!product) return notFound();
-  const product = {
-    featuredImage: {
-      url: "/dummy-t-shirt.jpg",
-      width: "400px",
-      height: "400px",
-      altText: "Product Name",
-    },
-    tags: ["awesome", "great"],
-    title: "Product Name",
-    seo: {
-      title: "Product Name",
-      description: "Some description",
-    },
-    description: "Some awesome product description",
-  };
-
-  const { url, width, height, altText: alt } = product.featuredImage || {};
-  const indexable = !product.tags.includes(HIDDEN_PRODUCT_TAG);
+  const indexable = product.payload.quantity.Int32 > 0;
 
   return {
-    title: product.seo.title || product.title,
-    description: product.seo.description || product.description,
+    title: product.payload.product_name,
+    description: product.payload.product_desc.String,
     robots: {
       index: indexable,
       follow: indexable,
@@ -45,40 +29,60 @@ export async function generateMetadata({
         follow: indexable,
       },
     },
-    openGraph: url
-      ? {
-          images: [
-            {
-              url,
-              width,
-              height,
-              alt,
-            },
-          ],
-        }
-      : null,
   };
 }
 
-const SIMILAR_PRODUCTS = new Array(15).fill(DUMMY_PRODUCT_v2);
+export default async function ProductPage({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  const { data: productResponse } = await getProduct({ slug: params.slug });
+  const { data: categoryResponse } = await getSimilarItems({
+    slug: params.slug,
+    page: 0,
+    size: 15,
+  });
 
-export default function ProductPage() {
   return (
     <>
-      <ProductDescription />
+      <article role="product description">
+        <Card className="grid grid-cols-1 md:grid-cols-3 p-4 dark:bg-black">
+          <div className="h-[400px] col-span-2">
+            <ProductImages />
+          </div>
+
+          <div>
+            <h1 className="text-5xl font-medium mb-2">
+              {productResponse.payload.product_name}
+            </h1>
+            <div className="flex w-full">
+              <PriceLabel payload={productResponse.payload} />
+            </div>
+            <div className="py-4">
+              <Separator />
+            </div>
+            <p className="py-4 prose">
+              {productResponse.payload.product_desc.String}
+            </p>
+
+            <CartActions product={productResponse.payload} />
+          </div>
+        </Card>
+      </article>
       <div className="py-4">
         <h3 className="prose text-xl font-bold mb-2">Similar Products</h3>
         <section
           role="similar products"
           className="flex space-x-2 overflow-x-auto w-full"
         >
-          {SIMILAR_PRODUCTS.map((product, index) => (
+          {categoryResponse.payload.map((product, index) => (
             <div
-              key={product.url + index}
+              key={product.product_id}
               className="aspect-square w-[80vw] md:w-[33vw] h-[400px] border"
             >
               <ProductCard
-                payload={DUMMY_PRODUCT_v1}
+                payload={product}
                 sizes="(min-width: 768px) 33vw, 80vw"
               />
             </div>
