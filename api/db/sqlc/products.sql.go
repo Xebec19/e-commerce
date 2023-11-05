@@ -254,7 +254,7 @@ func (q *Queries) ReadProductQuantity(ctx context.Context, productID int32) (sql
 }
 
 const readSimilarItems = `-- name: ReadSimilarItems :many
-SELECT product_id, product_name, product_image, quantity, product_desc from v_products where category_id = $1 and product_id != $2 limit $3 offset $4
+SELECT product_id, product_name, product_image, quantity, product_desc, price, delivery_price from v_products where category_id = $1 and product_id != $2 limit $3 offset $4
 `
 
 type ReadSimilarItemsParams struct {
@@ -265,11 +265,13 @@ type ReadSimilarItemsParams struct {
 }
 
 type ReadSimilarItemsRow struct {
-	ProductID    int32          `json:"product_id"`
-	ProductName  string         `json:"product_name"`
-	ProductImage sql.NullString `json:"product_image"`
-	Quantity     sql.NullInt32  `json:"quantity"`
-	ProductDesc  sql.NullString `json:"product_desc"`
+	ProductID     int32          `json:"product_id"`
+	ProductName   string         `json:"product_name"`
+	ProductImage  sql.NullString `json:"product_image"`
+	Quantity      sql.NullInt32  `json:"quantity"`
+	ProductDesc   sql.NullString `json:"product_desc"`
+	Price         string         `json:"price"`
+	DeliveryPrice sql.NullString `json:"delivery_price"`
 }
 
 func (q *Queries) ReadSimilarItems(ctx context.Context, arg ReadSimilarItemsParams) ([]ReadSimilarItemsRow, error) {
@@ -292,6 +294,8 @@ func (q *Queries) ReadSimilarItems(ctx context.Context, arg ReadSimilarItemsPara
 			&i.ProductImage,
 			&i.Quantity,
 			&i.ProductDesc,
+			&i.Price,
+			&i.DeliveryPrice,
 		); err != nil {
 			return nil, err
 		}

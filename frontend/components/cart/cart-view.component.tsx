@@ -13,8 +13,8 @@ export default function CartViewComponent() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
-      <CartListEdit items={cartPayload?.data?.payload?.items} />
-      <CartSummary cartDetails={cartPayload?.data?.payload?.cartPayload} />
+      <CartListEdit items={cartPayload?.data.payload.items!} />
+      <CartSummary cartDetails={cartPayload?.data?.payload?.cartPayload!} />
     </div>
   );
 }

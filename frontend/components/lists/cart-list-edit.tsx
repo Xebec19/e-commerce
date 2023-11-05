@@ -15,6 +15,7 @@ import {
 } from "@/lib/http/cart.http";
 import { useToast } from "../ui/use-toast";
 import { queryClient } from "@/store/query.provider";
+import Link from "next/link";
 
 const RemoveFromCartIcon = ({ productId }: { productId: number }) => {
   const { toast } = useToast();
@@ -122,7 +123,11 @@ function CartItem({ item }: { item: ItemsEntity }) {
       </div>
 
       <div className="flex flex-col flex-1 space-y-2">
-        <span className="text-xl">{item.product_name.String}</span>
+        <Link
+          href={`/product/${item.product_name.String}_${item.product_id.Int32}`}
+        >
+          <span className="text-xl">{item.product_name.String}</span>
+        </Link>
         <span className="text-md text-slate">
           {ellipsis(item.product_desc.String, 100)}
         </span>
