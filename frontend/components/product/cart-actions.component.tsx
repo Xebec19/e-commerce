@@ -2,7 +2,7 @@
 
 import { IProductPayload } from "@/interfaces/product.interface";
 import { Button } from "../ui/button";
-import { Loader2, Plus, ShoppingCart, Trash, X } from "lucide-react";
+import { Loader2, Minus, Plus, ShoppingCart, Trash } from "lucide-react";
 import { errorMessage } from "@/lib/messages";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
@@ -78,7 +78,7 @@ export default function CartActions({ product }: { product: IProductPayload }) {
   };
 
   const decrementQuantity = () => {
-    if (quantity === 0) {
+    if (quantity === 1) {
       showError(errorMessage.BelowQuantityLimit);
       return;
     } else {
@@ -105,7 +105,7 @@ export default function CartActions({ product }: { product: IProductPayload }) {
           </Button>
           <span className="text-2xl prose">{quantity}</span>
           <Button size={"icon"} variant={"ghost"} onClick={decrementQuantity}>
-            <X />
+            <Minus />
           </Button>
         </div>
         {addItemPending ? (

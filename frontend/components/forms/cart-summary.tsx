@@ -9,6 +9,7 @@ import { useMutation } from "@tanstack/react-query";
 import { removeCoupon } from "@/lib/http/coupon.http";
 import { useToast } from "../ui/use-toast";
 import { queryClient } from "@/store/query.provider";
+import { useRouter } from "next/navigation";
 
 export default function CartSummary({
   cartDetails,
@@ -16,6 +17,8 @@ export default function CartSummary({
   cartDetails: CartPayload;
 }) {
   const { toast } = useToast();
+
+  const router = useRouter();
 
   const { mutate: remove } = useMutation({
     mutationFn: removeCoupon,
@@ -90,7 +93,13 @@ export default function CartSummary({
         </div>
       </div>
       <div className="text-right">
-        <Button className="uppercase"> Proceed to Checkout</Button>
+        <Button
+          className="uppercase"
+          onClick={() => router.push("/shipping")}
+          disabled={cartDetails?.Total <= 0}
+        >
+          Proceed to Checkout
+        </Button>
       </div>
     </div>
   );

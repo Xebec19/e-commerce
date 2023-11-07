@@ -322,7 +322,7 @@ func getCartDetails(c *fiber.Ctx) error {
 			DiscountCode:  cartDetails.DiscountCode.String,
 			DeliveryPrice: deliveryPriceTotal,
 			Discount:      discountTotal,
-			Total:         subTotal + deliveryPriceTotal - discountTotal,
+			Total:         max(subTotal+deliveryPriceTotal-discountTotal, 0),
 		},
 		"items": cartItems,
 	}
