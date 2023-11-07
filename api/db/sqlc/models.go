@@ -180,6 +180,16 @@ type Product struct {
 	IsFeatured    sql.NullBool   `json:"is_featured"`
 }
 
+type ProductImage struct {
+	ImgID     uuid.UUID     `json:"img_id"`
+	ProductID sql.NullInt32 `json:"product_id"`
+	ImageUrl  string        `json:"image_url"`
+	CreatedOn sql.NullTime  `json:"created_on"`
+	UpdatedOn sql.NullTime  `json:"updated_on"`
+	UpdatedBy sql.NullInt32 `json:"updated_by"`
+	Status    NullStatus    `json:"status"`
+}
+
 type Token struct {
 	TokenID    int32         `json:"token_id"`
 	UserID     sql.NullInt32 `json:"user_id"`

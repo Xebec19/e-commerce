@@ -24,6 +24,7 @@ type Querier interface {
 	GetDiscount(ctx context.Context, lower string) (GetDiscountRow, error)
 	GetDiscountCount(ctx context.Context, discountCode sql.NullString) (int64, error)
 	GetOrderDetails(ctx context.Context, orderID sql.NullString) ([]OrderDetail, error)
+	GetProductImages(ctx context.Context, productID sql.NullInt32) ([]GetProductImagesRow, error)
 	InsertCartItem(ctx context.Context, arg InsertCartItemParams) error
 	ListOrder(ctx context.Context, userID int32) ([]ListOrderRow, error)
 	ReadAllCategories(ctx context.Context) ([]ReadAllCategoriesRow, error)

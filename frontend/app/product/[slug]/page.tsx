@@ -4,9 +4,12 @@ import CartActions from "@/components/product/cart-actions.component";
 import ProductCard from "@/components/product/product-card";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { getProduct, getSimilarItems } from "@/lib/http/product.http";
+import {
+  getProduct,
+  getProductImages,
+  getSimilarItems,
+} from "@/lib/http/product.http";
 import { Metadata } from "next";
-
 // TODO add json ld
 
 export async function generateMetadata({
@@ -44,12 +47,16 @@ export default async function ProductPage({
     size: 15,
   });
 
+  const { data: productImagesResponse } = await getProductImages({
+    slug: params.slug,
+  });
+
   return (
     <>
       <article role="product description">
         <Card className="grid grid-cols-1 md:grid-cols-3 p-4 dark:bg-black">
           <div className="h-[400px] col-span-2">
-            <ProductImages />
+            <ProductImages images={productImagesResponse.payload} />
           </div>
 
           <div>

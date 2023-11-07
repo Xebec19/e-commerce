@@ -7,7 +7,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import Link from "next/link";
-import { Eye, EyeOff, Loader } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { registerHttp } from "@/lib/http/auth.http";
 import { useMutation } from "@tanstack/react-query";
@@ -225,7 +225,7 @@ export default function LoginForm() {
         <div className="flex justify-end">
           {isPending ? (
             <Button disabled size={"icon"}>
-              <Loader size={20} />
+              <Loader2 size={20} className="animate-spin" />
             </Button>
           ) : (
             <Button type="submit" className="uppercase">

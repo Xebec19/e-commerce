@@ -2,6 +2,7 @@ package product
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"strconv"
 	"strings"
@@ -168,6 +169,31 @@ func readSimilarProduct(c *fiber.Ctx) error {
 	}
 
 	c.Status(fiber.StatusOK).JSON(util.SuccessResponse(categoryItems, "similar products fetched"))
+
+	return nil
+}
+
+// @Summary: returns array of product image of given product
+//
+// @Route /product/v1/product-images/:slug [get]
+func readProductImages(c *fiber.Ctx) error {
+	slug := c.Params("slug", "0")
+	entities := strings.Split(slug, "_")
+	productId, err := strconv.Atoi(entities[len(entities)-1])
+
+	if err != nil {
+		c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
+		return err
+	}
+
+	productImages, err := db.DBQuery.GetProductImages(c.Context(), sql.NullInt32{Int32: int32(productId), Valid: true})
+
+	if err != nil {
+		c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(errors.New("could not fetch product images")))
+		return err
+	}
+
+	c.Status(fiber.StatusOK).JSON(util.SuccessResponse(productImages, "product images fetched"))
 
 	return nil
 }

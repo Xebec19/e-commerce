@@ -624,3 +624,13 @@ alter table users add column phone varchar(20);
 alter table products add column is_featured boolean default false;
 
 update discounts set expired_on = current_timestamp + interval '1 year';
+
+create table product_images (
+    img_id uuid default uuid_generate_v4() primary key,
+    product_id int references products(product_id),
+    image_url text not null,
+    created_on timestamp default current_timestamp,
+    updated_on timestamp default current_timestamp,
+    updated_by int references users(user_id),
+    status status default 'active'
+);

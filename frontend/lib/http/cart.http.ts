@@ -1,7 +1,8 @@
-import { IUpdateCart } from "@/interfaces/cart.interface";
+import { ICartPayload, IUpdateCart } from "@/interfaces/cart.interface";
 import requestAPI from "./request";
+import { AxiosResponse } from "axios";
 
-export function getCart() {
+export function getCart(): Promise<AxiosResponse<ICartPayload>> {
   return requestAPI.get("/cart/cart-details");
 }
 
