@@ -2,6 +2,7 @@ import {
   ISimilarProductResponse,
   IProductPayload,
   IProductResponse,
+  IProductImagesResponse,
 } from "@/interfaces/product.interface";
 import { environment } from "..";
 import requestAPI from "./request";
@@ -63,6 +64,16 @@ export const getSimilarItems = ({
   size: number;
 }): Promise<AxiosResponse<ISimilarProductResponse>> => {
   let url = `/product/v1/similar-products/${slug}?page=${page}&size=${size}`;
+
+  return requestAPI.get(url);
+};
+
+export const getProductImages = ({
+  slug,
+}: {
+  slug: string;
+}): Promise<AxiosResponse<IProductImagesResponse>> => {
+  let url = `/product/v1/product-images/${slug}`;
 
   return requestAPI.get(url);
 };

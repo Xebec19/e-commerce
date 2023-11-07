@@ -4,14 +4,17 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { Separator } from "../ui/separator";
 import { useState } from "react";
+import { IProductImagePayload } from "@/interfaces/product.interface";
 
-const IMAGES = ["/dummy-t-shirt.jpg", "/dummy-pant.jpg"];
-
-export default function ProductImages() {
+export default function ProductImages({
+  images,
+}: {
+  images: IProductImagePayload[];
+}) {
   const [selectedImage, setSelectedImage] = useState(0);
 
   function handleNext() {
-    if (selectedImage < IMAGES.length - 1) {
+    if (selectedImage < images.length - 1) {
       setSelectedImage(selectedImage + 1);
     } else {
       setSelectedImage(0);
@@ -22,7 +25,7 @@ export default function ProductImages() {
     if (selectedImage > 0) {
       setSelectedImage(selectedImage - 1);
     } else {
-      setSelectedImage(IMAGES.length - 1);
+      setSelectedImage(images.length - 1);
     }
   }
 
@@ -33,7 +36,7 @@ export default function ProductImages() {
           <Image
             fill
             className="object-contain h-full w-full transition-all ease-in-out"
-            src={IMAGES[selectedImage]}
+            src={images[selectedImage].image_url}
             sizes={"(min-width: 768px) 40vw, 100vw"}
             alt="dummy-t-shirt.jpg"
           />

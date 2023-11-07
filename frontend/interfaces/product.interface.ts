@@ -39,3 +39,13 @@ export interface IProductPayload {
 export interface ISimilarProductResponse extends IResponse {
   payload: IProductPayload[];
 }
+
+export interface IProductImagePayload {
+  img_id: string;
+  product_id: INullableInt32;
+  image_url: string;
+}
+
+export interface IProductImagesResponse extends IResponse {
+  payload: IProductImagePayload[];
+}
