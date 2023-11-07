@@ -9,6 +9,13 @@ import { Select, SelectContent, SelectItem, SelectValue } from "../ui/select";
 import { SelectTrigger } from "@radix-ui/react-select";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/redux.store";
+import {
+  updateBillingAddress,
+  updateShippingAddress,
+} from "@/store/checkout.slice";
+import { useRouter } from "next/navigation";
 
 const validationSchema = Yup.object({
   firstName: Yup.string().required("Required"),
@@ -19,21 +26,16 @@ const validationSchema = Yup.object({
   zip: Yup.number().required("Required"),
 });
 
-const initialValues = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  address: "",
-  state: "New Delhi",
-  zip: "",
-};
-
 export default function BillingForm() {
+  const dispatch = useDispatch();
+  const { billingAddress } = useSelector((state: RootState) => state.checkout);
+  const router = useRouter();
+
   const formik = useFormik({
-    initialValues,
+    initialValues: { ...billingAddress },
     validationSchema,
     onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+      dispatch({ type: updateBillingAddress, payload: values });
     },
   });
 
@@ -153,18 +155,6 @@ export default function BillingForm() {
           ) : (
             <></>
           )}
-        </div>
-
-        <div className="md:col-span-2 py-4">
-          <div className="flex items-center space-x-2">
-            <Checkbox id="sameBillingAddress" />
-            <Label
-              htmlFor="sameBillingAddress"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              Shipping address is the same as my billing address
-            </Label>
-          </div>
         </div>
 
         <div className="md:col-span-2">

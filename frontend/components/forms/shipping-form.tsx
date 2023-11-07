@@ -8,6 +8,11 @@ import { Textarea } from "../ui/textarea";
 import { Select, SelectContent, SelectItem, SelectValue } from "../ui/select";
 import { SelectTrigger } from "@radix-ui/react-select";
 import { Button } from "../ui/button";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/redux.store";
+import { updateShippingAddress } from "@/store/checkout.slice";
+import { Checkbox } from "../ui/checkbox";
+import { useRouter } from "next/navigation";
 
 const validationSchema = Yup.object({
   firstName: Yup.string().required("Required"),
@@ -19,24 +24,20 @@ const validationSchema = Yup.object({
   address: Yup.string().required("Required"),
   state: Yup.string().required("Required"),
   zip: Yup.number().required("Required"),
+  isSameAddressForBilling: Yup.boolean().default(false),
 });
 
-const initialValues = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  phoneNum: "",
-  address: "",
-  state: "New Delhi",
-  zip: "",
-};
-
 export default function ShippingForm() {
+  const { shippingAddress } = useSelector((state: RootState) => state.checkout);
+  const dispatch = useDispatch();
+  const router = useRouter();
+
   const formik = useFormik({
-    initialValues,
+    initialValues: { ...shippingAddress },
     validationSchema,
     onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+      dispatch({ type: updateShippingAddress, payload: values });
+      router.push("/billing");
     },
   });
 
@@ -175,9 +176,23 @@ export default function ShippingForm() {
           )}
         </div>
 
+        <div className="flex space-x-2 items-center">
+          <Checkbox
+            id="isSameAddressForBilling"
+            name="isSameAddressForBilling"
+            checked={formik.values.isSameAddressForBilling}
+            onCheckedChange={(value) =>
+              formik.setFieldValue("isSameAddressForBilling", value)
+            }
+          />
+          <Label htmlFor="isSameAddressForBilling">
+            Is same address for billing ?
+          </Label>
+        </div>
+
         <div className="md:col-span-2">
           <Button type="submit" className="w-full uppercase">
-            Continue to Payment
+            Continue to Billing
           </Button>
         </div>
       </form>

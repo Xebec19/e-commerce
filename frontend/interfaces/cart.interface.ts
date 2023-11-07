@@ -1,11 +1,13 @@
-import { INullableInt32, INullableString } from "./general.interface";
+import {
+  INullableInt32,
+  INullableString,
+  IResponse,
+} from "./general.interface";
 
-export interface ICartPayload {
-  message: string;
-  payload: Payload;
-  status: boolean;
+export interface ICartResponse extends IResponse {
+  payload: ICartPayload;
 }
-export interface Payload {
+export interface ICartPayload {
   cartPayload: CartPayload;
   items?: ItemsEntity[] | null;
 }
