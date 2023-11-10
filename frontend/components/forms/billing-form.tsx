@@ -16,6 +16,7 @@ import {
   updateShippingAddress,
 } from "@/store/checkout.slice";
 import { useRouter } from "next/navigation";
+import useCheckout from "@/hooks/use-checkout";
 
 const validationSchema = Yup.object({
   firstName: Yup.string().required("Required"),
@@ -30,6 +31,7 @@ export default function BillingForm() {
   const dispatch = useDispatch();
   const { billingAddress } = useSelector((state: RootState) => state.checkout);
   const router = useRouter();
+  const handleCheckout = useCheckout();
 
   const formik = useFormik({
     initialValues: { ...billingAddress },
@@ -158,7 +160,11 @@ export default function BillingForm() {
         </div>
 
         <div className="md:col-span-2">
-          <Button type="submit" className="w-full uppercase">
+          <Button
+            type="submit"
+            className="w-full uppercase"
+            onClick={handleCheckout}
+          >
             Checkout
           </Button>
         </div>
