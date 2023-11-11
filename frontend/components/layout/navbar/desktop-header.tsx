@@ -4,7 +4,14 @@ import SearchInput from "@/components/search/search-input";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { environment } from "@/lib";
-import { LogIn, ShoppingCart } from "lucide-react";
+import {
+  LogIn,
+  MoreHorizontal,
+  Package2,
+  Power,
+  ShoppingCart,
+  User,
+} from "lucide-react";
 import Image from "next/image";
 import { fetchCategories } from "@/lib/http/product.http";
 import Link from "next/link";
@@ -12,12 +19,22 @@ import { ICategoryPayload } from "@/interfaces/product.interface";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/redux.store";
 import { useQuery } from "@tanstack/react-query";
+import {
+  DropdownMenuGroup,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import useLogout from "@/hooks/use-logout";
 
 export default function DesktopHeader() {
   const { data: categories } = useQuery({
     queryKey: ["categories"],
     queryFn: fetchCategories,
   });
+
+  const handleLogout = useLogout();
 
   const auth = useSelector((state: RootState) => state.auth);
 
@@ -60,6 +77,33 @@ export default function DesktopHeader() {
               <LogIn />
             </Button>
           </Link>
+        )}
+        {auth.authenticated && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="icon">
+                <MoreHorizontal />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              <DropdownMenuGroup>
+                <DropdownMenuItem className="space-x-2">
+                  <User className="h-4 w-4" />
+                  <span>View Profile</span>
+                </DropdownMenuItem>
+
+                <DropdownMenuItem className="space-x-2">
+                  <Package2 className="h-4 w-4" />
+                  <span>View Orders</span>
+                </DropdownMenuItem>
+
+                <DropdownMenuItem className="space-x-2" onClick={handleLogout}>
+                  <Power className="h-4 w-4" />
+                  <span>Logout</span>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
         )}
       </span>
     </nav>

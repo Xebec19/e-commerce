@@ -1,19 +1,23 @@
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 import {
   Sheet,
-  SheetClose,
   SheetContent,
-  SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
+import useLogout from "@/hooks/use-logout";
+import { RootState } from "@/store/redux.store";
+import { Menu, Power } from "lucide-react";
+import { useSelector } from "react-redux";
 
 export function Sidebar() {
+  const handleLogout = useLogout();
+  const auth = useSelector((state: RootState) => state.auth);
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -25,12 +29,26 @@ export function Sidebar() {
         <SheetHeader>
           <SheetTitle>Menu</SheetTitle>
         </SheetHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <p>Link1</p>
+        <div className="flex flex-col justify-between items-stretch h-full">
+          <Separator className="my-2" />
+          <div className="space-y-2 flex-1 divide-y">
+            <div className="items-center">
+              <p>Link1</p>
+            </div>
+            <div className="items-center pt-2">
+              <p>Link2</p>
+            </div>
+
+            {auth.authenticated && (
+              <div className="flex items-center pt-2" onClick={handleLogout}>
+                <Power className="h-4 w-4 mr-2" />
+                <p>Logout</p>
+              </div>
+            )}
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <p>Link2</p>
+          <Separator />
+          <div className="flex py-2">
+            <span>Terms & conditions</span>
           </div>
         </div>
       </SheetContent>
