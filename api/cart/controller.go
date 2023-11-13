@@ -18,6 +18,7 @@ type updateCartSchema struct {
 }
 
 // @Summary	Add a product to user's cart
+//
 // @Router		/cart/add-product [post]
 func addProductIntoCart(c *fiber.Ctx) error {
 	req := new(updateCartSchema)
