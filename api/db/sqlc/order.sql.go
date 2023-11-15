@@ -10,6 +10,77 @@ import (
 	"database/sql"
 )
 
+const createOrder = `-- name: CreateOrder :one
+INSERT INTO public.orders
+(order_id, user_id, price, delivery_price, total, created_on, email, address, discount_amount, discount_code)
+VALUES($1, $2, $3, $4, $5, now(), $6, $7, $8, $9) RETURNING order_id, user_id, price, delivery_price, total, created_on, email, address, discount_amount, discount_code
+`
+
+type CreateOrderParams struct {
+	OrderID        string         `json:"order_id"`
+	UserID         int32          `json:"user_id"`
+	Price          string         `json:"price"`
+	DeliveryPrice  string         `json:"delivery_price"`
+	Total          string         `json:"total"`
+	Email          string         `json:"email"`
+	Address        string         `json:"address"`
+	DiscountAmount sql.NullInt32  `json:"discount_amount"`
+	DiscountCode   sql.NullString `json:"discount_code"`
+}
+
+func (q *Queries) CreateOrder(ctx context.Context, arg CreateOrderParams) (Order, error) {
+	row := q.db.QueryRowContext(ctx, createOrder,
+		arg.OrderID,
+		arg.UserID,
+		arg.Price,
+		arg.DeliveryPrice,
+		arg.Total,
+		arg.Email,
+		arg.Address,
+		arg.DiscountAmount,
+		arg.DiscountCode,
+	)
+	var i Order
+	err := row.Scan(
+		&i.OrderID,
+		&i.UserID,
+		&i.Price,
+		&i.DeliveryPrice,
+		&i.Total,
+		&i.CreatedOn,
+		&i.Email,
+		&i.Address,
+		&i.DiscountAmount,
+		&i.DiscountCode,
+	)
+	return i, err
+}
+
+const createOrderDetails = `-- name: CreateOrderDetails :exec
+INSERT INTO public.order_details
+(order_id, product_id, product_price, quantity, delivery_price)
+VALUES($1, $2, $3, $4, $5)
+`
+
+type CreateOrderDetailsParams struct {
+	OrderID       sql.NullString `json:"order_id"`
+	ProductID     sql.NullInt32  `json:"product_id"`
+	ProductPrice  sql.NullString `json:"product_price"`
+	Quantity      sql.NullInt32  `json:"quantity"`
+	DeliveryPrice sql.NullString `json:"delivery_price"`
+}
+
+func (q *Queries) CreateOrderDetails(ctx context.Context, arg CreateOrderDetailsParams) error {
+	_, err := q.db.ExecContext(ctx, createOrderDetails,
+		arg.OrderID,
+		arg.ProductID,
+		arg.ProductPrice,
+		arg.Quantity,
+		arg.DeliveryPrice,
+	)
+	return err
+}
+
 const getDiscountCount = `-- name: GetDiscountCount :one
 select count(order_id) from orders where discount_code = $1
 `

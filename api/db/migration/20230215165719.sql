@@ -634,3 +634,6 @@ create table product_images (
     updated_by int references users(user_id),
     status status default 'active'
 );
+
+create type orderStatus as enum ('pending', 'cancelled', 'confirmed', 'delivered');
+alter table orders add column status orderStatus default 'pending';
