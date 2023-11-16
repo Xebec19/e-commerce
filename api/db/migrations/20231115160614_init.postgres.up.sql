@@ -1,3 +1,14 @@
+-- cart_details (done)
+-- carts (done)
+-- categories (done)
+-- countries (done)
+-- discounts (done)
+-- order_details
+-- orders
+-- product_images (done)
+-- products (done)
+-- users (done)
+
 create type enum_status as enum ('active','inactive');
 
 create type enum_access as enum('user','admin');
@@ -59,3 +70,42 @@ create table product_images (
     updated_by int references users(user_id),
     status status default 'active'
 );
+
+create table countries (
+    country_id uuid default uuid_generate_v4() primary key,
+    country_name varchar(200) not null,
+    currency varchar(200) not null,
+    currency_symbol varchar(5) not null
+);
+
+insert into countries (country_name, currency, currency_symbol) values('india','rupees','₹');
+
+create table carts (
+    cart_id uuid default uuid_generate_v4() primary key,
+    user_id uuid references users(user_id),
+    discount_code varchar(20) references discounts(discount_id),
+    created_on timestamp with time zone default current_timestamp,
+    updated_on timestamp with time zone default current_timestamp,
+);
+
+create table cart_details (
+    cd_id uuid default uuid_generate_v4() primary key,
+    cart_id uuid references carts(cart_id),
+    product_id uuid references products(product_id),
+    product_price numeric,
+    quantity numeric,
+    delivery_price numeric
+);
+
+-- todo add shipping and billing address to orders
+create table orders (
+    order_id uuid default uuid_generate_v4() primary key,
+    user_id uuid references users(user_id),
+    price numeric default 0,
+    delivery_price numeric default 0,
+    total numeric default 0,
+    created_on timestamp with time zone default current_timestamp,
+    shipping_email varchar(200) not null,
+    billing_email varchar(200) not null,
+
+)
