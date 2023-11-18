@@ -1,4 +1,4 @@
-module github.com/Xebec19/e-commerce/api
+module github.com/Xebec19/e-commerce/client-api
 
 go 1.21
 

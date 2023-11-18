@@ -7,7 +7,7 @@ import (
 	"database/sql"
 	"log"
 
-	"github.com/Xebec19/e-commerce/api/util"
+	"github.com/Xebec19/e-commerce/client-api/util"
 	_ "github.com/lib/pq"
 )
 

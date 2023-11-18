@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	db "github.com/Xebec19/e-commerce/api/db/sqlc"
-	"github.com/Xebec19/e-commerce/api/util"
+	db "github.com/Xebec19/e-commerce/client-api/db/sqlc"
+	"github.com/Xebec19/e-commerce/client-api/util"
 	"github.com/gofiber/fiber/v2"
 )
 

@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"github.com/Xebec19/e-commerce/api/util"
+	"github.com/Xebec19/e-commerce/client-api/util"
 	"github.com/gofiber/fiber"
 )
 
