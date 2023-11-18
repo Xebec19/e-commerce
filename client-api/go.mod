@@ -8,6 +8,7 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.4.3
 	github.com/google/uuid v1.1.2
 	github.com/lib/pq v1.10.7
+	github.com/matoous/go-nanoid/v2 v2.0.0
 	github.com/spf13/viper v1.14.0
 	github.com/stretchr/testify v1.8.1
 	github.com/swaggo/swag v1.8.9
@@ -25,7 +26,6 @@ require (
 	github.com/gorilla/schema v1.1.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
-	github.com/matoous/go-nanoid/v2 v2.0.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rogpeppe/go-internal v1.8.0 // indirect
 	github.com/swaggo/files v1.0.0 // indirect
