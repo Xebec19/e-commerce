@@ -71,7 +71,7 @@ export default function CategoryForm({
               value={field.value}
               onValueChange={(value) => field.onChange(value)}
             >
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger asChild className="w-[180px]">
                 <SelectValue placeholder="Theme" className="border w-full" />
               </SelectTrigger>
               <SelectContent className="bg-background border">
