@@ -4,8 +4,8 @@ export type LoginFormType = {
 };
 
 export type CategoryFormType = {
-  categoryId: string;
-  categoryName: string;
-  status: "active" | "inactive";
-  imageUrl: string;
+  categoryId?: string;
+  categoryName?: string;
+  status?: "active" | "inactive";
+  imageUrl?: string;
 };
