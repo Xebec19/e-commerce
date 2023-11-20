@@ -214,7 +214,8 @@ CREATE TABLE public.product_images (
     created_on timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     updated_on timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     updated_by uuid,
-    status public.enum_status DEFAULT 'active'::public.enum_status
+    status public.enum_status DEFAULT 'active'::public.enum_status,
+    is_featured boolean DEFAULT false
 );
 
 
@@ -272,6 +273,33 @@ CREATE TABLE public.users (
 
 
 ALTER TABLE public.users OWNER TO postgres;
+
+--
+-- Name: v_products; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public.v_products AS
+ SELECT bp.product_id,
+    bp.product_name,
+    pi2.image_url,
+    bp.quantity,
+    bp.created_on,
+    bp.price,
+    bp.delivery_price,
+    bp.product_desc,
+    bp.gender,
+    bc.category_id,
+    bc.category_name,
+    bc2.country_id,
+    bc2.country_name
+   FROM (((public.products bp
+     JOIN public.categories bc ON ((bp.category_id = bc.category_id)))
+     JOIN public.countries bc2 ON ((bc2.country_id = bp.country_id)))
+     JOIN public.product_images pi2 ON ((pi2.product_id = bp.product_id)))
+  WHERE ((bc.status = 'active'::public.enum_status) AND (bp.status = 'active'::public.enum_status) AND pi2.is_featured);
+
+
+ALTER TABLE public.v_products OWNER TO postgres;
 
 --
 -- Name: cart_details cart_details_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres

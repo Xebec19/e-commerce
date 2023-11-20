@@ -8,7 +8,7 @@ create type enum_type as enum('voucher','coupon'); -- voucher would be % type di
 
 create type enum_gender as enum('male','female','undefined');
 
-create table users (
+create table if not exists users (
     user_id uuid default uuid_generate_v4() primary key,
     first_name varchar(200) not null,
     last_name varchar(200),
@@ -21,7 +21,7 @@ create table users (
     access enum_access default 'user'
 );
 
-create table discounts (
+create table if not exists discounts (
 	discount_id uuid default uuid_generate_v4() primary key,
 	code varchar(20) not null unique,
 	"status" enum_status default 'active',
@@ -37,7 +37,7 @@ create table discounts (
 -- create a dummy discount code
 -- insert into discounts (code, created_by, updated_by) values ('WELCOME10',1,1);
 
-create table categories (
+create table if not exists categories (
     category_id uuid default uuid_generate_v4() primary key,
     category_name varchar(200) not null,
     created_on timestamp with time zone default current_timestamp,
@@ -45,14 +45,14 @@ create table categories (
     status enum_status default 'active'
 );
 
-create table countries (
+create table if not exists countries (
     country_id uuid default uuid_generate_v4() primary key,
     country_name varchar(200) not null,
     currency varchar(200) not null,
     currency_symbol varchar(5) not null
 );
 
-create table products (
+create table if not exists products (
     product_id uuid default uuid_generate_v4() primary key,
     category_id uuid references categories(category_id),
     product_name varchar(200) not null,
@@ -67,7 +67,7 @@ create table products (
     status enum_status default 'active'
 );
 
-create table product_images (
+create table if not exists product_images (
     img_id uuid default uuid_generate_v4() primary key,
     product_id uuid references products(product_id),
     image_url text not null,
@@ -79,7 +79,7 @@ create table product_images (
 
 insert into countries (country_name, currency, currency_symbol) values('india','rupees','₹');
 
-create table carts (
+create table if not exists carts (
     cart_id uuid default uuid_generate_v4() primary key,
     user_id uuid references users(user_id),
     discount_code varchar(20) references discounts(code),
@@ -87,7 +87,7 @@ create table carts (
     updated_on timestamp with time zone default current_timestamp
 );
 
-create table cart_details (
+create table if not exists cart_details (
     cd_id uuid default uuid_generate_v4() primary key,
     cart_id uuid references carts(cart_id),
     product_id uuid references products(product_id),
@@ -96,7 +96,7 @@ create table cart_details (
     delivery_price numeric
 );
 
-create table orders (
+create table if not exists orders (
     order_id uuid default uuid_generate_v4() primary key,
     user_id uuid references users(user_id),
     price numeric default 0,
@@ -113,7 +113,7 @@ create table orders (
     shipping_address text
 );
 
-create table order_details (
+create table if not exists order_details (
     od_id uuid default uuid_generate_v4() primary key,
     order_id uuid references orders(order_id),
     product_id uuid references products(product_id),
