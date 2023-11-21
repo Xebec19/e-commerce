@@ -1,0 +1,1 @@
+alter table orders add column discount_id uuid references discounts(discount_id);

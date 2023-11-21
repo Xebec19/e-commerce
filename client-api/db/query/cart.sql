@@ -39,6 +39,7 @@ select cart_id, discount_code from carts where user_id = $1;
 
 -- name: GetCartItems :many
 select cd.cd_id, cd.cart_id, cd.product_id, cd.quantity, p.product_name, 
-p.product_image, p.price, p.product_desc, p.delivery_price  
+pi2.image_url, p.price, p.product_desc, p.delivery_price  
 from cart_details cd 
-left join products p on p.product_id = cd.product_id where cd.cart_id = $1;
+left join products p on p.product_id = cd.product_id 
+left join product_images pi2 on pi2.product_id = p.product_id where pi2.is_featured is true and cd.cart_id = $1;
