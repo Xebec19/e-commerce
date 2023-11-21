@@ -8,6 +8,8 @@ package db
 import (
 	"context"
 	"database/sql"
+
+	"github.com/google/uuid"
 )
 
 const readAllCategories = `-- name: ReadAllCategories :many
@@ -16,7 +18,7 @@ WHERE status = 'active'
 `
 
 type ReadAllCategoriesRow struct {
-	CategoryID   int32          `json:"category_id"`
+	CategoryID   uuid.UUID      `json:"category_id"`
 	CategoryName string         `json:"category_name"`
 	ImageUrl     sql.NullString `json:"image_url"`
 }
@@ -50,12 +52,12 @@ WHERE status = 'active' AND category_id = $1
 `
 
 type ReadOneCategoryRow struct {
-	CategoryID   int32          `json:"category_id"`
+	CategoryID   uuid.UUID      `json:"category_id"`
 	CategoryName string         `json:"category_name"`
 	ImageUrl     sql.NullString `json:"image_url"`
 }
 
-func (q *Queries) ReadOneCategory(ctx context.Context, categoryID int32) (ReadOneCategoryRow, error) {
+func (q *Queries) ReadOneCategory(ctx context.Context, categoryID uuid.UUID) (ReadOneCategoryRow, error) {
 	row := q.db.QueryRowContext(ctx, readOneCategory, categoryID)
 	var i ReadOneCategoryRow
 	err := row.Scan(&i.CategoryID, &i.CategoryName, &i.ImageUrl)

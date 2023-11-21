@@ -12,7 +12,7 @@ create table if not exists users (
     user_id uuid default uuid_generate_v4() primary key,
     first_name varchar(200) not null,
     last_name varchar(200),
-    email varchar(200) unique,
+    email varchar(200) unique not null,
     phone varchar(20) unique,
     password varchar(200) not null,
     created_on timestamp with time zone default current_timestamp,
@@ -56,11 +56,11 @@ create table if not exists products (
     product_id uuid default uuid_generate_v4() primary key,
     category_id uuid references categories(category_id),
     product_name varchar(200) not null,
-    price numeric default 0,
-    delivery_price numeric default 0,
+    price integer default 0,
+    delivery_price integer default 0,
     gender enum_gender default 'undefined',
     product_desc text,
-    quantity numeric default 0,
+    quantity integer default 0,
     country_id uuid references countries(country_id),
     created_on timestamp with time zone DEFAULT current_timestamp,
     updated_on timestamp with time zone DEFAULT current_timestamp,
@@ -91,17 +91,17 @@ create table if not exists cart_details (
     cd_id uuid default uuid_generate_v4() primary key,
     cart_id uuid references carts(cart_id),
     product_id uuid references products(product_id),
-    product_price numeric,
-    quantity numeric,
-    delivery_price numeric
+    product_price integer,
+    quantity integer,
+    delivery_price integer
 );
 
 create table if not exists orders (
     order_id uuid default uuid_generate_v4() primary key,
     user_id uuid references users(user_id),
-    price numeric default 0,
-    delivery_price numeric default 0,
-    total numeric default 0,
+    price integer default 0,
+    delivery_price integer default 0,
+    total integer default 0,
     created_on timestamp with time zone default current_timestamp,
     billing_first_name varchar(200) not null,
     billing_last_name varchar(200) not null,
@@ -117,7 +117,7 @@ create table if not exists order_details (
     od_id uuid default uuid_generate_v4() primary key,
     order_id uuid references orders(order_id),
     product_id uuid references products(product_id),
-    product_price numeric not null,
-    quantity numeric not null,
-    delivery_price numeric not null
+    product_price integer not null,
+    quantity integer not null,
+    delivery_price integer not null
 );

@@ -8,21 +8,45 @@ package db
 import (
 	"context"
 	"database/sql"
+
+	"github.com/google/uuid"
 )
 
 const getDiscount = `-- name: GetDiscount :one
-select code, type, value from public.discounts where lower(code) = lower($1) and status = 'active' and expired_on > current_timestamp
+select discount_id, code, type, value from public.discounts where lower(code) = lower($1) and status = 'active' and expired_on > current_timestamp
 `
 
 type GetDiscountRow struct {
-	Code  string        `json:"code"`
-	Type  NullType      `json:"type"`
-	Value sql.NullInt32 `json:"value"`
+	DiscountID uuid.UUID     `json:"discount_id"`
+	Code       string        `json:"code"`
+	Type       NullEnumType  `json:"type"`
+	Value      sql.NullInt32 `json:"value"`
 }
 
 func (q *Queries) GetDiscount(ctx context.Context, lower string) (GetDiscountRow, error) {
 	row := q.db.QueryRowContext(ctx, getDiscount, lower)
 	var i GetDiscountRow
-	err := row.Scan(&i.Code, &i.Type, &i.Value)
+	err := row.Scan(
+		&i.DiscountID,
+		&i.Code,
+		&i.Type,
+		&i.Value,
+	)
 	return i, err
+}
+
+const getDiscountCount = `-- name: GetDiscountCount :one
+select count(discount_id) from orders where discount_id = $1 and user_id = $2
+`
+
+type GetDiscountCountParams struct {
+	DiscountID uuid.NullUUID `json:"discount_id"`
+	UserID     uuid.NullUUID `json:"user_id"`
+}
+
+func (q *Queries) GetDiscountCount(ctx context.Context, arg GetDiscountCountParams) (int64, error) {
+	row := q.db.QueryRowContext(ctx, getDiscountCount, arg.DiscountID, arg.UserID)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
 }

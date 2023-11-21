@@ -12,227 +12,298 @@ import (
 	"github.com/google/uuid"
 )
 
-type Status string
+type EnumAccess string
 
 const (
-	StatusActive   Status = "active"
-	StatusInactive Status = "inactive"
+	EnumAccessUser  EnumAccess = "user"
+	EnumAccessAdmin EnumAccess = "admin"
 )
 
-func (e *Status) Scan(src interface{}) error {
+func (e *EnumAccess) Scan(src interface{}) error {
 	switch s := src.(type) {
 	case []byte:
-		*e = Status(s)
+		*e = EnumAccess(s)
 	case string:
-		*e = Status(s)
+		*e = EnumAccess(s)
 	default:
-		return fmt.Errorf("unsupported scan type for Status: %T", src)
+		return fmt.Errorf("unsupported scan type for EnumAccess: %T", src)
 	}
 	return nil
 }
 
-type NullStatus struct {
-	Status Status `json:"status"`
-	Valid  bool   `json:"valid"` // Valid is true if Status is not NULL
+type NullEnumAccess struct {
+	EnumAccess EnumAccess `json:"enum_access"`
+	Valid      bool       `json:"valid"` // Valid is true if EnumAccess is not NULL
 }
 
 // Scan implements the Scanner interface.
-func (ns *NullStatus) Scan(value interface{}) error {
+func (ns *NullEnumAccess) Scan(value interface{}) error {
 	if value == nil {
-		ns.Status, ns.Valid = "", false
+		ns.EnumAccess, ns.Valid = "", false
 		return nil
 	}
 	ns.Valid = true
-	return ns.Status.Scan(value)
+	return ns.EnumAccess.Scan(value)
 }
 
 // Value implements the driver Valuer interface.
-func (ns NullStatus) Value() (driver.Value, error) {
+func (ns NullEnumAccess) Value() (driver.Value, error) {
 	if !ns.Valid {
 		return nil, nil
 	}
-	return string(ns.Status), nil
+	return string(ns.EnumAccess), nil
 }
 
-type Type string
+type EnumGender string
 
 const (
-	TypeVoucher Type = "voucher"
-	TypeCoupon  Type = "coupon"
+	EnumGenderMale      EnumGender = "male"
+	EnumGenderFemale    EnumGender = "female"
+	EnumGenderUndefined EnumGender = "undefined"
 )
 
-func (e *Type) Scan(src interface{}) error {
+func (e *EnumGender) Scan(src interface{}) error {
 	switch s := src.(type) {
 	case []byte:
-		*e = Type(s)
+		*e = EnumGender(s)
 	case string:
-		*e = Type(s)
+		*e = EnumGender(s)
 	default:
-		return fmt.Errorf("unsupported scan type for Type: %T", src)
+		return fmt.Errorf("unsupported scan type for EnumGender: %T", src)
 	}
 	return nil
 }
 
-type NullType struct {
-	Type  Type `json:"type"`
-	Valid bool `json:"valid"` // Valid is true if Type is not NULL
+type NullEnumGender struct {
+	EnumGender EnumGender `json:"enum_gender"`
+	Valid      bool       `json:"valid"` // Valid is true if EnumGender is not NULL
 }
 
 // Scan implements the Scanner interface.
-func (ns *NullType) Scan(value interface{}) error {
+func (ns *NullEnumGender) Scan(value interface{}) error {
 	if value == nil {
-		ns.Type, ns.Valid = "", false
+		ns.EnumGender, ns.Valid = "", false
 		return nil
 	}
 	ns.Valid = true
-	return ns.Type.Scan(value)
+	return ns.EnumGender.Scan(value)
 }
 
 // Value implements the driver Valuer interface.
-func (ns NullType) Value() (driver.Value, error) {
+func (ns NullEnumGender) Value() (driver.Value, error) {
 	if !ns.Valid {
 		return nil, nil
 	}
-	return string(ns.Type), nil
+	return string(ns.EnumGender), nil
+}
+
+type EnumStatus string
+
+const (
+	EnumStatusActive   EnumStatus = "active"
+	EnumStatusInactive EnumStatus = "inactive"
+)
+
+func (e *EnumStatus) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = EnumStatus(s)
+	case string:
+		*e = EnumStatus(s)
+	default:
+		return fmt.Errorf("unsupported scan type for EnumStatus: %T", src)
+	}
+	return nil
+}
+
+type NullEnumStatus struct {
+	EnumStatus EnumStatus `json:"enum_status"`
+	Valid      bool       `json:"valid"` // Valid is true if EnumStatus is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullEnumStatus) Scan(value interface{}) error {
+	if value == nil {
+		ns.EnumStatus, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.EnumStatus.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullEnumStatus) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.EnumStatus), nil
+}
+
+type EnumType string
+
+const (
+	EnumTypeVoucher EnumType = "voucher"
+	EnumTypeCoupon  EnumType = "coupon"
+)
+
+func (e *EnumType) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = EnumType(s)
+	case string:
+		*e = EnumType(s)
+	default:
+		return fmt.Errorf("unsupported scan type for EnumType: %T", src)
+	}
+	return nil
+}
+
+type NullEnumType struct {
+	EnumType EnumType `json:"enum_type"`
+	Valid    bool     `json:"valid"` // Valid is true if EnumType is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullEnumType) Scan(value interface{}) error {
+	if value == nil {
+		ns.EnumType, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.EnumType.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullEnumType) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.EnumType), nil
 }
 
 type Cart struct {
-	CartID       int32          `json:"cart_id"`
-	UserID       sql.NullInt32  `json:"user_id"`
+	CartID       uuid.UUID      `json:"cart_id"`
+	UserID       uuid.NullUUID  `json:"user_id"`
+	DiscountCode sql.NullString `json:"discount_code"`
 	CreatedOn    sql.NullTime   `json:"created_on"`
 	UpdatedOn    sql.NullTime   `json:"updated_on"`
-	DiscountCode sql.NullString `json:"discount_code"`
 }
 
 type CartDetail struct {
-	CdID          int32          `json:"cd_id"`
-	CartID        sql.NullInt32  `json:"cart_id"`
-	ProductID     sql.NullInt32  `json:"product_id"`
-	ProductPrice  sql.NullString `json:"product_price"`
-	Quantity      sql.NullInt32  `json:"quantity"`
-	DeliveryPrice sql.NullString `json:"delivery_price"`
+	CdID          uuid.UUID     `json:"cd_id"`
+	CartID        uuid.NullUUID `json:"cart_id"`
+	ProductID     uuid.NullUUID `json:"product_id"`
+	ProductPrice  sql.NullInt32 `json:"product_price"`
+	Quantity      sql.NullInt32 `json:"quantity"`
+	DeliveryPrice sql.NullInt32 `json:"delivery_price"`
 }
 
 type Category struct {
-	CategoryID   int32          `json:"category_id"`
+	CategoryID   uuid.UUID      `json:"category_id"`
 	CategoryName string         `json:"category_name"`
 	CreatedOn    sql.NullTime   `json:"created_on"`
 	ImageUrl     sql.NullString `json:"image_url"`
-	Status       sql.NullString `json:"status"`
+	Status       NullEnumStatus `json:"status"`
 }
 
 type Country struct {
-	CountryID      int32          `json:"country_id"`
-	CountryName    sql.NullString `json:"country_name"`
-	Currency       sql.NullString `json:"currency"`
-	CurrencySymbol sql.NullString `json:"currency_symbol"`
+	CountryID      uuid.UUID `json:"country_id"`
+	CountryName    string    `json:"country_name"`
+	Currency       string    `json:"currency"`
+	CurrencySymbol string    `json:"currency_symbol"`
 }
 
 type Discount struct {
-	DiscountID uuid.UUID     `json:"discount_id"`
-	Code       string        `json:"code"`
-	Status     NullStatus    `json:"status"`
-	Type       NullType      `json:"type"`
-	Value      sql.NullInt32 `json:"value"`
-	CreatedOn  sql.NullTime  `json:"created_on"`
-	UpdatedOn  sql.NullTime  `json:"updated_on"`
-	CreatedBy  sql.NullInt32 `json:"created_by"`
-	UpdatedBy  sql.NullInt32 `json:"updated_by"`
-	ExpiredOn  sql.NullTime  `json:"expired_on"`
+	DiscountID uuid.UUID      `json:"discount_id"`
+	Code       string         `json:"code"`
+	Status     NullEnumStatus `json:"status"`
+	Type       NullEnumType   `json:"type"`
+	Value      sql.NullInt32  `json:"value"`
+	CreatedOn  sql.NullTime   `json:"created_on"`
+	UpdatedOn  sql.NullTime   `json:"updated_on"`
+	CreatedBy  uuid.NullUUID  `json:"created_by"`
+	UpdatedBy  uuid.NullUUID  `json:"updated_by"`
+	ExpiredOn  sql.NullTime   `json:"expired_on"`
 }
 
 type Order struct {
-	OrderID        string         `json:"order_id"`
-	UserID         int32          `json:"user_id"`
-	Price          string         `json:"price"`
-	DeliveryPrice  string         `json:"delivery_price"`
-	Total          string         `json:"total"`
-	CreatedOn      sql.NullTime   `json:"created_on"`
-	Email          string         `json:"email"`
-	Address        string         `json:"address"`
-	DiscountAmount sql.NullInt32  `json:"discount_amount"`
-	DiscountCode   sql.NullString `json:"discount_code"`
+	OrderID           uuid.UUID      `json:"order_id"`
+	UserID            uuid.NullUUID  `json:"user_id"`
+	Price             sql.NullInt32  `json:"price"`
+	DeliveryPrice     sql.NullInt32  `json:"delivery_price"`
+	Total             sql.NullInt32  `json:"total"`
+	CreatedOn         sql.NullTime   `json:"created_on"`
+	BillingFirstName  string         `json:"billing_first_name"`
+	BillingLastName   string         `json:"billing_last_name"`
+	BillingEmail      string         `json:"billing_email"`
+	BillingAddress    sql.NullString `json:"billing_address"`
+	ShippingFirstName string         `json:"shipping_first_name"`
+	ShippingLastName  string         `json:"shipping_last_name"`
+	ShippingEmail     string         `json:"shipping_email"`
+	ShippingAddress   sql.NullString `json:"shipping_address"`
+	DiscountID        uuid.NullUUID  `json:"discount_id"`
 }
 
 type OrderDetail struct {
-	OdID          int32          `json:"od_id"`
-	OrderID       sql.NullString `json:"order_id"`
-	ProductID     sql.NullInt32  `json:"product_id"`
-	ProductPrice  sql.NullString `json:"product_price"`
-	Quantity      sql.NullInt32  `json:"quantity"`
-	DeliveryPrice sql.NullString `json:"delivery_price"`
+	OdID          uuid.UUID     `json:"od_id"`
+	OrderID       uuid.NullUUID `json:"order_id"`
+	ProductID     uuid.NullUUID `json:"product_id"`
+	ProductPrice  int32         `json:"product_price"`
+	Quantity      int32         `json:"quantity"`
+	DeliveryPrice int32         `json:"delivery_price"`
 }
 
 type Product struct {
-	ProductID     int32          `json:"product_id"`
-	CategoryID    sql.NullInt32  `json:"category_id"`
+	ProductID     uuid.UUID      `json:"product_id"`
+	CategoryID    uuid.NullUUID  `json:"category_id"`
 	ProductName   string         `json:"product_name"`
-	ProductImage  sql.NullString `json:"product_image"`
+	Price         sql.NullInt32  `json:"price"`
+	DeliveryPrice sql.NullInt32  `json:"delivery_price"`
+	Gender        NullEnumGender `json:"gender"`
+	ProductDesc   sql.NullString `json:"product_desc"`
 	Quantity      sql.NullInt32  `json:"quantity"`
+	CountryID     uuid.NullUUID  `json:"country_id"`
 	CreatedOn     sql.NullTime   `json:"created_on"`
 	UpdatedOn     sql.NullTime   `json:"updated_on"`
-	Status        sql.NullString `json:"status"`
-	Price         string         `json:"price"`
-	DeliveryPrice sql.NullString `json:"delivery_price"`
-	ProductDesc   sql.NullString `json:"product_desc"`
-	Gender        sql.NullString `json:"gender"`
-	CountryID     sql.NullInt32  `json:"country_id"`
-	IsFeatured    sql.NullBool   `json:"is_featured"`
+	Status        NullEnumStatus `json:"status"`
 }
 
 type ProductImage struct {
-	ImgID     uuid.UUID     `json:"img_id"`
-	ProductID sql.NullInt32 `json:"product_id"`
-	ImageUrl  string        `json:"image_url"`
-	CreatedOn sql.NullTime  `json:"created_on"`
-	UpdatedOn sql.NullTime  `json:"updated_on"`
-	UpdatedBy sql.NullInt32 `json:"updated_by"`
-	Status    NullStatus    `json:"status"`
-}
-
-type Token struct {
-	TokenID    int32         `json:"token_id"`
-	UserID     sql.NullInt32 `json:"user_id"`
-	Token      string        `json:"token"`
-	CreatedOn  sql.NullTime  `json:"created_on"`
-	LastAccess sql.NullTime  `json:"last_access"`
+	ImgID      uuid.UUID      `json:"img_id"`
+	ProductID  uuid.NullUUID  `json:"product_id"`
+	ImageUrl   string         `json:"image_url"`
+	CreatedOn  sql.NullTime   `json:"created_on"`
+	UpdatedOn  sql.NullTime   `json:"updated_on"`
+	UpdatedBy  uuid.NullUUID  `json:"updated_by"`
+	Status     NullEnumStatus `json:"status"`
+	IsFeatured sql.NullBool   `json:"is_featured"`
 }
 
 type User struct {
-	UserID    int32          `json:"user_id"`
+	UserID    uuid.UUID      `json:"user_id"`
 	FirstName string         `json:"first_name"`
 	LastName  sql.NullString `json:"last_name"`
 	Email     string         `json:"email"`
+	Phone     sql.NullString `json:"phone"`
 	Password  string         `json:"password"`
 	CreatedOn sql.NullTime   `json:"created_on"`
 	UpdatedOn sql.NullTime   `json:"updated_on"`
-	Status    sql.NullString `json:"status"`
-	Access    sql.NullString `json:"access"`
-	Phone     sql.NullString `json:"phone"`
-}
-
-type VCart struct {
-	UserID        sql.NullInt32  `json:"user_id"`
-	CartID        int32          `json:"cart_id"`
-	CardItemID    int32          `json:"card_item_id"`
-	ProductID     sql.NullInt32  `json:"product_id"`
-	Price         string         `json:"price"`
-	Quantity      sql.NullInt32  `json:"quantity"`
-	DeliveryPrice sql.NullString `json:"delivery_price"`
+	Status    NullEnumStatus `json:"status"`
+	Access    NullEnumAccess `json:"access"`
 }
 
 type VProduct struct {
-	ProductID     int32          `json:"product_id"`
+	ProductID     uuid.UUID      `json:"product_id"`
 	ProductName   string         `json:"product_name"`
-	ProductImage  sql.NullString `json:"product_image"`
+	ImageUrl      string         `json:"image_url"`
 	Quantity      sql.NullInt32  `json:"quantity"`
 	CreatedOn     sql.NullTime   `json:"created_on"`
-	Price         string         `json:"price"`
-	DeliveryPrice sql.NullString `json:"delivery_price"`
+	Price         sql.NullInt32  `json:"price"`
+	DeliveryPrice sql.NullInt32  `json:"delivery_price"`
 	ProductDesc   sql.NullString `json:"product_desc"`
-	Gender        sql.NullString `json:"gender"`
-	CategoryID    int32          `json:"category_id"`
+	Gender        NullEnumGender `json:"gender"`
+	CategoryID    uuid.UUID      `json:"category_id"`
 	CategoryName  string         `json:"category_name"`
-	CountryID     int32          `json:"country_id"`
-	CountryName   sql.NullString `json:"country_name"`
+	CountryID     uuid.UUID      `json:"country_id"`
+	CountryName   string         `json:"country_name"`
 }
