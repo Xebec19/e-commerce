@@ -8,8 +8,6 @@ package db
 import (
 	"context"
 	"database/sql"
-
-	"github.com/google/uuid"
 )
 
 const countUser = `-- name: CountUser :one
@@ -36,7 +34,7 @@ type CreateUserParams struct {
 	Password  string         `json:"password"`
 }
 
-func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (uuid.UUID, error) {
+func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (int32, error) {
 	row := q.db.QueryRowContext(ctx, createUser,
 		arg.FirstName,
 		arg.LastName,
@@ -44,7 +42,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (uuid.UU
 		arg.Phone,
 		arg.Password,
 	)
-	var user_id uuid.UUID
+	var user_id int32
 	err := row.Scan(&user_id)
 	return user_id, err
 }
@@ -55,7 +53,7 @@ WHERE lower(u.EMAIL) = lower($1)
 `
 
 type FindUserOneRow struct {
-	UserID   uuid.UUID   `json:"user_id"`
+	UserID   int32       `json:"user_id"`
 	Email    string      `json:"email"`
 	UserName interface{} `json:"user_name"`
 	Password string      `json:"password"`
@@ -78,7 +76,7 @@ SELECT user_id, first_name, last_name, email, phone, "password", created_on, upd
 FROM public.users WHERE user_id = $1
 `
 
-func (q *Queries) ReadUser(ctx context.Context, userID uuid.UUID) (User, error) {
+func (q *Queries) ReadUser(ctx context.Context, userID int32) (User, error) {
 	row := q.db.QueryRowContext(ctx, readUser, userID)
 	var i User
 	err := row.Scan(

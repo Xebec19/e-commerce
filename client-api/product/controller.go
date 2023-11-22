@@ -10,7 +10,6 @@ import (
 	db "github.com/Xebec19/e-commerce/client-api/db/sqlc"
 	"github.com/Xebec19/e-commerce/client-api/util"
 	"github.com/gofiber/fiber/v2"
-	"github.com/google/uuid"
 )
 
 func readProducts(c *fiber.Ctx) error {
@@ -52,9 +51,9 @@ func readOneProduct(c *fiber.Ctx) error {
 	slug := c.Params("slug", "0")
 	entities := strings.Split(slug, "_")
 	param := entities[len(entities)-1]
-	productId, err := uuid.Parse(param)
+	productId, err := strconv.Atoi(param)
 
-	product, err := db.DBQuery.ReadOneProduct(context.Background(), uuid.UUID(productId))
+	product, err := db.DBQuery.ReadOneProduct(context.Background(), int32(productId))
 
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
@@ -97,7 +96,7 @@ func readSimilarProduct(c *fiber.Ctx) error {
 	slug := c.Params("slug", "0")
 	entities := strings.Split(slug, "_")
 	param := entities[len(entities)-1]
-	productId, err := uuid.Parse(param)
+	productId, err := strconv.Atoi(param)
 
 	if err != nil {
 		c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
@@ -118,7 +117,7 @@ func readSimilarProduct(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
 	}
 
-	categoryId, err := db.DBQuery.ReadCategory(context.Background(), productId)
+	categoryId, err := db.DBQuery.ReadCategory(context.Background(), int32(productId))
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(errors.New("could not find product")))
@@ -126,7 +125,7 @@ func readSimilarProduct(c *fiber.Ctx) error {
 
 	categoryParams := db.ReadSimilarItemsParams{
 		CategoryID: categoryId,
-		ProductID:  uuid.UUID(productId),
+		ProductID:  int32(productId),
 		Limit:      int32(size),
 		Offset:     int32(page * size),
 	}

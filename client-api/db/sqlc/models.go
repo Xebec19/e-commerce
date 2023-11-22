@@ -8,8 +8,6 @@ import (
 	"database/sql"
 	"database/sql/driver"
 	"fmt"
-
-	"github.com/google/uuid"
 )
 
 type EnumAccess string
@@ -182,24 +180,24 @@ func (ns NullEnumType) Value() (driver.Value, error) {
 }
 
 type Cart struct {
-	CartID       uuid.UUID      `json:"cart_id"`
-	UserID       uuid.NullUUID  `json:"user_id"`
+	CartID       int32          `json:"cart_id"`
+	UserID       sql.NullInt32  `json:"user_id"`
 	DiscountCode sql.NullString `json:"discount_code"`
 	CreatedOn    sql.NullTime   `json:"created_on"`
 	UpdatedOn    sql.NullTime   `json:"updated_on"`
 }
 
 type CartDetail struct {
-	CdID          uuid.UUID     `json:"cd_id"`
-	CartID        uuid.NullUUID `json:"cart_id"`
-	ProductID     uuid.NullUUID `json:"product_id"`
+	CdID          int32         `json:"cd_id"`
+	CartID        sql.NullInt32 `json:"cart_id"`
+	ProductID     sql.NullInt32 `json:"product_id"`
 	ProductPrice  sql.NullInt32 `json:"product_price"`
 	Quantity      sql.NullInt32 `json:"quantity"`
 	DeliveryPrice sql.NullInt32 `json:"delivery_price"`
 }
 
 type Category struct {
-	CategoryID   uuid.UUID      `json:"category_id"`
+	CategoryID   int32          `json:"category_id"`
 	CategoryName string         `json:"category_name"`
 	CreatedOn    sql.NullTime   `json:"created_on"`
 	ImageUrl     sql.NullString `json:"image_url"`
@@ -207,28 +205,28 @@ type Category struct {
 }
 
 type Country struct {
-	CountryID      uuid.UUID `json:"country_id"`
-	CountryName    string    `json:"country_name"`
-	Currency       string    `json:"currency"`
-	CurrencySymbol string    `json:"currency_symbol"`
+	CountryID      int32  `json:"country_id"`
+	CountryName    string `json:"country_name"`
+	Currency       string `json:"currency"`
+	CurrencySymbol string `json:"currency_symbol"`
 }
 
 type Discount struct {
-	DiscountID uuid.UUID      `json:"discount_id"`
+	DiscountID int32          `json:"discount_id"`
 	Code       string         `json:"code"`
 	Status     NullEnumStatus `json:"status"`
 	Type       NullEnumType   `json:"type"`
 	Value      sql.NullInt32  `json:"value"`
 	CreatedOn  sql.NullTime   `json:"created_on"`
 	UpdatedOn  sql.NullTime   `json:"updated_on"`
-	CreatedBy  uuid.NullUUID  `json:"created_by"`
-	UpdatedBy  uuid.NullUUID  `json:"updated_by"`
+	CreatedBy  sql.NullInt32  `json:"created_by"`
+	UpdatedBy  sql.NullInt32  `json:"updated_by"`
 	ExpiredOn  sql.NullTime   `json:"expired_on"`
 }
 
 type Order struct {
-	OrderID           uuid.UUID      `json:"order_id"`
-	UserID            uuid.NullUUID  `json:"user_id"`
+	OrderID           int32          `json:"order_id"`
+	UserID            sql.NullInt32  `json:"user_id"`
 	Price             sql.NullInt32  `json:"price"`
 	DeliveryPrice     sql.NullInt32  `json:"delivery_price"`
 	Total             sql.NullInt32  `json:"total"`
@@ -241,46 +239,46 @@ type Order struct {
 	ShippingLastName  string         `json:"shipping_last_name"`
 	ShippingEmail     string         `json:"shipping_email"`
 	ShippingAddress   sql.NullString `json:"shipping_address"`
-	DiscountID        uuid.NullUUID  `json:"discount_id"`
+	DiscountID        sql.NullInt32  `json:"discount_id"`
 }
 
 type OrderDetail struct {
-	OdID          uuid.UUID     `json:"od_id"`
-	OrderID       uuid.NullUUID `json:"order_id"`
-	ProductID     uuid.NullUUID `json:"product_id"`
+	OdID          int32         `json:"od_id"`
+	OrderID       sql.NullInt32 `json:"order_id"`
+	ProductID     sql.NullInt32 `json:"product_id"`
 	ProductPrice  int32         `json:"product_price"`
 	Quantity      int32         `json:"quantity"`
 	DeliveryPrice int32         `json:"delivery_price"`
 }
 
 type Product struct {
-	ProductID     uuid.UUID      `json:"product_id"`
-	CategoryID    uuid.NullUUID  `json:"category_id"`
+	ProductID     int32          `json:"product_id"`
+	CategoryID    sql.NullInt32  `json:"category_id"`
 	ProductName   string         `json:"product_name"`
 	Price         sql.NullInt32  `json:"price"`
 	DeliveryPrice sql.NullInt32  `json:"delivery_price"`
 	Gender        NullEnumGender `json:"gender"`
 	ProductDesc   sql.NullString `json:"product_desc"`
 	Quantity      sql.NullInt32  `json:"quantity"`
-	CountryID     uuid.NullUUID  `json:"country_id"`
+	CountryID     sql.NullInt32  `json:"country_id"`
 	CreatedOn     sql.NullTime   `json:"created_on"`
 	UpdatedOn     sql.NullTime   `json:"updated_on"`
 	Status        NullEnumStatus `json:"status"`
 }
 
 type ProductImage struct {
-	ImgID      uuid.UUID      `json:"img_id"`
-	ProductID  uuid.NullUUID  `json:"product_id"`
+	ImgID      int32          `json:"img_id"`
+	ProductID  sql.NullInt32  `json:"product_id"`
 	ImageUrl   string         `json:"image_url"`
 	CreatedOn  sql.NullTime   `json:"created_on"`
 	UpdatedOn  sql.NullTime   `json:"updated_on"`
-	UpdatedBy  uuid.NullUUID  `json:"updated_by"`
+	UpdatedBy  sql.NullInt32  `json:"updated_by"`
 	Status     NullEnumStatus `json:"status"`
 	IsFeatured sql.NullBool   `json:"is_featured"`
 }
 
 type User struct {
-	UserID    uuid.UUID      `json:"user_id"`
+	UserID    int32          `json:"user_id"`
 	FirstName string         `json:"first_name"`
 	LastName  sql.NullString `json:"last_name"`
 	Email     string         `json:"email"`
@@ -293,7 +291,7 @@ type User struct {
 }
 
 type VProduct struct {
-	ProductID     uuid.UUID      `json:"product_id"`
+	ProductID     int32          `json:"product_id"`
 	ProductName   string         `json:"product_name"`
 	ImageUrl      string         `json:"image_url"`
 	Quantity      sql.NullInt32  `json:"quantity"`
@@ -302,8 +300,8 @@ type VProduct struct {
 	DeliveryPrice sql.NullInt32  `json:"delivery_price"`
 	ProductDesc   sql.NullString `json:"product_desc"`
 	Gender        NullEnumGender `json:"gender"`
-	CategoryID    uuid.UUID      `json:"category_id"`
+	CategoryID    int32          `json:"category_id"`
 	CategoryName  string         `json:"category_name"`
-	CountryID     uuid.UUID      `json:"country_id"`
+	CountryID     int32          `json:"country_id"`
 	CountryName   string         `json:"country_name"`
 }

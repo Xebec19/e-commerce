@@ -7,8 +7,7 @@ package db
 
 import (
 	"context"
-
-	"github.com/google/uuid"
+	"database/sql"
 )
 
 const getProductImages = `-- name: GetProductImages :many
@@ -17,12 +16,12 @@ FROM public.product_images where status = 'active' and product_id = $1
 `
 
 type GetProductImagesRow struct {
-	ImgID     uuid.UUID     `json:"img_id"`
-	ProductID uuid.NullUUID `json:"product_id"`
+	ImgID     int32         `json:"img_id"`
+	ProductID sql.NullInt32 `json:"product_id"`
 	ImageUrl  string        `json:"image_url"`
 }
 
-func (q *Queries) GetProductImages(ctx context.Context, productID uuid.NullUUID) ([]GetProductImagesRow, error) {
+func (q *Queries) GetProductImages(ctx context.Context, productID sql.NullInt32) ([]GetProductImagesRow, error) {
 	rows, err := q.db.QueryContext(ctx, getProductImages, productID)
 	if err != nil {
 		return nil, err

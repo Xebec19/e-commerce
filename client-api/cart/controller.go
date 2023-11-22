@@ -9,12 +9,11 @@ import (
 	db "github.com/Xebec19/e-commerce/client-api/db/sqlc"
 	"github.com/Xebec19/e-commerce/client-api/util"
 	"github.com/gofiber/fiber/v2"
-	"github.com/google/uuid"
 )
 
 type updateCartSchema struct {
-	ProductId uuid.UUID `json:"product_id" binding:"required"`
-	Quantity  int32     `json:"quantity" binding:"required"`
+	ProductId int32 `json:"product_id" binding:"required"`
+	Quantity  int32 `json:"quantity" binding:"required"`
 }
 
 // @Summary	Add a product to user's cart
@@ -58,8 +57,8 @@ func addProductIntoCart(c *fiber.Ctx) error {
 	}
 
 	cartDetailArgs := db.CheckCartDetailParams{
-		CartID:    cartId,
-		ProductID: req.ProductId,
+		CartID:    sql.NullInt32{Int32: cartId, Valid: true},
+		ProductID: sql.NullInt32{Int32: req.ProductId, Valid: true},
 	}
 
 	cartDetail, err := db.DBQuery.CheckCartDetail(c.Context(), cartDetailArgs)
@@ -69,8 +68,8 @@ func addProductIntoCart(c *fiber.Ctx) error {
 
 	if cartDetail == 0 {
 		insertCartItemArgv := db.InsertCartItemParams{
-			CartID:    cartId,
-			ProductID: req.ProductId,
+			CartID:    sql.NullInt32{Int32: cartId, Valid: true},
+			ProductID: sql.NullInt32{Int32: req.ProductId, Valid: true},
 			Quantity:  sql.NullInt32{Int32: int32(req.Quantity), Valid: true},
 		}
 
@@ -81,8 +80,8 @@ func addProductIntoCart(c *fiber.Ctx) error {
 
 	updateCartArgv := db.UpdateCartItemQuantityParams{
 		Quantity:  sql.NullInt32{Int32: int32(req.Quantity), Valid: true},
-		ProductID: req.ProductId,
-		CartID:    cartId,
+		ProductID: sql.NullInt32{Int32: req.ProductId, Valid: true},
+		CartID:    sql.NullInt32{Int32: cartId, Valid: true},
 	}
 
 	db.DBQuery.UpdateCartItemQuantity(c.Context(), updateCartArgv)
@@ -112,7 +111,7 @@ func deleteProduct(c *fiber.Ctx) error {
 
 	deleteCartItemParams := db.DeleteCartItemParams{
 		ProductID: sql.NullInt32{Int32: int32(req.ProductId), Valid: true},
-		CartID:    cartId,
+		CartID:    sql.NullInt32{Int32: cartId, Valid: true},
 	}
 
 	db.DBQuery.DeleteCartItem(c.Context(), deleteCartItemParams)
@@ -141,7 +140,7 @@ func removeProductFromCart(c *fiber.Ctx) error {
 	}
 
 	argv := db.ReadCartItemQuantityParams{
-		CartID:    cartId,
+		CartID:    sql.NullInt32{Int32: cartId, Valid: true},
 		ProductID: sql.NullInt32{Int32: int32(req.ProductId), Valid: true},
 	}
 
@@ -151,7 +150,7 @@ func removeProductFromCart(c *fiber.Ctx) error {
 	}
 
 	cartDetailArgs := db.CheckCartDetailParams{
-		CartID:    cartId,
+		CartID:    sql.NullInt32{Int32: cartId, Valid: true},
 		ProductID: sql.NullInt32{Int32: int32(req.ProductId), Valid: true},
 	}
 
@@ -168,7 +167,7 @@ func removeProductFromCart(c *fiber.Ctx) error {
 		argv := db.RemoveCartItemParams{
 			Quantity:  sql.NullInt32{Int32: int32(req.Quantity), Valid: true},
 			ProductID: sql.NullInt32{Int32: int32(req.ProductId), Valid: true},
-			CartID:    cartId,
+			CartID:    sql.NullInt32{Int32: cartId, Valid: true},
 		}
 
 		db.DBQuery.RemoveCartItem(c.Context(), argv)
@@ -177,7 +176,7 @@ func removeProductFromCart(c *fiber.Ctx) error {
 
 	deleteCartItemParams := db.DeleteCartItemParams{
 		ProductID: sql.NullInt32{Int32: int32(req.ProductId), Valid: true},
-		CartID:    cartId,
+		CartID:    sql.NullInt32{Int32: cartId, Valid: true},
 	}
 
 	db.DBQuery.DeleteCartItem(c.Context(), deleteCartItemParams)
@@ -207,8 +206,8 @@ func addDiscount(c *fiber.Ctx) error {
 	}
 
 	args := db.GetDiscountCountParams{
-		UserID:     userId,
-		DiscountID: discountCode.DiscountID,
+		UserID:     sql.NullInt32{Int32: int32(userId), Valid: true},
+		DiscountID: sql.NullInt32{Int32: discountCode.DiscountID, Valid: true},
 	}
 
 	// check if given discount has been applied previously
@@ -276,7 +275,7 @@ func getCartDetails(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
 	}
 
-	cartItems, err := db.DBQuery.GetCartItems(context.Background(), cartId)
+	cartItems, err := db.DBQuery.GetCartItems(context.Background(), sql.NullInt32{Int32: cartId, Valid: true})
 
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
@@ -311,7 +310,7 @@ func getCartDetails(c *fiber.Ctx) error {
 
 	result := map[string]interface{}{
 		"cartPayload": struct {
-			CartId        uuid.UUID
+			CartId        int32
 			Price         int32
 			DiscountCode  string
 			DeliveryPrice int32
