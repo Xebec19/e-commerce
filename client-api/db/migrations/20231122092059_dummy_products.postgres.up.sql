@@ -122,7 +122,7 @@ INSERT INTO products
 INSERT INTO public.users (first_name,last_name,email,phone,"password",created_on,updated_on,status,"access") VALUES
 	 ('Rohan','Thakur','rohan@gmail.com','7291003805','$2a$10$8d9bYVxTafPrNRGi3qh0nelvdooi4hIojo/z/qv4M0s8rovtvjJga','2023-11-22 15:05:16.154278+05:30','2023-11-22 15:05:16.154278+05:30','active','user');
 
-insert into product_images(product_id, image_url, updated_by)
+insert into product_images(product_id, image_url, updated_by, is_featured)
 select product_id, 
 'https://ecommerce-rohan-admin.s3.ap-south-1.amazonaws.com/aiony-haust-3TLl_97HNJo-unsplash.jpg' as image_url,
-1 as updated_by from products;
+1 as updated_by, true as is_featured from products;

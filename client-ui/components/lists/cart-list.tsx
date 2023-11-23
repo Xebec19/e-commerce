@@ -31,9 +31,7 @@ export default function CartList({ cart }: { cart: ICartPayload }) {
               </span>
             </div>
             <span className="text-md flex">{`${environment.CURRENCY_CODE} ${
-              !isNaN(+item?.price.String)
-                ? parseInt(item?.price.String).toFixed(2)
-                : "-"
+              !isNaN(+item?.price.Int32) ? item?.price.Int32.toFixed(2) : "-"
             } ${environment.CURRENCY}`}</span>
           </li>
         ))}

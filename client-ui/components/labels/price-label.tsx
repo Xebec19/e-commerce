@@ -4,7 +4,9 @@ import { environment } from "@/lib";
 export default function PriceLabel({ payload }: { payload: IProductPayload }) {
   return (
     <div className="flex bg-blue-700 items-center rounded-full border px-2 py-1 text-white text-sm font-semibold dark:border-neutral-800">
-      {`${environment.CURRENCY_CODE} ${payload.price} ${environment.CURRENCY}`}
+      {`${environment.CURRENCY_CODE} ${payload.price.Int32.toFixed(2)} ${
+        environment.CURRENCY
+      }`}
     </div>
   );
 }

@@ -30,7 +30,7 @@ export const metadata = {
 export default async function Home() {
   const products = await fetchNewProducts();
 
-  let featuredProducts = products.slice(0, 3).map((product, index) => {
+  let featuredProducts = products?.slice(0, 3).map((product, index) => {
     if (index == 0) {
       product.is_featured = true;
     }
@@ -38,7 +38,7 @@ export default async function Home() {
     return product;
   });
 
-  let newProducts = products.slice(3);
+  let newProducts = products?.slice(3);
 
   return (
     <>

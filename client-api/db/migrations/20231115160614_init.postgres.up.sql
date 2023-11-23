@@ -13,7 +13,7 @@ create table if not exists users (
     first_name varchar(200) not null,
     last_name varchar(200),
     email varchar(200) unique not null,
-    phone varchar(20) unique,
+    phone varchar(20),
     password varchar(200) not null,
     created_on timestamp with time zone default current_timestamp,
     updated_on timestamp with time zone default current_timestamp,
