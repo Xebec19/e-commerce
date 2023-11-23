@@ -8,8 +8,6 @@ package db
 import (
 	"context"
 	"database/sql"
-
-	"github.com/google/uuid"
 )
 
 const addDiscount = `-- name: AddDiscount :exec
@@ -17,7 +15,7 @@ update carts set discount_code = $2 where cart_id = $1
 `
 
 type AddDiscountParams struct {
-	CartID       uuid.UUID      `json:"cart_id"`
+	CartID       int32          `json:"cart_id"`
 	DiscountCode sql.NullString `json:"discount_code"`
 }
 
@@ -32,8 +30,8 @@ where cart_id = $1 and product_id = $2
 `
 
 type CheckCartDetailParams struct {
-	CartID    uuid.NullUUID `json:"cart_id"`
-	ProductID uuid.NullUUID `json:"product_id"`
+	CartID    sql.NullInt32 `json:"cart_id"`
+	ProductID sql.NullInt32 `json:"product_id"`
 }
 
 func (q *Queries) CheckCartDetail(ctx context.Context, arg CheckCartDetailParams) (int32, error) {
@@ -47,7 +45,7 @@ const countCartId = `-- name: CountCartId :one
 select count(cart_id) from carts c where user_id = $1
 `
 
-func (q *Queries) CountCartId(ctx context.Context, userID uuid.NullUUID) (int64, error) {
+func (q *Queries) CountCartId(ctx context.Context, userID sql.NullInt32) (int64, error) {
 	row := q.db.QueryRowContext(ctx, countCartId, userID)
 	var count int64
 	err := row.Scan(&count)
@@ -58,7 +56,7 @@ const createCart = `-- name: CreateCart :exec
 insert into carts (user_id) values ($1)
 `
 
-func (q *Queries) CreateCart(ctx context.Context, userID uuid.NullUUID) error {
+func (q *Queries) CreateCart(ctx context.Context, userID sql.NullInt32) error {
 	_, err := q.db.ExecContext(ctx, createCart, userID)
 	return err
 }
@@ -68,8 +66,8 @@ delete from cart_details where cart_id = $1 and product_id = $2
 `
 
 type DeleteCartItemParams struct {
-	CartID    uuid.NullUUID `json:"cart_id"`
-	ProductID uuid.NullUUID `json:"product_id"`
+	CartID    sql.NullInt32 `json:"cart_id"`
+	ProductID sql.NullInt32 `json:"product_id"`
 }
 
 func (q *Queries) DeleteCartItem(ctx context.Context, arg DeleteCartItemParams) error {
@@ -82,11 +80,11 @@ select cart_id, discount_code from carts where user_id = $1
 `
 
 type GetCartDetailsRow struct {
-	CartID       uuid.UUID      `json:"cart_id"`
+	CartID       int32          `json:"cart_id"`
 	DiscountCode sql.NullString `json:"discount_code"`
 }
 
-func (q *Queries) GetCartDetails(ctx context.Context, userID uuid.NullUUID) (GetCartDetailsRow, error) {
+func (q *Queries) GetCartDetails(ctx context.Context, userID sql.NullInt32) (GetCartDetailsRow, error) {
 	row := q.db.QueryRowContext(ctx, getCartDetails, userID)
 	var i GetCartDetailsRow
 	err := row.Scan(&i.CartID, &i.DiscountCode)
@@ -97,9 +95,9 @@ const getCartID = `-- name: GetCartID :one
 select cart_id from carts where user_id = $1
 `
 
-func (q *Queries) GetCartID(ctx context.Context, userID uuid.NullUUID) (uuid.UUID, error) {
+func (q *Queries) GetCartID(ctx context.Context, userID sql.NullInt32) (int32, error) {
 	row := q.db.QueryRowContext(ctx, getCartID, userID)
-	var cart_id uuid.UUID
+	var cart_id int32
 	err := row.Scan(&cart_id)
 	return cart_id, err
 }
@@ -113,9 +111,9 @@ left join product_images pi2 on pi2.product_id = p.product_id where pi2.is_featu
 `
 
 type GetCartItemsRow struct {
-	CdID          uuid.UUID      `json:"cd_id"`
-	CartID        uuid.NullUUID  `json:"cart_id"`
-	ProductID     uuid.NullUUID  `json:"product_id"`
+	CdID          int32          `json:"cd_id"`
+	CartID        sql.NullInt32  `json:"cart_id"`
+	ProductID     sql.NullInt32  `json:"product_id"`
 	Quantity      sql.NullInt32  `json:"quantity"`
 	ProductName   sql.NullString `json:"product_name"`
 	ImageUrl      sql.NullString `json:"image_url"`
@@ -124,7 +122,7 @@ type GetCartItemsRow struct {
 	DeliveryPrice sql.NullInt32  `json:"delivery_price"`
 }
 
-func (q *Queries) GetCartItems(ctx context.Context, cartID uuid.NullUUID) ([]GetCartItemsRow, error) {
+func (q *Queries) GetCartItems(ctx context.Context, cartID sql.NullInt32) ([]GetCartItemsRow, error) {
 	rows, err := q.db.QueryContext(ctx, getCartItems, cartID)
 	if err != nil {
 		return nil, err
@@ -164,8 +162,8 @@ values($1,$2,(select price from products p where p.product_id = $2),$3,
 `
 
 type InsertCartItemParams struct {
-	CartID    uuid.NullUUID `json:"cart_id"`
-	ProductID uuid.NullUUID `json:"product_id"`
+	CartID    sql.NullInt32 `json:"cart_id"`
+	ProductID sql.NullInt32 `json:"product_id"`
 	Quantity  sql.NullInt32 `json:"quantity"`
 }
 
@@ -179,8 +177,8 @@ select quantity from cart_details where cart_id = $1 and product_id = $2
 `
 
 type ReadCartItemQuantityParams struct {
-	CartID    uuid.NullUUID `json:"cart_id"`
-	ProductID uuid.NullUUID `json:"product_id"`
+	CartID    sql.NullInt32 `json:"cart_id"`
+	ProductID sql.NullInt32 `json:"product_id"`
 }
 
 func (q *Queries) ReadCartItemQuantity(ctx context.Context, arg ReadCartItemQuantityParams) (sql.NullInt32, error) {
@@ -196,8 +194,8 @@ update cart_details set quantity = quantity - $1 where cart_id = $2 and product_
 
 type RemoveCartItemParams struct {
 	Quantity  sql.NullInt32 `json:"quantity"`
-	CartID    uuid.NullUUID `json:"cart_id"`
-	ProductID uuid.NullUUID `json:"product_id"`
+	CartID    sql.NullInt32 `json:"cart_id"`
+	ProductID sql.NullInt32 `json:"product_id"`
 }
 
 func (q *Queries) RemoveCartItem(ctx context.Context, arg RemoveCartItemParams) error {
@@ -210,8 +208,8 @@ update carts set discount_code = null where cart_id = $1 and user_id = $2
 `
 
 type RemoveDiscountParams struct {
-	CartID uuid.UUID     `json:"cart_id"`
-	UserID uuid.NullUUID `json:"user_id"`
+	CartID int32         `json:"cart_id"`
+	UserID sql.NullInt32 `json:"user_id"`
 }
 
 func (q *Queries) RemoveDiscount(ctx context.Context, arg RemoveDiscountParams) error {
@@ -225,8 +223,8 @@ update cart_details set quantity = $1 + quantity where product_id = $2 and cart_
 
 type UpdateCartItemQuantityParams struct {
 	Quantity  sql.NullInt32 `json:"quantity"`
-	ProductID uuid.NullUUID `json:"product_id"`
-	CartID    uuid.NullUUID `json:"cart_id"`
+	ProductID sql.NullInt32 `json:"product_id"`
+	CartID    sql.NullInt32 `json:"cart_id"`
 }
 
 func (q *Queries) UpdateCartItemQuantity(ctx context.Context, arg UpdateCartItemQuantityParams) error {

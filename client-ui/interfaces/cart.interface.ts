@@ -25,10 +25,10 @@ export interface ItemsEntity {
   product_id: INullableInt32;
   quantity: INullableInt32;
   product_name: INullableString;
-  product_image: INullableString;
-  price: INullableString;
+  image_url: string;
+  price: INullableInt32;
   product_desc: INullableString;
-  delivery_price: INullableString;
+  delivery_price: INullableInt32;
 }
 
 export interface IUpdateCart {

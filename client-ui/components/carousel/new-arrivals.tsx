@@ -38,7 +38,7 @@ export default function NewArrivals({
   return (
     <div className="pb-6 pt-1">
       <Swiper {...slidesProps}>
-        {products.map((product, i) => (
+        {products?.map((product, i) => (
           <SwiperSlide key={product.product_id}>
             <ProductCard
               payload={product}

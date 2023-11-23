@@ -8,7 +8,7 @@ export default function ThreeGridItems({
 }) {
   return (
     <div className="mx-auto grid mx-w-screen-2xl gap-4 pb-4 md:grid-cols-6 md:grid-rows-2">
-      {products.map((product) => (
+      {products?.map((product) => (
         <ProductCard
           key={product.product_id}
           payload={product}

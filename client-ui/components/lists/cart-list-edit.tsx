@@ -114,7 +114,7 @@ function CartItem({ item }: { item: ItemsEntity }) {
     <li className="flex justify-between items-start space-x-4 py-4 px-2">
       <div className="w-[80px] h-[80px] relative overflow-hidden rounded-md">
         <Image
-          src={item.product_image.String}
+          src={item.image_url}
           alt={item.product_name.String}
           height={100}
           width={100}
@@ -135,7 +135,7 @@ function CartItem({ item }: { item: ItemsEntity }) {
 
       <div className="flex flex-col space-y-2">
         <span className="text-md text-right pr-1">
-          {environment.CURRENCY_CODE} {item.price.String}
+          {environment.CURRENCY_CODE} {item.price.Int32}
         </span>
         <div className="rounded-full border flex px-2 space-x-2 py-2 items-center">
           <Button

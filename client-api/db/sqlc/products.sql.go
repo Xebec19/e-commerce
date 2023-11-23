@@ -8,8 +8,6 @@ package db
 import (
 	"context"
 	"database/sql"
-
-	"github.com/google/uuid"
 )
 
 const readAllProducts = `-- name: ReadAllProducts :many
@@ -22,7 +20,7 @@ type ReadAllProductsParams struct {
 }
 
 type ReadAllProductsRow struct {
-	ProductID     uuid.UUID      `json:"product_id"`
+	ProductID     int32          `json:"product_id"`
 	ProductName   string         `json:"product_name"`
 	ImageUrl      string         `json:"image_url"`
 	Quantity      sql.NullInt32  `json:"quantity"`
@@ -66,9 +64,9 @@ const readCategory = `-- name: ReadCategory :one
 select category_id from v_products where product_id = $1
 `
 
-func (q *Queries) ReadCategory(ctx context.Context, productID uuid.UUID) (uuid.UUID, error) {
+func (q *Queries) ReadCategory(ctx context.Context, productID int32) (int32, error) {
 	row := q.db.QueryRowContext(ctx, readCategory, productID)
-	var category_id uuid.UUID
+	var category_id int32
 	err := row.Scan(&category_id)
 	return category_id, err
 }
@@ -78,13 +76,13 @@ SELECT product_id, product_name, image_url, quantity, product_desc from v_produc
 `
 
 type ReadCategoryItemsParams struct {
-	CategoryID uuid.UUID `json:"category_id"`
-	Limit      int32     `json:"limit"`
-	Offset     int32     `json:"offset"`
+	CategoryID int32 `json:"category_id"`
+	Limit      int32 `json:"limit"`
+	Offset     int32 `json:"offset"`
 }
 
 type ReadCategoryItemsRow struct {
-	ProductID   uuid.UUID      `json:"product_id"`
+	ProductID   int32          `json:"product_id"`
 	ProductName string         `json:"product_name"`
 	ImageUrl    string         `json:"image_url"`
 	Quantity    sql.NullInt32  `json:"quantity"`
@@ -124,7 +122,7 @@ const readCategoryProduct = `-- name: ReadCategoryProduct :many
 SELECT product_id, product_name, image_url, quantity, created_on, price, delivery_price, product_desc, gender, category_id, category_name, country_id, country_name FROM v_products WHERE category_id = $1
 `
 
-func (q *Queries) ReadCategoryProduct(ctx context.Context, categoryID uuid.UUID) ([]VProduct, error) {
+func (q *Queries) ReadCategoryProduct(ctx context.Context, categoryID int32) ([]VProduct, error) {
 	rows, err := q.db.QueryContext(ctx, readCategoryProduct, categoryID)
 	if err != nil {
 		return nil, err
@@ -171,7 +169,7 @@ type ReadNewProductsParams struct {
 }
 
 type ReadNewProductsRow struct {
-	ProductID     uuid.UUID      `json:"product_id"`
+	ProductID     int32          `json:"product_id"`
 	ProductName   string         `json:"product_name"`
 	ImageUrl      string         `json:"image_url"`
 	Quantity      sql.NullInt32  `json:"quantity"`
@@ -216,18 +214,18 @@ SELECT product_id, product_name, image_url, product_desc, price, quantity, deliv
 `
 
 type ReadOneProductRow struct {
-	ProductID     uuid.UUID      `json:"product_id"`
+	ProductID     int32          `json:"product_id"`
 	ProductName   string         `json:"product_name"`
 	ImageUrl      string         `json:"image_url"`
 	ProductDesc   sql.NullString `json:"product_desc"`
 	Price         sql.NullInt32  `json:"price"`
 	Quantity      sql.NullInt32  `json:"quantity"`
 	DeliveryPrice sql.NullInt32  `json:"delivery_price"`
-	CategoryID    uuid.UUID      `json:"category_id"`
+	CategoryID    int32          `json:"category_id"`
 	CategoryName  string         `json:"category_name"`
 }
 
-func (q *Queries) ReadOneProduct(ctx context.Context, productID uuid.UUID) (ReadOneProductRow, error) {
+func (q *Queries) ReadOneProduct(ctx context.Context, productID int32) (ReadOneProductRow, error) {
 	row := q.db.QueryRowContext(ctx, readOneProduct, productID)
 	var i ReadOneProductRow
 	err := row.Scan(
@@ -248,7 +246,7 @@ const readProductQuantity = `-- name: ReadProductQuantity :one
 SELECT quantity from v_products where product_id = $1
 `
 
-func (q *Queries) ReadProductQuantity(ctx context.Context, productID uuid.UUID) (sql.NullInt32, error) {
+func (q *Queries) ReadProductQuantity(ctx context.Context, productID int32) (sql.NullInt32, error) {
 	row := q.db.QueryRowContext(ctx, readProductQuantity, productID)
 	var quantity sql.NullInt32
 	err := row.Scan(&quantity)
@@ -260,14 +258,14 @@ SELECT product_id, product_name, image_url, quantity, product_desc, price, deliv
 `
 
 type ReadSimilarItemsParams struct {
-	CategoryID uuid.UUID `json:"category_id"`
-	ProductID  uuid.UUID `json:"product_id"`
-	Limit      int32     `json:"limit"`
-	Offset     int32     `json:"offset"`
+	CategoryID int32 `json:"category_id"`
+	ProductID  int32 `json:"product_id"`
+	Limit      int32 `json:"limit"`
+	Offset     int32 `json:"offset"`
 }
 
 type ReadSimilarItemsRow struct {
-	ProductID     uuid.UUID      `json:"product_id"`
+	ProductID     int32          `json:"product_id"`
 	ProductName   string         `json:"product_name"`
 	ImageUrl      string         `json:"image_url"`
 	Quantity      sql.NullInt32  `json:"quantity"`

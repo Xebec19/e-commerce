@@ -8,8 +8,6 @@ package db
 import (
 	"context"
 	"database/sql"
-
-	"github.com/google/uuid"
 )
 
 const getDiscount = `-- name: GetDiscount :one
@@ -17,7 +15,7 @@ select discount_id, code, type, value from public.discounts where lower(code) = 
 `
 
 type GetDiscountRow struct {
-	DiscountID uuid.UUID     `json:"discount_id"`
+	DiscountID int32         `json:"discount_id"`
 	Code       string        `json:"code"`
 	Type       NullEnumType  `json:"type"`
 	Value      sql.NullInt32 `json:"value"`
@@ -40,8 +38,8 @@ select count(discount_id) from orders where discount_id = $1 and user_id = $2
 `
 
 type GetDiscountCountParams struct {
-	DiscountID uuid.NullUUID `json:"discount_id"`
-	UserID     uuid.NullUUID `json:"user_id"`
+	DiscountID sql.NullInt32 `json:"discount_id"`
+	UserID     sql.NullInt32 `json:"user_id"`
 }
 
 func (q *Queries) GetDiscountCount(ctx context.Context, arg GetDiscountCountParams) (int64, error) {

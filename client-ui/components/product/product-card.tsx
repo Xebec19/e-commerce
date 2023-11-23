@@ -26,7 +26,7 @@ export default function ProductCard({
       <Link href={`/product/${slug}`}>
         <Image
           className="relative h-full w-full object-contain transition duration-300 ease-in-out group-hover:scale-105"
-          src={payload.product_image.String}
+          src={payload.image_url}
           fill
           alt={payload.product_name}
           sizes={sizes}
