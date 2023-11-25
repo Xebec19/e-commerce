@@ -114,7 +114,7 @@ function CartItem({ item }: { item: ItemsEntity }) {
     <li className="flex justify-between items-start space-x-4 py-4 px-2">
       <div className="w-[80px] h-[80px] relative overflow-hidden rounded-md">
         <Image
-          src={item.image_url}
+          src={item.image_url.String}
           alt={item.product_name.String}
           height={100}
           width={100}

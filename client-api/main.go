@@ -8,6 +8,7 @@ import (
 	"github.com/Xebec19/e-commerce/client-api/cart"
 	db "github.com/Xebec19/e-commerce/client-api/db/sqlc"
 	_ "github.com/Xebec19/e-commerce/client-api/docs"
+	"github.com/Xebec19/e-commerce/client-api/order"
 	"github.com/Xebec19/e-commerce/client-api/product"
 	"github.com/Xebec19/e-commerce/client-api/user"
 	util "github.com/Xebec19/e-commerce/client-api/util"
@@ -82,6 +83,7 @@ func main() {
 
 	// Private Routes
 	cart.SetRoute(app)
+	order.SetRoute(app)
 
 	// start server
 	log.Printf("Server listening on %v", config.ServerAddress)

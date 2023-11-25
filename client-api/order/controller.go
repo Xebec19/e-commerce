@@ -1,0 +1,122 @@
+package order
+
+import (
+	"context"
+	"database/sql"
+	"strings"
+
+	db "github.com/Xebec19/e-commerce/client-api/db/sqlc"
+	"github.com/Xebec19/e-commerce/client-api/util"
+	"github.com/gofiber/fiber/v2"
+)
+
+type orderSchema struct {
+	BillingFirstName  string `json:"billingFirstName" binding:"required"`
+	BillingLastName   string `json:"billingLastName" binding:"required"`
+	BillingEmail      string `json:"billingEmail" binding:"required"`
+	BillingAddress    string `json:"billingAddress" binding:"required"`
+	ShippingFirstName string `json:"shippingFirstName" binding:"required"`
+	ShippingLastName  string `json:"shippingLastName" binding:"required"`
+	ShippingEmail     string `json:"shippingEmail" binding:"required"`
+	ShippingAddress   string `json:"shippingAddress" binding:"required"`
+}
+
+// Route /order/v1/create-order [post]
+func createOrder(c *fiber.Ctx) error {
+	req := new(orderSchema)
+	if err := c.BodyParser(req); err != nil {
+		c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
+		return err
+	}
+
+	userId := c.Locals("userid").(int64)
+
+	cartId, err := db.DBQuery.GetCartID(context.Background(), sql.NullInt32{Int32: int32(userId), Valid: true})
+
+	if err != nil {
+		c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
+		return err
+	}
+
+	cartDetails, err := db.DBQuery.GetCartDetails(context.Background(), sql.NullInt32{Int32: int32(userId), Valid: true})
+
+	if err != nil {
+		c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
+		return err
+	}
+
+	cartItems, err := db.DBQuery.GetCartItems(c.Context(), sql.NullInt32{Int32: cartId, Valid: true})
+
+	if err != nil {
+		c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
+		return err
+	}
+
+	var subTotal int32
+	var deliveryPriceTotal int32
+	var discountTotal int32
+	var total int32
+	subTotal = 0
+	deliveryPriceTotal = 0
+	discountTotal = 0
+	total = 0
+
+	for _, item := range cartItems {
+		price := item.Price.Int32
+
+		deliveryPrice := item.DeliveryPrice.Int32
+
+		subTotal += item.Quantity.Int32 * price
+		deliveryPriceTotal += deliveryPrice
+	}
+
+	if cartDetails.DiscountCode.String != "" {
+		discount, _ := db.DBQuery.GetDiscount(context.Background(), strings.ToLower(cartDetails.DiscountCode.String))
+
+		if discount.Type.EnumType == "voucher" {
+			discountTotal = discount.Value.Int32
+		} else {
+			total := subTotal + deliveryPriceTotal
+			discountTotal = ((discount.Value.Int32) * 100) / total
+		}
+	}
+
+	total = max(0, subTotal+deliveryPriceTotal-discountTotal)
+
+	argv := db.CreateOrderParams{
+		UserID:            sql.NullInt32{Int32: int32(userId), Valid: true},
+		Price:             sql.NullInt32{Int32: subTotal, Valid: true},
+		DeliveryPrice:     sql.NullInt32{Int32: deliveryPriceTotal, Valid: true},
+		Total:             sql.NullInt32{Int32: total, Valid: true},
+		BillingFirstName:  req.BillingFirstName,
+		BillingLastName:   req.BillingLastName,
+		BillingEmail:      req.BillingEmail,
+		BillingAddress:    sql.NullString{String: req.BillingAddress, Valid: true},
+		ShippingFirstName: req.ShippingFirstName,
+		ShippingLastName:  req.ShippingLastName,
+		ShippingEmail:     req.ShippingEmail,
+		ShippingAddress:   sql.NullString{String: req.ShippingAddress, Valid: true},
+	}
+
+	orderId, err := db.DBQuery.CreateOrder(c.Context(), argv)
+
+	if err != nil {
+		c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
+		return err
+	}
+
+	for _, value := range cartItems {
+		argv2 := db.CreateOrderItemParams{
+			OrderID:       sql.NullInt32{Int32: orderId, Valid: true},
+			ProductID:     value.ProductID,
+			ProductPrice:  value.Price.Int32,
+			Quantity:      value.Quantity.Int32,
+			DeliveryPrice: value.DeliveryPrice.Int32,
+		}
+
+		db.DBQuery.CreateOrderItem(c.Context(), argv2)
+	}
+
+	c.Status(fiber.StatusOK).JSON(util.SuccessResponse(orderId, "order created successfully"))
+	return nil
+}

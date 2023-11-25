@@ -1,5 +1,5 @@
 import { environment } from "@/lib";
-declare var Razorpay;
+declare var Razorpay: any;
 
 export default function useCheckout() {
   const handleCheckout = () => {
