@@ -25,7 +25,7 @@ export default function Footer() {
 
         <div className="col-span-2 flex flex-col justify-start items-start md:items-end">
           <span>+91 9898998989</span>
-          <address>123, Ice Area, new Yorkshire, Westwood</address>
+          <address>{environment.ADDRESS}</address>
         </div>
       </div>
       <div className="p-4 flex-col md:flex-row flex justify-between border-t border-neutral-200">

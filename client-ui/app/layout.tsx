@@ -9,6 +9,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { environment } from "@/lib";
 import { ReduxProvider } from "@/store/redux.provider";
 import Script from "next/script";
+import { Suspense } from "react";
+import { Loader2 } from "lucide-react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,9 +33,11 @@ export default function RootLayout({
               <>
                 <Navbar />
                 <Toaster />
-                <main className="px-4 container min-h-[60vh] my-4">
-                  {children}
-                </main>
+                <Suspense fallback={<Loader2 className="animate-spin" />}>
+                  <main className="px-4 container min-h-[60vh] my-4">
+                    {children}
+                  </main>
+                </Suspense>
                 <Footer />
               </>
             </QueryProvider>

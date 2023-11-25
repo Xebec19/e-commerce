@@ -6,7 +6,6 @@ require (
 	github.com/gofiber/fiber/v2 v2.41.0
 	github.com/gofiber/swagger v0.1.8
 	github.com/golang-jwt/jwt/v4 v4.4.3
-	github.com/google/uuid v1.1.2
 	github.com/lib/pq v1.10.7
 	github.com/matoous/go-nanoid/v2 v2.0.0
 	github.com/spf13/viper v1.14.0
@@ -24,9 +23,6 @@ require (
 	github.com/go-openapi/swag v0.22.3 // indirect
 	github.com/gofiber/utils v0.0.10 // indirect
 	github.com/gorilla/schema v1.1.0 // indirect
-	github.com/jackc/pgpassfile v1.0.0 // indirect
-	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
-	github.com/jackc/pgx/v5 v5.5.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect

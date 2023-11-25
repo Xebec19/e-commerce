@@ -25,7 +25,7 @@ export interface ItemsEntity {
   product_id: INullableInt32;
   quantity: INullableInt32;
   product_name: INullableString;
-  image_url: string;
+  image_url: INullableString;
   price: INullableInt32;
   product_desc: INullableString;
   delivery_price: INullableInt32;
