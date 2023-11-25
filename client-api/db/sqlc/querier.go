@@ -15,7 +15,7 @@ type Querier interface {
 	CountCartId(ctx context.Context, userID sql.NullInt32) (int64, error)
 	CountUser(ctx context.Context, lower string) (int64, error)
 	CreateCart(ctx context.Context, userID sql.NullInt32) error
-	CreateOrder(ctx context.Context, arg CreateOrderParams) (int32, error)
+	CreateOrder(ctx context.Context, arg CreateOrderParams) (string, error)
 	CreateOrderItem(ctx context.Context, arg CreateOrderItemParams) error
 	CreateUser(ctx context.Context, arg CreateUserParams) (int32, error)
 	DeleteCartItem(ctx context.Context, arg DeleteCartItemParams) error

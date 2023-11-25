@@ -96,12 +96,15 @@ create table if not exists cart_details (
     delivery_price integer
 );
 
+create type enum_order_status as enum('processing','confirmed','delivered','cancelled','pending-payment','refunded');
+
 create table if not exists orders (
-    order_id serial primary key,
+    order_id varchar(20) primary key,
     user_id integer references users(user_id),
     price integer default 0,
     delivery_price integer default 0,
     total integer default 0,
+    status enum_order_status default 'processing',
     created_on timestamp with time zone default current_timestamp,
     billing_first_name varchar(200) not null,
     billing_last_name varchar(200) not null,
@@ -115,7 +118,7 @@ create table if not exists orders (
 
 create table if not exists order_details (
     od_id serial primary key,
-    order_id integer references orders(order_id),
+    order_id varchar(20) references orders(order_id),
     product_id integer references products(product_id),
     product_price integer not null,
     quantity integer not null,

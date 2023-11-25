@@ -95,6 +95,52 @@ func (ns NullEnumGender) Value() (driver.Value, error) {
 	return string(ns.EnumGender), nil
 }
 
+type EnumOrderStatus string
+
+const (
+	EnumOrderStatusProcessing     EnumOrderStatus = "processing"
+	EnumOrderStatusConfirmed      EnumOrderStatus = "confirmed"
+	EnumOrderStatusDelivered      EnumOrderStatus = "delivered"
+	EnumOrderStatusCancelled      EnumOrderStatus = "cancelled"
+	EnumOrderStatusPendingPayment EnumOrderStatus = "pending-payment"
+	EnumOrderStatusRefunded       EnumOrderStatus = "refunded"
+)
+
+func (e *EnumOrderStatus) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = EnumOrderStatus(s)
+	case string:
+		*e = EnumOrderStatus(s)
+	default:
+		return fmt.Errorf("unsupported scan type for EnumOrderStatus: %T", src)
+	}
+	return nil
+}
+
+type NullEnumOrderStatus struct {
+	EnumOrderStatus EnumOrderStatus `json:"enum_order_status"`
+	Valid           bool            `json:"valid"` // Valid is true if EnumOrderStatus is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullEnumOrderStatus) Scan(value interface{}) error {
+	if value == nil {
+		ns.EnumOrderStatus, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.EnumOrderStatus.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullEnumOrderStatus) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.EnumOrderStatus), nil
+}
+
 type EnumStatus string
 
 const (
@@ -225,30 +271,33 @@ type Discount struct {
 }
 
 type Order struct {
-	OrderID           int32          `json:"order_id"`
-	UserID            sql.NullInt32  `json:"user_id"`
-	Price             sql.NullInt32  `json:"price"`
-	DeliveryPrice     sql.NullInt32  `json:"delivery_price"`
-	Total             sql.NullInt32  `json:"total"`
-	CreatedOn         sql.NullTime   `json:"created_on"`
-	BillingFirstName  string         `json:"billing_first_name"`
-	BillingLastName   string         `json:"billing_last_name"`
-	BillingEmail      string         `json:"billing_email"`
-	BillingAddress    sql.NullString `json:"billing_address"`
-	ShippingFirstName string         `json:"shipping_first_name"`
-	ShippingLastName  string         `json:"shipping_last_name"`
-	ShippingEmail     string         `json:"shipping_email"`
-	ShippingAddress   sql.NullString `json:"shipping_address"`
-	DiscountID        sql.NullInt32  `json:"discount_id"`
+	OrderID           string              `json:"order_id"`
+	UserID            sql.NullInt32       `json:"user_id"`
+	Price             sql.NullInt32       `json:"price"`
+	DeliveryPrice     sql.NullInt32       `json:"delivery_price"`
+	Total             sql.NullInt32       `json:"total"`
+	Status            NullEnumOrderStatus `json:"status"`
+	CreatedOn         sql.NullTime        `json:"created_on"`
+	BillingFirstName  string              `json:"billing_first_name"`
+	BillingLastName   string              `json:"billing_last_name"`
+	BillingEmail      string              `json:"billing_email"`
+	BillingAddress    sql.NullString      `json:"billing_address"`
+	ShippingFirstName string              `json:"shipping_first_name"`
+	ShippingLastName  string              `json:"shipping_last_name"`
+	ShippingEmail     string              `json:"shipping_email"`
+	ShippingAddress   sql.NullString      `json:"shipping_address"`
+	DiscountID        sql.NullInt32       `json:"discount_id"`
+	BillingPhone      sql.NullString      `json:"billing_phone"`
+	ShippingPhone     sql.NullString      `json:"shipping_phone"`
 }
 
 type OrderDetail struct {
-	OdID          int32         `json:"od_id"`
-	OrderID       sql.NullInt32 `json:"order_id"`
-	ProductID     sql.NullInt32 `json:"product_id"`
-	ProductPrice  int32         `json:"product_price"`
-	Quantity      int32         `json:"quantity"`
-	DeliveryPrice int32         `json:"delivery_price"`
+	OdID          int32          `json:"od_id"`
+	OrderID       sql.NullString `json:"order_id"`
+	ProductID     sql.NullInt32  `json:"product_id"`
+	ProductPrice  int32          `json:"product_price"`
+	Quantity      int32          `json:"quantity"`
+	DeliveryPrice int32          `json:"delivery_price"`
 }
 
 type Product struct {

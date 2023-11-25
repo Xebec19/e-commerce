@@ -15,13 +15,17 @@ type orderSchema struct {
 	BillingLastName   string `json:"billingLastName" binding:"required"`
 	BillingEmail      string `json:"billingEmail" binding:"required"`
 	BillingAddress    string `json:"billingAddress" binding:"required"`
+	BillingPhone      string `json:"billingPhone" binding:"required"`
 	ShippingFirstName string `json:"shippingFirstName" binding:"required"`
 	ShippingLastName  string `json:"shippingLastName" binding:"required"`
 	ShippingEmail     string `json:"shippingEmail" binding:"required"`
 	ShippingAddress   string `json:"shippingAddress" binding:"required"`
+	ShippingPhone     string `json:"shippingPhone" binding:"required"`
 }
 
-// Route /order/v1/create-order [post]
+// @Summary: it create an order of status processing
+//
+// @Router: /order/v1/create-order [post]
 func createOrder(c *fiber.Ctx) error {
 	req := new(orderSchema)
 	if err := c.BodyParser(req); err != nil {
@@ -83,7 +87,10 @@ func createOrder(c *fiber.Ctx) error {
 
 	total = max(0, subTotal+deliveryPriceTotal-discountTotal)
 
+	id := strings.ToUpper(util.RandomId(10))
+
 	argv := db.CreateOrderParams{
+		OrderID:           id,
 		UserID:            sql.NullInt32{Int32: int32(userId), Valid: true},
 		Price:             sql.NullInt32{Int32: subTotal, Valid: true},
 		DeliveryPrice:     sql.NullInt32{Int32: deliveryPriceTotal, Valid: true},
@@ -92,10 +99,12 @@ func createOrder(c *fiber.Ctx) error {
 		BillingLastName:   req.BillingLastName,
 		BillingEmail:      req.BillingEmail,
 		BillingAddress:    sql.NullString{String: req.BillingAddress, Valid: true},
+		BillingPhone:      sql.NullString{String: req.BillingPhone, Valid: true},
 		ShippingFirstName: req.ShippingFirstName,
 		ShippingLastName:  req.ShippingLastName,
 		ShippingEmail:     req.ShippingEmail,
 		ShippingAddress:   sql.NullString{String: req.ShippingAddress, Valid: true},
+		ShippingPhone:     sql.NullString{String: req.ShippingPhone, Valid: true},
 	}
 
 	orderId, err := db.DBQuery.CreateOrder(c.Context(), argv)
@@ -107,7 +116,7 @@ func createOrder(c *fiber.Ctx) error {
 
 	for _, value := range cartItems {
 		argv2 := db.CreateOrderItemParams{
-			OrderID:       sql.NullInt32{Int32: orderId, Valid: true},
+			OrderID:       sql.NullString{String: orderId, Valid: true},
 			ProductID:     value.ProductID,
 			ProductPrice:  value.Price.Int32,
 			Quantity:      value.Quantity.Int32,
@@ -117,6 +126,14 @@ func createOrder(c *fiber.Ctx) error {
 		db.DBQuery.CreateOrderItem(c.Context(), argv2)
 	}
 
-	c.Status(fiber.StatusOK).JSON(util.SuccessResponse(orderId, "order created successfully"))
+	payload := map[string]interface{}{
+		"orderId":       orderId,
+		"subTotal":      subTotal,
+		"deliveryPrice": deliveryPriceTotal,
+		"total":         total,
+		"discountTotal": discountTotal,
+	}
+
+	c.Status(fiber.StatusOK).JSON(util.SuccessResponse(payload, "order created successfully"))
 	return nil
 }
