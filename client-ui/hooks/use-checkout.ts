@@ -33,28 +33,28 @@ export default function useCheckout() {
 
       var options = {
         key: environment.RAZORPAY_KEY,
-        amount: response.data.payload.total,
+        order_id: response.data.payload.orderId,
+        amount: response.data.payload.total * 100, // convert to paise
         currency: environment.CURRENCY,
         name: environment.SITE_NAME,
-        image:
-          "https://ecommerce-rohan-admin.s3.ap-south-1.amazonaws.com/aiony-haust-3TLl_97HNJo-unsplash.jpg",
-        order_id: "order_9A33XWu170gUtm",
+        image: environment.LOGO + "",
         description: `Payment for ${response.data.payload.orderId}`,
         callback_url: "http://localhost:3000/",
         handler: function (response: any) {
           console.log({
             paymentId: response.razorpay_payment_id,
-            orderId: response.razorpay_order_id,
+            orderId: response.razorpay_orderId,
             signature: response.razorpay_signature,
           });
+          console.log({ response });
+        },
+        notes: {
+          key: "hellow",
         },
         prefill: {
           name: payload.billingFirstName,
           email: payload.billingEmail,
           contact: payload.billingPhone,
-        },
-        notes: {
-          address: environment.ADDRESS,
         },
         theme: {
           color: "#3399cc",

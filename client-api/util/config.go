@@ -5,11 +5,14 @@ import (
 )
 
 type Config struct {
-	DBDriver      string `mapstructure:"DB_DRIVER"`
-	DBSource      string `mapstructure:"DB_SOURCE"`
-	ServerAddress string `mapstructure:"SERVER_ADDRESS"`
-	JwtSecret     string `mapstructure:"JWT_SECRET"`
-	Env           string `mapstructure:"ENV"`
+	DBDriver       string `mapstructure:"DB_DRIVER"`
+	DBSource       string `mapstructure:"DB_SOURCE"`
+	ServerAddress  string `mapstructure:"SERVER_ADDRESS"`
+	JwtSecret      string `mapstructure:"JWT_SECRET"`
+	Env            string `mapstructure:"ENV"`
+	RazorpayKey    string `mapstructure:"RAZORPAY_KEY"`
+	RazorpaySecret string `mapstructure:"RAZORPAY_SECRET"`
+	Currency       string `mapstructure:"CURRENCY"`
 }
 
 func LoadConfig(path string) (config Config, err error) {

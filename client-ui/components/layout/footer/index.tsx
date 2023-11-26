@@ -6,7 +6,7 @@ export default function Footer() {
     <footer className="container px-4">
       <div className="w-full grid grid-cols-2 md:grid-cols-4 gap-4 py-4">
         <Image
-          src="/icons8-shopaholic-48.png"
+          src={environment.LOGO + ""}
           width={40}
           height={40}
           alt={environment.SITE_NAME + ""}

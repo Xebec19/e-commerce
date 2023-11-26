@@ -3,11 +3,13 @@ package order
 import (
 	"context"
 	"database/sql"
+	"log"
 	"strings"
 
 	db "github.com/Xebec19/e-commerce/client-api/db/sqlc"
 	"github.com/Xebec19/e-commerce/client-api/util"
 	"github.com/gofiber/fiber/v2"
+	razorpay "github.com/razorpay/razorpay-go"
 )
 
 type orderSchema struct {
@@ -87,7 +89,25 @@ func createOrder(c *fiber.Ctx) error {
 
 	total = max(0, subTotal+deliveryPriceTotal-discountTotal)
 
-	id := strings.ToUpper(util.RandomId(10))
+	config, err := util.LoadConfig(("."))
+	if err != nil {
+		log.Fatal("cannot load config: ", err)
+	}
+	razorPayClient := razorpay.NewClient(config.RazorpayKey, config.RazorpaySecret)
+
+	data := map[string]interface{}{
+		"amount":   total * 100,
+		"currency": config.Currency,
+	}
+
+	body, err := razorPayClient.Order.Create(data, nil)
+
+	if err != nil {
+		c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
+		return err
+	}
+
+	id, _ := body["id"].(string)
 
 	argv := db.CreateOrderParams{
 		OrderID:           id,

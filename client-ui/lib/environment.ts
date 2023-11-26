@@ -6,3 +6,4 @@ export const RAZORPAY_KEY = process.env.NEXT_PUBLIC_RAZORPAY_KEY;
 export const CLARITY_KEY = process.env.NEXT_PUBLIC_CLARITY_KEY;
 export const ADDRESS = process.env.NEXT_PUBLIC_ADDRESS;
 export const PHONE_NUMBER = process.env.NEXT_PUBLIC_PHONE_NUMBER;
+export const LOGO = process.env.NEXT_PUBLIC_SITE_LOGO;
