@@ -44,7 +44,7 @@ export default function DesktopHeader() {
         <Link href={"/"} className="flex space-x-4 items-center">
           <Image
             priority
-            src="/icons8-shopaholic-48.png"
+            src={environment.LOGO + ""}
             width={40}
             height={40}
             alt={environment.SITE_NAME + ""}

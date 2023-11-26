@@ -26,6 +26,7 @@ require (
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/razorpay/razorpay-go v1.2.0 // indirect
 	github.com/rogpeppe/go-internal v1.8.0 // indirect
 	github.com/swaggo/files v1.0.0 // indirect
 	golang.org/x/net v0.10.0 // indirect
