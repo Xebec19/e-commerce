@@ -3,6 +3,7 @@ package order
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"log"
 	"strings"
 
@@ -155,5 +156,40 @@ func createOrder(c *fiber.Ctx) error {
 	}
 
 	c.Status(fiber.StatusOK).JSON(util.SuccessResponse(payload, "order created successfully"))
+	return nil
+}
+
+type confirmOrderSchema struct {
+	PaymentId string `json:"paymentId" binding:"required"`
+	OrderId   string `json:"orderId" binding:"required"`
+	Signature string `json:"signature" binding:"required"`
+}
+
+// @Summary: it validates signature of paid order to make sure that it is not altered
+//
+// @Router /order/v1/confirm-order [post]
+func confirmOrder(c *fiber.Ctx) error {
+	req := new(confirmOrderSchema)
+	if err := c.BodyParser(req); err != nil {
+		c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
+		return err
+	}
+
+	status := util.VerifyRazorpaySignature(req.OrderId, req.PaymentId, req.Signature)
+
+	if !status {
+		c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(errors.New("signature is invalid")))
+		return nil
+	}
+
+	argv := db.ConfirmOrderPaymentParams{
+		OrderID:              req.OrderId,
+		TransactionSignature: sql.NullString{String: req.Signature, Valid: true},
+		PaymentID:            sql.NullString{String: req.PaymentId, Valid: true},
+	}
+
+	db.DBQuery.ConfirmOrderPayment(c.Context(), argv)
+
+	c.Status(fiber.StatusOK).JSON(util.SuccessResponse(status, "order confirm"))
 	return nil
 }

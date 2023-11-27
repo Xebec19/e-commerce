@@ -1,4 +1,5 @@
 import {
+  IConfirmOrderRequest,
   ICreateOrderRequest,
   ICreateOrderResponse,
 } from "@/interfaces/order.interface";
@@ -11,5 +12,14 @@ export const createOrder = ({
   payload: ICreateOrderRequest;
 }): Promise<AxiosResponse<ICreateOrderResponse>> => {
   let url = "/order/v1/create-order";
+  return requestAPI.post(url, payload);
+};
+
+export const confirmOrder = ({
+  payload,
+}: {
+  payload: IConfirmOrderRequest;
+}) => {
+  let url = "/order/v1/confirm-order";
   return requestAPI.post(url, payload);
 };

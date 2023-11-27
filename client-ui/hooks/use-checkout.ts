@@ -1,7 +1,7 @@
 import { useToast } from "@/components/ui/use-toast";
 import { ICreateOrderRequest } from "@/interfaces/order.interface";
 import { environment } from "@/lib";
-import { createOrder } from "@/lib/http/order.http";
+import { confirmOrder, createOrder } from "@/lib/http/order.http";
 import { RootState } from "@/store/redux.store";
 import { useSelector } from "react-redux";
 declare var Razorpay: any;
@@ -40,16 +40,15 @@ export default function useCheckout() {
         image: environment.LOGO + "",
         description: `Payment for ${response.data.payload.orderId}`,
         callback_url: "http://localhost:3000/",
-        handler: function (response: any) {
-          console.log({
+        handler: async function (response: any) {
+          let payload = {
             paymentId: response.razorpay_payment_id,
-            orderId: response.razorpay_orderId,
+            orderId: response.razorpay_order_id,
             signature: response.razorpay_signature,
-          });
-          console.log({ response });
-        },
-        notes: {
-          key: "hellow",
+          };
+          const r = await confirmOrder({ payload });
+
+          console.log({ r });
         },
         prefill: {
           name: payload.billingFirstName,

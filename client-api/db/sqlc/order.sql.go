@@ -10,6 +10,23 @@ import (
 	"database/sql"
 )
 
+const confirmOrderPayment = `-- name: ConfirmOrderPayment :exec
+UPDATE public.orders
+SET status = 'processing', payment_id = $1, transaction_signature = $2
+WHERE order_id = $3
+`
+
+type ConfirmOrderPaymentParams struct {
+	PaymentID            sql.NullString `json:"payment_id"`
+	TransactionSignature sql.NullString `json:"transaction_signature"`
+	OrderID              string         `json:"order_id"`
+}
+
+func (q *Queries) ConfirmOrderPayment(ctx context.Context, arg ConfirmOrderPaymentParams) error {
+	_, err := q.db.ExecContext(ctx, confirmOrderPayment, arg.PaymentID, arg.TransactionSignature, arg.OrderID)
+	return err
+}
+
 const createOrder = `-- name: CreateOrder :one
 INSERT INTO public.orders
 (order_id, user_id, price, delivery_price, total, billing_first_name, billing_last_name, billing_email, billing_address, billing_phone, shipping_first_name, shipping_last_name, shipping_email, shipping_address, shipping_phone, discount_id)

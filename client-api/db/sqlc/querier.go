@@ -12,6 +12,7 @@ import (
 type Querier interface {
 	AddDiscount(ctx context.Context, arg AddDiscountParams) error
 	CheckCartDetail(ctx context.Context, arg CheckCartDetailParams) (int32, error)
+	ConfirmOrderPayment(ctx context.Context, arg ConfirmOrderPaymentParams) error
 	CountCartId(ctx context.Context, userID sql.NullInt32) (int64, error)
 	CountUser(ctx context.Context, lower string) (int64, error)
 	CreateCart(ctx context.Context, userID sql.NullInt32) error

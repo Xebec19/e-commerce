@@ -24,3 +24,9 @@ export interface ICreateOrderPayload {
 export interface ICreateOrderResponse extends IResponse {
   payload: ICreateOrderPayload;
 }
+
+export interface IConfirmOrderRequest {
+  paymentId: string;
+  orderId: string;
+  signature: string;
+}
