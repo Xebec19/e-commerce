@@ -38,7 +38,7 @@ export default function ProductImages({
             className="object-contain h-full w-full transition-all ease-in-out"
             src={images[selectedImage].image_url}
             sizes={"(min-width: 768px) 40vw, 100vw"}
-            alt="dummy-t-shirt.jpg"
+            alt={images[selectedImage].img_id}
           />
 
           <div className="absolute bottom-4 block m-auto">
