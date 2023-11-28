@@ -190,6 +190,18 @@ func confirmOrder(c *fiber.Ctx) error {
 
 	db.DBQuery.ConfirmOrderPayment(c.Context(), argv)
 
+	userId := c.Locals("userid").(int64)
+
+	cartId, err := db.DBQuery.GetCartID(context.Background(), sql.NullInt32{Int32: int32(userId), Valid: true})
+
+	if err != nil {
+		c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
+		return err
+	}
+
+	db.DBQuery.DeleteCart(c.Context(), cartId)
+	db.DBQuery.DeleteAllCartItems(c.Context(), sql.NullInt32{Int32: cartId, Valid: true})
+
 	payload := map[string]interface{}{
 		"status":  status,
 		"orderId": req.OrderId,

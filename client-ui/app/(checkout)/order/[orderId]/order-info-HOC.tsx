@@ -1,10 +1,13 @@
 "use client";
 
+import { Tooltip, TooltipProvider } from "@/components/ui/tooltip";
 import { OrderInfo, OrderItemsEntity } from "@/interfaces/order.interface";
 import { ellipsis, environment } from "@/lib";
 import { getOrderDetails } from "@/lib/http/order.http";
+import { orderStatusHelperText } from "@/lib/messages";
+import { TooltipContent, TooltipTrigger } from "@radix-ui/react-tooltip";
 import { useQuery } from "@tanstack/react-query";
-import { X } from "lucide-react";
+import { HelpCircle, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -43,10 +46,29 @@ export default function OrderDetaisHOC() {
 
   return (
     <section role="order details">
-      <h1 className="text-2xl prose font-bold">
-        Order Details for{" "}
-        <span className="uppercase text-green-500">{orderId}</span>
-      </h1>
+      <div className="flex justify-between">
+        <h1 className="text-2xl prose font-bold">
+          Order Details for{" "}
+          <span className="uppercase text-green-500">{orderId}</span>
+        </h1>
+        <div className="flex space-x-2 items-center cursor-pointer">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <HelpCircle className="h-4 w-4" />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p className="text-sm max-w-sm break-words">
+                  {orderStatusHelperText({
+                    message: order?.orderInfo?.status.enum_order_status + "",
+                  })}
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <span className="text-xl prose font-bold">Processing</span>
+        </div>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
         {order?.orderItems?.length ? (
           <OrderItems orderList={order.orderItems} />

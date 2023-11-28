@@ -19,6 +19,8 @@ type Querier interface {
 	CreateOrder(ctx context.Context, arg CreateOrderParams) (string, error)
 	CreateOrderItem(ctx context.Context, arg CreateOrderItemParams) error
 	CreateUser(ctx context.Context, arg CreateUserParams) (int32, error)
+	DeleteAllCartItems(ctx context.Context, cartID sql.NullInt32) error
+	DeleteCart(ctx context.Context, cartID int32) error
 	DeleteCartItem(ctx context.Context, arg DeleteCartItemParams) error
 	FindUserOne(ctx context.Context, lower string) (FindUserOneRow, error)
 	GetCartDetails(ctx context.Context, userID sql.NullInt32) (GetCartDetailsRow, error)

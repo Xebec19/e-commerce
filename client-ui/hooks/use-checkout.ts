@@ -2,6 +2,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { ICreateOrderRequest } from "@/interfaces/order.interface";
 import { environment } from "@/lib";
 import { confirmOrder, createOrder } from "@/lib/http/order.http";
+import { queryClient } from "@/store/query.provider";
 import { RootState } from "@/store/redux.store";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
@@ -53,6 +54,8 @@ export default function useCheckout() {
             if (!resp.data.payload.status) {
               throw new Error("Request failed!");
             }
+
+            queryClient.invalidateQueries({ queryKey: ["/cart"] });
 
             router.push(`/order/${payload.orderId}`);
             return;
