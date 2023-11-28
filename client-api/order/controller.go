@@ -190,6 +190,40 @@ func confirmOrder(c *fiber.Ctx) error {
 
 	db.DBQuery.ConfirmOrderPayment(c.Context(), argv)
 
-	c.Status(fiber.StatusOK).JSON(util.SuccessResponse(status, "order confirm"))
+	payload := map[string]interface{}{
+		"status":  status,
+		"orderId": req.OrderId,
+	}
+
+	c.Status(fiber.StatusOK).JSON(util.SuccessResponse(payload, "order confirm"))
+	return nil
+}
+
+// @Summary: it returns order details
+//
+// @Router /order/v1/get-order/:orderId [get]
+func getOrder(c *fiber.Ctx) error {
+	orderId := c.Params("orderId")
+
+	orderInfo, err := db.DBQuery.GetOrder(c.Context(), orderId)
+
+	if err != nil {
+		c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
+		return err
+	}
+
+	orderItems, err := db.DBQuery.GetOrderItems(c.Context(), sql.NullString{String: orderId, Valid: true})
+
+	if err != nil {
+		c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
+		return err
+	}
+
+	payload := map[string]interface{}{
+		"orderInfo":  orderInfo,
+		"orderItems": orderItems,
+	}
+
+	c.Status(fiber.StatusOK).JSON(util.SuccessResponse(payload, "order details"))
 	return nil
 }

@@ -291,6 +291,7 @@ type Order struct {
 	ShippingPhone        sql.NullString      `json:"shipping_phone"`
 	PaymentID            sql.NullString      `json:"payment_id"`
 	TransactionSignature sql.NullString      `json:"transaction_signature"`
+	DiscountAmount       sql.NullInt32       `json:"discount_amount"`
 }
 
 type OrderDetail struct {

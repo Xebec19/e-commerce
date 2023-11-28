@@ -8,6 +8,11 @@ export interface INullableInt32 {
   Valid: boolean;
 }
 
+export interface INullableTimestamp {
+  Time: string;
+  Valid: boolean;
+}
+
 export interface IResponse {
   message: string;
   status: boolean;
