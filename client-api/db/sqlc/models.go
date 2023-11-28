@@ -271,24 +271,27 @@ type Discount struct {
 }
 
 type Order struct {
-	OrderID           string              `json:"order_id"`
-	UserID            sql.NullInt32       `json:"user_id"`
-	Price             sql.NullInt32       `json:"price"`
-	DeliveryPrice     sql.NullInt32       `json:"delivery_price"`
-	Total             sql.NullInt32       `json:"total"`
-	Status            NullEnumOrderStatus `json:"status"`
-	CreatedOn         sql.NullTime        `json:"created_on"`
-	BillingFirstName  string              `json:"billing_first_name"`
-	BillingLastName   string              `json:"billing_last_name"`
-	BillingEmail      string              `json:"billing_email"`
-	BillingAddress    sql.NullString      `json:"billing_address"`
-	ShippingFirstName string              `json:"shipping_first_name"`
-	ShippingLastName  string              `json:"shipping_last_name"`
-	ShippingEmail     string              `json:"shipping_email"`
-	ShippingAddress   sql.NullString      `json:"shipping_address"`
-	DiscountID        sql.NullInt32       `json:"discount_id"`
-	BillingPhone      sql.NullString      `json:"billing_phone"`
-	ShippingPhone     sql.NullString      `json:"shipping_phone"`
+	OrderID              string              `json:"order_id"`
+	UserID               sql.NullInt32       `json:"user_id"`
+	Price                sql.NullInt32       `json:"price"`
+	DeliveryPrice        sql.NullInt32       `json:"delivery_price"`
+	Total                sql.NullInt32       `json:"total"`
+	Status               NullEnumOrderStatus `json:"status"`
+	CreatedOn            sql.NullTime        `json:"created_on"`
+	BillingFirstName     string              `json:"billing_first_name"`
+	BillingLastName      string              `json:"billing_last_name"`
+	BillingEmail         string              `json:"billing_email"`
+	BillingAddress       sql.NullString      `json:"billing_address"`
+	ShippingFirstName    string              `json:"shipping_first_name"`
+	ShippingLastName     string              `json:"shipping_last_name"`
+	ShippingEmail        string              `json:"shipping_email"`
+	ShippingAddress      sql.NullString      `json:"shipping_address"`
+	DiscountID           sql.NullInt32       `json:"discount_id"`
+	BillingPhone         sql.NullString      `json:"billing_phone"`
+	ShippingPhone        sql.NullString      `json:"shipping_phone"`
+	PaymentID            sql.NullString      `json:"payment_id"`
+	TransactionSignature sql.NullString      `json:"transaction_signature"`
+	DiscountAmount       sql.NullInt32       `json:"discount_amount"`
 }
 
 type OrderDetail struct {

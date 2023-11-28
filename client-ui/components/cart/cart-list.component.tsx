@@ -13,7 +13,7 @@ export default function CartListView() {
 
   return (
     <section role="cart details">
-      <CartList cart={cartPayload?.data.payload} />
+      <CartList cart={cartPayload?.data.payload!} />
       <CouponForm />
     </section>
   );

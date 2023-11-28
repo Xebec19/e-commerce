@@ -1,12 +1,14 @@
 import { useToast } from "@/components/ui/use-toast";
 import { ICreateOrderRequest } from "@/interfaces/order.interface";
 import { environment } from "@/lib";
-import { createOrder } from "@/lib/http/order.http";
+import { confirmOrder, createOrder } from "@/lib/http/order.http";
 import { RootState } from "@/store/redux.store";
+import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 declare var Razorpay: any;
 
 export default function useCheckout() {
+  const router = useRouter();
   const checkOutDetails = useSelector((state: RootState) => state.checkout);
   const { toast } = useToast();
 
@@ -39,17 +41,38 @@ export default function useCheckout() {
         name: environment.SITE_NAME,
         image: environment.LOGO + "",
         description: `Payment for ${response.data.payload.orderId}`,
-        callback_url: "http://localhost:3000/",
-        handler: function (response: any) {
-          console.log({
-            paymentId: response.razorpay_payment_id,
-            orderId: response.razorpay_orderId,
-            signature: response.razorpay_signature,
-          });
-          console.log({ response });
-        },
-        notes: {
-          key: "hellow",
+        handler: async function (response: any) {
+          try {
+            let payload = {
+              paymentId: response.razorpay_payment_id,
+              orderId: response.razorpay_order_id,
+              signature: response.razorpay_signature,
+            };
+            const resp = await confirmOrder({ payload });
+
+            if (!resp.data.payload.status) {
+              throw new Error("Request failed!");
+            }
+
+            router.push(`/order/${payload.orderId}`);
+            return;
+          } catch (error: any) {
+            toast({
+              variant: "destructive",
+              title: "Payment failed",
+              description:
+                "Please try again later. Error: " +
+                error.message +
+                " | " +
+                error?.response?.data?.message +
+                " | " +
+                error?.response?.data?.error +
+                " | " +
+                error?.response?.data?.error_description +
+                " | " +
+                error?.response?.data?.error_code,
+            });
+          }
         },
         prefill: {
           name: payload.billingFirstName,

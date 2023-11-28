@@ -3,6 +3,7 @@ package order
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"log"
 	"strings"
 
@@ -155,5 +156,74 @@ func createOrder(c *fiber.Ctx) error {
 	}
 
 	c.Status(fiber.StatusOK).JSON(util.SuccessResponse(payload, "order created successfully"))
+	return nil
+}
+
+type confirmOrderSchema struct {
+	PaymentId string `json:"paymentId" binding:"required"`
+	OrderId   string `json:"orderId" binding:"required"`
+	Signature string `json:"signature" binding:"required"`
+}
+
+// @Summary: it validates signature of paid order to make sure that it is not altered
+//
+// @Router /order/v1/confirm-order [post]
+func confirmOrder(c *fiber.Ctx) error {
+	req := new(confirmOrderSchema)
+	if err := c.BodyParser(req); err != nil {
+		c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
+		return err
+	}
+
+	status := util.VerifyRazorpaySignature(req.OrderId, req.PaymentId, req.Signature)
+
+	if !status {
+		c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(errors.New("signature is invalid")))
+		return nil
+	}
+
+	argv := db.ConfirmOrderPaymentParams{
+		OrderID:              req.OrderId,
+		TransactionSignature: sql.NullString{String: req.Signature, Valid: true},
+		PaymentID:            sql.NullString{String: req.PaymentId, Valid: true},
+	}
+
+	db.DBQuery.ConfirmOrderPayment(c.Context(), argv)
+
+	payload := map[string]interface{}{
+		"status":  status,
+		"orderId": req.OrderId,
+	}
+
+	c.Status(fiber.StatusOK).JSON(util.SuccessResponse(payload, "order confirm"))
+	return nil
+}
+
+// @Summary: it returns order details
+//
+// @Router /order/v1/get-order/:orderId [get]
+func getOrder(c *fiber.Ctx) error {
+	orderId := c.Params("orderId")
+
+	orderInfo, err := db.DBQuery.GetOrder(c.Context(), orderId)
+
+	if err != nil {
+		c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
+		return err
+	}
+
+	orderItems, err := db.DBQuery.GetOrderItems(c.Context(), sql.NullString{String: orderId, Valid: true})
+
+	if err != nil {
+		c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
+		return err
+	}
+
+	payload := map[string]interface{}{
+		"orderInfo":  orderInfo,
+		"orderItems": orderItems,
+	}
+
+	c.Status(fiber.StatusOK).JSON(util.SuccessResponse(payload, "order details"))
 	return nil
 }
