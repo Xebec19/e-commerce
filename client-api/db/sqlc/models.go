@@ -286,12 +286,12 @@ type Order struct {
 	ShippingLastName     string              `json:"shipping_last_name"`
 	ShippingEmail        string              `json:"shipping_email"`
 	ShippingAddress      sql.NullString      `json:"shipping_address"`
-	DiscountID           sql.NullInt32       `json:"discount_id"`
 	BillingPhone         sql.NullString      `json:"billing_phone"`
 	ShippingPhone        sql.NullString      `json:"shipping_phone"`
 	PaymentID            sql.NullString      `json:"payment_id"`
 	TransactionSignature sql.NullString      `json:"transaction_signature"`
 	DiscountAmount       sql.NullInt32       `json:"discount_amount"`
+	DiscountCode         sql.NullString      `json:"discount_code"`
 }
 
 type OrderDetail struct {

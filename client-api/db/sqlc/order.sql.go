@@ -29,8 +29,8 @@ func (q *Queries) ConfirmOrderPayment(ctx context.Context, arg ConfirmOrderPayme
 
 const createOrder = `-- name: CreateOrder :one
 INSERT INTO public.orders
-(order_id, user_id, price, delivery_price, total, billing_first_name, billing_last_name, billing_email, billing_address, billing_phone, shipping_first_name, shipping_last_name, shipping_email, shipping_address, shipping_phone, discount_id)
-VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) returning order_id
+(order_id, user_id, price, delivery_price, total, billing_first_name, billing_last_name, billing_email, billing_address, billing_phone, shipping_first_name, shipping_last_name, shipping_email, shipping_address, shipping_phone, discount_code, discount_amount)
+VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17) returning order_id
 `
 
 type CreateOrderParams struct {
@@ -49,7 +49,8 @@ type CreateOrderParams struct {
 	ShippingEmail     string         `json:"shipping_email"`
 	ShippingAddress   sql.NullString `json:"shipping_address"`
 	ShippingPhone     sql.NullString `json:"shipping_phone"`
-	DiscountID        sql.NullInt32  `json:"discount_id"`
+	DiscountCode      sql.NullString `json:"discount_code"`
+	DiscountAmount    sql.NullInt32  `json:"discount_amount"`
 }
 
 func (q *Queries) CreateOrder(ctx context.Context, arg CreateOrderParams) (string, error) {
@@ -69,7 +70,8 @@ func (q *Queries) CreateOrder(ctx context.Context, arg CreateOrderParams) (strin
 		arg.ShippingEmail,
 		arg.ShippingAddress,
 		arg.ShippingPhone,
-		arg.DiscountID,
+		arg.DiscountCode,
+		arg.DiscountAmount,
 	)
 	var order_id string
 	err := row.Scan(&order_id)
@@ -102,8 +104,8 @@ func (q *Queries) CreateOrderItem(ctx context.Context, arg CreateOrderItemParams
 }
 
 const getOrder = `-- name: GetOrder :one
-SELECT o.order_id, o.user_id, o.price, o.delivery_price, o.total, o.status, o.created_on, o.billing_first_name, o.billing_last_name, o.billing_email, o.billing_address, o.shipping_first_name, o.shipping_last_name, o.shipping_email, o.shipping_address, o.discount_id, o.billing_phone, o.shipping_phone, o.payment_id, o.transaction_signature, o.discount_amount, d.code as "discount_code" FROM public.orders o 
-left join discounts d on d.discount_id = o.discount_id 
+SELECT o.order_id, o.user_id, o.price, o.delivery_price, o.total, o.status, o.created_on, o.billing_first_name, o.billing_last_name, o.billing_email, o.billing_address, o.shipping_first_name, o.shipping_last_name, o.shipping_email, o.shipping_address, o.billing_phone, o.shipping_phone, o.payment_id, o.transaction_signature, o.discount_amount, o.discount_code, d.code as "discount_code" FROM public.orders o 
+left join discounts d on d.code = o.discount_code 
 WHERE order_id = $1
 `
 
@@ -123,13 +125,13 @@ type GetOrderRow struct {
 	ShippingLastName     string              `json:"shipping_last_name"`
 	ShippingEmail        string              `json:"shipping_email"`
 	ShippingAddress      sql.NullString      `json:"shipping_address"`
-	DiscountID           sql.NullInt32       `json:"discount_id"`
 	BillingPhone         sql.NullString      `json:"billing_phone"`
 	ShippingPhone        sql.NullString      `json:"shipping_phone"`
 	PaymentID            sql.NullString      `json:"payment_id"`
 	TransactionSignature sql.NullString      `json:"transaction_signature"`
 	DiscountAmount       sql.NullInt32       `json:"discount_amount"`
 	DiscountCode         sql.NullString      `json:"discount_code"`
+	DiscountCode_2       sql.NullString      `json:"discount_code_2"`
 }
 
 func (q *Queries) GetOrder(ctx context.Context, orderID string) (GetOrderRow, error) {
@@ -151,13 +153,13 @@ func (q *Queries) GetOrder(ctx context.Context, orderID string) (GetOrderRow, er
 		&i.ShippingLastName,
 		&i.ShippingEmail,
 		&i.ShippingAddress,
-		&i.DiscountID,
 		&i.BillingPhone,
 		&i.ShippingPhone,
 		&i.PaymentID,
 		&i.TransactionSignature,
 		&i.DiscountAmount,
 		&i.DiscountCode,
+		&i.DiscountCode_2,
 	)
 	return i, err
 }

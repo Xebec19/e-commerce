@@ -58,7 +58,7 @@ export default function OrderDetaisHOC() {
                 <HelpCircle className="h-4 w-4" />
               </TooltipTrigger>
               <TooltipContent>
-                <p className="text-sm max-w-sm break-words">
+                <p className="text-sm max-w-sm break-words bg-background p-2 rounded-md">
                   {orderStatusHelperText({
                     message: order?.orderInfo?.status.enum_order_status + "",
                   })}
@@ -83,45 +83,47 @@ export default function OrderDetaisHOC() {
 
 const OrderSummary = ({ orderInfo }: { orderInfo: OrderInfo }) => {
   return (
-    <div className="flex-col divide-y border rounded-md mb-4">
-      <div className="flex justify-between py-4 px-2">
-        <span>Sub Total</span>
-        <span>{`${environment.CURRENCY_CODE} ${
-          orderInfo?.price?.Int32?.toFixed(2) ?? 0
-        } ${environment.CURRENCY}`}</span>
-      </div>
-
-      <div className="flex justify-between py-4 px-2">
-        <span>Delivery Charges</span>
-        <span>{`${environment.CURRENCY_CODE} ${
-          orderInfo?.delivery_price?.Int32?.toFixed(2) ?? 0
-        } ${environment.CURRENCY}`}</span>
-      </div>
-
-      {orderInfo?.discount_code?.String?.length ? (
-        <div className="flex justify-between py-4 px-2 text-green-500 font-bold items-center">
-          <div className="flex items-center">
-            {orderInfo?.discount_code?.String}
-          </div>
-          <span>
-            {" "}
-            -{" "}
-            {`${
-              environment.CURRENCY_CODE
-            } ${orderInfo?.discount_amount?.Int32?.toFixed(2)} ${
-              environment.CURRENCY
-            }`}
-          </span>
+    <div>
+      <div className="flex-col divide-y border rounded-md mb-4">
+        <div className="flex justify-between py-4 px-2">
+          <span>Sub Total</span>
+          <span>{`${environment.CURRENCY_CODE} ${
+            orderInfo?.price?.Int32?.toFixed(2) ?? 0
+          } ${environment.CURRENCY}`}</span>
         </div>
-      ) : (
-        <></>
-      )}
 
-      <div className="flex justify-between py-4 px-2">
-        <span>Total</span>
-        <span>{`${environment.CURRENCY_CODE} ${
-          orderInfo?.total?.Int32?.toFixed(2) ?? 0
-        } ${environment.CURRENCY}`}</span>
+        <div className="flex justify-between py-4 px-2">
+          <span>Delivery Charges</span>
+          <span>{`${environment.CURRENCY_CODE} ${
+            orderInfo?.delivery_price?.Int32?.toFixed(2) ?? 0
+          } ${environment.CURRENCY}`}</span>
+        </div>
+
+        {orderInfo?.discount_code?.String?.length ? (
+          <div className="flex justify-between py-4 px-2 text-green-500 font-bold items-center">
+            <div className="flex items-center">
+              {orderInfo?.discount_code?.String}
+            </div>
+            <span>
+              {" "}
+              -{" "}
+              {`${
+                environment.CURRENCY_CODE
+              } ${orderInfo?.discount_amount?.Int32?.toFixed(2)} ${
+                environment.CURRENCY
+              }`}
+            </span>
+          </div>
+        ) : (
+          <></>
+        )}
+
+        <div className="flex justify-between py-4 px-2">
+          <span>Total</span>
+          <span>{`${environment.CURRENCY_CODE} ${
+            orderInfo?.total?.Int32?.toFixed(2) ?? 0
+          } ${environment.CURRENCY}`}</span>
+        </div>
       </div>
     </div>
   );

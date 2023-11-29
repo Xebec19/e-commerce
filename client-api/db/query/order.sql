@@ -1,7 +1,7 @@
 -- name: CreateOrder :one
 INSERT INTO public.orders
-(order_id, user_id, price, delivery_price, total, billing_first_name, billing_last_name, billing_email, billing_address, billing_phone, shipping_first_name, shipping_last_name, shipping_email, shipping_address, shipping_phone, discount_id)
-VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) returning order_id;
+(order_id, user_id, price, delivery_price, total, billing_first_name, billing_last_name, billing_email, billing_address, billing_phone, shipping_first_name, shipping_last_name, shipping_email, shipping_address, shipping_phone, discount_code, discount_amount)
+VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17) returning order_id;
 
 -- name: CreateOrderItem :exec
 INSERT INTO public.order_details
@@ -15,7 +15,7 @@ WHERE order_id = $3;
 
 -- name: GetOrder :one
 SELECT o.*, d.code as "discount_code" FROM public.orders o 
-left join discounts d on d.discount_id = o.discount_id 
+left join discounts d on d.code = o.discount_code 
 WHERE order_id = $1;
 
 -- name: GetOrderItems :many
