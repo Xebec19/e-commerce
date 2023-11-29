@@ -70,15 +70,6 @@ func (q *Queries) DeleteAllCartItems(ctx context.Context, cartID sql.NullInt32) 
 	return err
 }
 
-const deleteCart = `-- name: DeleteCart :exec
-delete from carts where cart_id = $1
-`
-
-func (q *Queries) DeleteCart(ctx context.Context, cartID int32) error {
-	_, err := q.db.ExecContext(ctx, deleteCart, cartID)
-	return err
-}
-
 const deleteCartItem = `-- name: DeleteCartItem :exec
 delete from cart_details where cart_id = $1 and product_id = $2
 `
@@ -232,6 +223,15 @@ type RemoveDiscountParams struct {
 
 func (q *Queries) RemoveDiscount(ctx context.Context, arg RemoveDiscountParams) error {
 	_, err := q.db.ExecContext(ctx, removeDiscount, arg.CartID, arg.UserID)
+	return err
+}
+
+const resetCart = `-- name: ResetCart :exec
+update carts set discount_code = null where cart_id = $1
+`
+
+func (q *Queries) ResetCart(ctx context.Context, cartID int32) error {
+	_, err := q.db.ExecContext(ctx, resetCart, cartID)
 	return err
 }
 

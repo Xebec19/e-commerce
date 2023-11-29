@@ -64,7 +64,7 @@ export default function CartList({ cart }: { cart: ICartPayload }) {
           </span>
         </li>
 
-        {cart?.cartPayload?.Discount && (
+        {cart?.cartPayload?.Discount ? (
           <li className="flex justify-between items center px-2 py-4 text-lime-500">
             <div className="flex flex-col">
               <span className="text-md font-bold">Promo Code</span>
@@ -79,6 +79,8 @@ export default function CartList({ cart }: { cart: ICartPayload }) {
               } ${environment.CURRENCY}`}
             </span>
           </li>
+        ) : (
+          <></>
         )}
 
         <li className="flex justify-between items center px-2 py-4">

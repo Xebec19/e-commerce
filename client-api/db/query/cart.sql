@@ -44,8 +44,8 @@ from cart_details cd
 left join products p on p.product_id = cd.product_id 
 left join product_images pi2 on pi2.product_id = p.product_id where pi2.is_featured is true and cd.cart_id = $1;
 
--- name: DeleteCart :exec
-delete from carts where cart_id = $1;
+-- name: ResetCart :exec
+update carts set discount_code = null where cart_id = $1;
 
 -- name: DeleteAllCartItems :exec
 delete from cart_details where cart_id = $1;

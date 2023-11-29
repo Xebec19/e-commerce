@@ -199,7 +199,7 @@ func confirmOrder(c *fiber.Ctx) error {
 		return err
 	}
 
-	db.DBQuery.DeleteCart(c.Context(), cartId)
+	db.DBQuery.ResetCart(c.Context(), cartId)
 	db.DBQuery.DeleteAllCartItems(c.Context(), sql.NullInt32{Int32: cartId, Valid: true})
 
 	payload := map[string]interface{}{
