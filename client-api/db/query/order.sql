@@ -13,6 +13,11 @@ UPDATE public.orders
 SET status = 'processing', payment_id = $1, transaction_signature = $2
 WHERE order_id = $3;
 
+-- name: CapturePayment :exec
+UPDATE public.orders
+SET status = 'processing'
+WHERE order_id = $1 and status = 'pending-payment';
+
 -- name: GetOrder :one
 SELECT o.*, d.code as "discount_code" FROM public.orders o 
 left join discounts d on d.code = o.discount_code 

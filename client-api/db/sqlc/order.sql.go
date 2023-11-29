@@ -10,6 +10,17 @@ import (
 	"database/sql"
 )
 
+const capturePayment = `-- name: CapturePayment :exec
+UPDATE public.orders
+SET status = 'processing'
+WHERE order_id = $1 and status = 'pending-payment'
+`
+
+func (q *Queries) CapturePayment(ctx context.Context, orderID string) error {
+	_, err := q.db.ExecContext(ctx, capturePayment, orderID)
+	return err
+}
+
 const confirmOrderPayment = `-- name: ConfirmOrderPayment :exec
 UPDATE public.orders
 SET status = 'processing', payment_id = $1, transaction_signature = $2

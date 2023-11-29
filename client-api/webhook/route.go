@@ -6,5 +6,5 @@ func SetRoute(app *fiber.App) {
 	router := app.Group("/webhook")
 
 	rz := router.Group("/razorpay")
-	rz.Post("/payment", confirmOrder)
+	rz.Post("/payment", paymentCapture)
 }
