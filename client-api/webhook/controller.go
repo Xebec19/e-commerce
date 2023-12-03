@@ -12,7 +12,18 @@ import (
 //
 // @Router: /webhook/razorpay/payment [post]
 func paymentCapture(c *fiber.Ctx) error {
+
+	webhookSignature := c.Get("X-Razorpay-Signature")
+
 	body := string(c.Body())
+
+	check := util.VerifyRazorpayWebhookSignature(webhookSignature, body)
+
+	if !check {
+		c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(errors.New("invalid signature")))
+		return errors.New("invalid signature")
+	}
+
 	event, err := util.ParseRazorpayWebhookEvent(body)
 	if err != nil {
 		c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))

@@ -54,3 +54,17 @@ func ParseRazorpayWebhookEvent(body string) (*RazorpayWebhookEvent, error) {
 
 	return &event, nil
 }
+
+func VerifyRazorpayWebhookSignature(body string, signature string) bool {
+
+	config, err := LoadConfig(".")
+	if err != nil {
+		log.Fatal("cannot load config:", err)
+	}
+
+	h := hmac.New(sha256.New, []byte(config.WebhookSecret))
+	h.Write([]byte(body))
+	calculatedSignature := hex.EncodeToString(h.Sum(nil))
+
+	return strings.EqualFold(signature, calculatedSignature)
+}

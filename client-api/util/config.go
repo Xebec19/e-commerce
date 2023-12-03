@@ -13,6 +13,7 @@ type Config struct {
 	RazorpayKey    string `mapstructure:"RAZORPAY_KEY"`
 	RazorpaySecret string `mapstructure:"RAZORPAY_SECRET"`
 	Currency       string `mapstructure:"CURRENCY"`
+	WebhookSecret  string `mapstructure:"RAZORPAY_WEBHOOK_SECRET"`
 }
 
 func LoadConfig(path string) (config Config, err error) {
