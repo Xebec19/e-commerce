@@ -116,6 +116,8 @@ func createOrder(c *fiber.Ctx) error {
 		Price:             sql.NullInt32{Int32: subTotal, Valid: true},
 		DeliveryPrice:     sql.NullInt32{Int32: deliveryPriceTotal, Valid: true},
 		Total:             sql.NullInt32{Int32: total, Valid: true},
+		DiscountCode:      sql.NullString{String: cartDetails.DiscountCode.String, Valid: true},
+		DiscountAmount:    sql.NullInt32{Int32: discountTotal, Valid: true},
 		BillingFirstName:  req.BillingFirstName,
 		BillingLastName:   req.BillingLastName,
 		BillingEmail:      req.BillingEmail,
@@ -199,7 +201,7 @@ func confirmOrder(c *fiber.Ctx) error {
 		return err
 	}
 
-	db.DBQuery.DeleteCart(c.Context(), cartId)
+	db.DBQuery.ResetCart(c.Context(), cartId)
 	db.DBQuery.DeleteAllCartItems(c.Context(), sql.NullInt32{Int32: cartId, Valid: true})
 
 	payload := map[string]interface{}{

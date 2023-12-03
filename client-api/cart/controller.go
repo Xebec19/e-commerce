@@ -206,8 +206,8 @@ func addDiscount(c *fiber.Ctx) error {
 	}
 
 	args := db.GetDiscountCountParams{
-		UserID:     sql.NullInt32{Int32: int32(userId), Valid: true},
-		DiscountID: sql.NullInt32{Int32: discountCode.DiscountID, Valid: true},
+		UserID:       sql.NullInt32{Int32: int32(userId), Valid: true},
+		DiscountCode: sql.NullString{String: discountCode.Code, Valid: true},
 	}
 
 	// check if given discount has been applied previously

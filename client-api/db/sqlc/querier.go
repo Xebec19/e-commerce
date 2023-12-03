@@ -11,6 +11,7 @@ import (
 
 type Querier interface {
 	AddDiscount(ctx context.Context, arg AddDiscountParams) error
+	CapturePayment(ctx context.Context, orderID string) error
 	CheckCartDetail(ctx context.Context, arg CheckCartDetailParams) (int32, error)
 	ConfirmOrderPayment(ctx context.Context, arg ConfirmOrderPaymentParams) error
 	CountCartId(ctx context.Context, userID sql.NullInt32) (int64, error)
@@ -20,7 +21,6 @@ type Querier interface {
 	CreateOrderItem(ctx context.Context, arg CreateOrderItemParams) error
 	CreateUser(ctx context.Context, arg CreateUserParams) (int32, error)
 	DeleteAllCartItems(ctx context.Context, cartID sql.NullInt32) error
-	DeleteCart(ctx context.Context, cartID int32) error
 	DeleteCartItem(ctx context.Context, arg DeleteCartItemParams) error
 	FindUserOne(ctx context.Context, lower string) (FindUserOneRow, error)
 	GetCartDetails(ctx context.Context, userID sql.NullInt32) (GetCartDetailsRow, error)
@@ -46,6 +46,7 @@ type Querier interface {
 	ReadUser(ctx context.Context, userID int32) (User, error)
 	RemoveCartItem(ctx context.Context, arg RemoveCartItemParams) error
 	RemoveDiscount(ctx context.Context, arg RemoveDiscountParams) error
+	ResetCart(ctx context.Context, cartID int32) error
 	UpdateCartItemQuantity(ctx context.Context, arg UpdateCartItemQuantityParams) error
 }
 

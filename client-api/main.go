@@ -12,6 +12,7 @@ import (
 	"github.com/Xebec19/e-commerce/client-api/product"
 	"github.com/Xebec19/e-commerce/client-api/user"
 	util "github.com/Xebec19/e-commerce/client-api/util"
+	"github.com/Xebec19/e-commerce/client-api/webhook"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
@@ -62,7 +63,7 @@ func main() {
 
 	// set up cors
 	app.Use(cors.New(cors.Config{
-		AllowHeaders:     "Origin,Content-Type,Accept,Content-Length,Accept-Language,Accept-Encoding,Connection,Access-Control-Allow-Origin,Authorization",
+		AllowHeaders:     "*",
 		AllowOrigins:     "*",
 		AllowCredentials: true,
 		AllowMethods:     "GET,POST,HEAD,PUT,DELETE,PATCH,OPTIONS",
@@ -78,6 +79,7 @@ func main() {
 	auth.SetRoute(app)
 	product.SetRoute(app)
 	user.SetRoute(app)
+	webhook.SetRoute(app)
 
 	app.Use(util.JwtValidate)
 

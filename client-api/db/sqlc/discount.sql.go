@@ -34,16 +34,16 @@ func (q *Queries) GetDiscount(ctx context.Context, lower string) (GetDiscountRow
 }
 
 const getDiscountCount = `-- name: GetDiscountCount :one
-select count(discount_id) from orders where discount_id = $1 and user_id = $2
+select count(discount_code) from orders where discount_code = $1 and user_id = $2
 `
 
 type GetDiscountCountParams struct {
-	DiscountID sql.NullInt32 `json:"discount_id"`
-	UserID     sql.NullInt32 `json:"user_id"`
+	DiscountCode sql.NullString `json:"discount_code"`
+	UserID       sql.NullInt32  `json:"user_id"`
 }
 
 func (q *Queries) GetDiscountCount(ctx context.Context, arg GetDiscountCountParams) (int64, error) {
-	row := q.db.QueryRowContext(ctx, getDiscountCount, arg.DiscountID, arg.UserID)
+	row := q.db.QueryRowContext(ctx, getDiscountCount, arg.DiscountCode, arg.UserID)
 	var count int64
 	err := row.Scan(&count)
 	return count, err
