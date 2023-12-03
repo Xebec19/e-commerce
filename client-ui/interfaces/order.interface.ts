@@ -73,10 +73,6 @@ export interface OrderInfo {
   payment_id: INullableString;
   transaction_signature: INullableString;
 }
-export interface Status {
-  enum_order_status: string;
-  valid: boolean;
-}
 export interface OrderItemsEntity {
   od_id: number;
   order_id: INullableString;
@@ -88,4 +84,30 @@ export interface OrderItemsEntity {
   product_name: INullableString;
   product_desc: INullableString;
   category_id: INullableInt32;
+}
+
+export interface IOrderListResponse extends IResponse {
+  payload: IOrderListEntity[];
+}
+
+export interface IOrderListEntity {
+  order_id: string;
+  user_id: INullableInt32;
+  price: INullableInt32;
+  delivery_price: INullableInt32;
+  total: INullableInt32;
+  status: Status;
+  created_on: INullableTimestamp;
+  shipping_first_name: string;
+  shipping_last_name: string;
+  shipping_email: string;
+  shipping_address: INullableString;
+  shipping_phone: INullableString;
+  discount_code: INullableString;
+  discount_amount: INullableInt32;
+}
+
+export interface Status {
+  enum_order_status: string;
+  valid: boolean;
 }

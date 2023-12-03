@@ -57,7 +57,7 @@ export default function useCheckout() {
 
             queryClient.invalidateQueries({ queryKey: ["/cart"] });
 
-            router.push(`/order/${payload.orderId}`);
+            router.push(`/orders/${payload.orderId}`);
             return;
           } catch (error: any) {
             toast({
@@ -86,8 +86,6 @@ export default function useCheckout() {
           color: "#3399cc",
         },
       };
-
-      console.log({ options });
 
       var rzp1 = new Razorpay(options);
       rzp1.on("payment.failed", function (response: any) {
