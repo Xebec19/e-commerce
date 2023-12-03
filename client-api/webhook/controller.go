@@ -17,7 +17,7 @@ func paymentCapture(c *fiber.Ctx) error {
 
 	body := string(c.Body())
 
-	check := util.VerifyRazorpayWebhookSignature(webhookSignature, body)
+	check := util.VerifyRazorpayWebhookSignature(body, webhookSignature)
 
 	if !check {
 		c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(errors.New("invalid signature")))
