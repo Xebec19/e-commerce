@@ -30,7 +30,7 @@ left join product_images pi2 on pi2.product_id = od.product_id
 WHERE order_id = $1 and pi2.is_featured = true;
 
 -- name: GetOrders :many
-SELECT o.order_id, o.user_id, o.price, o.delivery_price, o.total,
+SELECT o.order_id, o.price, o.delivery_price, o.total,
 o.status, o.created_on, o.shipping_first_name, o.shipping_last_name, o.shipping_email,
-o.shipping_address, o.shipping_phone, o.discount_code, o.discount_amount 
+o.shipping_address, o.shipping_phone, o.discount_code, o.discount_amount, COUNT(order_id) OVER () AS total_orders 
 FROM public.orders o WHERE user_id = $1 order by created_on desc limit $2 offset $3;

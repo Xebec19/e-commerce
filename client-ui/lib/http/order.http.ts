@@ -70,6 +70,7 @@ export const getOrderList = async ({
       shippingPhone: order.shipping_phone.String,
       discountCode: order.discount_code.String,
       discountAmount: order.discount_amount.Int32,
+      totalRows: order.total_orders,
     }))
   );
 };

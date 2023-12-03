@@ -230,9 +230,9 @@ func (q *Queries) GetOrderItems(ctx context.Context, orderID sql.NullString) ([]
 }
 
 const getOrders = `-- name: GetOrders :many
-SELECT o.order_id, o.user_id, o.price, o.delivery_price, o.total,
+SELECT o.order_id, o.price, o.delivery_price, o.total,
 o.status, o.created_on, o.shipping_first_name, o.shipping_last_name, o.shipping_email,
-o.shipping_address, o.shipping_phone, o.discount_code, o.discount_amount 
+o.shipping_address, o.shipping_phone, o.discount_code, o.discount_amount, COUNT(order_id) OVER () AS total_orders 
 FROM public.orders o WHERE user_id = $1 order by created_on desc limit $2 offset $3
 `
 
@@ -244,7 +244,6 @@ type GetOrdersParams struct {
 
 type GetOrdersRow struct {
 	OrderID           string              `json:"order_id"`
-	UserID            sql.NullInt32       `json:"user_id"`
 	Price             sql.NullInt32       `json:"price"`
 	DeliveryPrice     sql.NullInt32       `json:"delivery_price"`
 	Total             sql.NullInt32       `json:"total"`
@@ -257,6 +256,7 @@ type GetOrdersRow struct {
 	ShippingPhone     sql.NullString      `json:"shipping_phone"`
 	DiscountCode      sql.NullString      `json:"discount_code"`
 	DiscountAmount    sql.NullInt32       `json:"discount_amount"`
+	TotalOrders       int64               `json:"total_orders"`
 }
 
 func (q *Queries) GetOrders(ctx context.Context, arg GetOrdersParams) ([]GetOrdersRow, error) {
@@ -270,7 +270,6 @@ func (q *Queries) GetOrders(ctx context.Context, arg GetOrdersParams) ([]GetOrde
 		var i GetOrdersRow
 		if err := rows.Scan(
 			&i.OrderID,
-			&i.UserID,
 			&i.Price,
 			&i.DeliveryPrice,
 			&i.Total,
@@ -283,6 +282,7 @@ func (q *Queries) GetOrders(ctx context.Context, arg GetOrdersParams) ([]GetOrde
 			&i.ShippingPhone,
 			&i.DiscountCode,
 			&i.DiscountAmount,
+			&i.TotalOrders,
 		); err != nil {
 			return nil, err
 		}

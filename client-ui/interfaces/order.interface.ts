@@ -92,7 +92,6 @@ export interface IOrderListResponse extends IResponse {
 
 export interface IOrderListEntity {
   order_id: string;
-  user_id: INullableInt32;
   price: INullableInt32;
   delivery_price: INullableInt32;
   total: INullableInt32;
@@ -105,6 +104,7 @@ export interface IOrderListEntity {
   shipping_phone: INullableString;
   discount_code: INullableString;
   discount_amount: INullableInt32;
+  total_orders: number;
 }
 
 export interface Status {

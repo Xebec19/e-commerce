@@ -15,6 +15,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { orderStatusHelperText } from "@/lib/messages";
+import { environment } from "@/lib";
 
 export const OrderListSchema = z.object({
   orderId: z.string(),
@@ -31,6 +32,7 @@ export const OrderListSchema = z.object({
   shippingPhone: z.string(),
   discountCode: z.string(),
   discountAmount: z.number(),
+  totalRows: z.number(),
 });
 
 export default function OrderListItem({
@@ -72,17 +74,55 @@ export default function OrderListItem({
       </CardHeader>
 
       <CardContent>
-        <div className="divide-y-2 space-y-2">
-          <div className="flex items-center space-x-2 py-2">
-            <Mail /> <span>{order.shippingEmail}</span>
+        <div className="flex flex-wrap justify-between space-x-4">
+          <div className="border flex-1 divide-y-2 space-y-2 rounded-md p-2">
+            <div className="flex justify-between py-2">
+              <span>Sub total :</span>
+              <span>{`${environment.CURRENCY_CODE} ${
+                order.price.toFixed(2) ?? 0
+              } ${environment.CURRENCY}`}</span>
+            </div>
+            <div className="flex justify-between py-2">
+              <span>Delivery Total :</span>
+              <span>{`${environment.CURRENCY_CODE} ${
+                order.price.toFixed(2) ?? 0
+              } ${environment.CURRENCY}`}</span>
+            </div>
+            {order.discountCode ? (
+              <div className="flex justify-between py-2">
+                <span className="text-green-500">{order.discountCode} :</span>
+                <span className="text-green-500">
+                  {" "}
+                  -{" "}
+                  {`${environment.CURRENCY_CODE} ${
+                    order.discountAmount.toFixed(2) ?? 0
+                  } ${environment.CURRENCY}`}
+                </span>
+              </div>
+            ) : (
+              <></>
+            )}
+            <div className="flex justify-between py-2">
+              <span>Total :</span>
+              <span>{`${environment.CURRENCY_CODE} ${
+                order.price.toFixed(2) ?? 0
+              } ${environment.CURRENCY}`}</span>
+            </div>
           </div>
 
-          <div className="flex items-center space-x-2 py-2">
-            <Phone /> <span>{order.shippingPhone}</span>
-          </div>
+          <div className="divide-y-2 space-y-2">
+            <div className="flex items-center space-x-2 py-2">
+              <Mail className="h-4 w-4" /> <span>{order.shippingEmail}</span>
+            </div>
 
-          <div className="flex items-center space-x-2 py-2">
-            <MapPin /> <span>{order.shippingAddress}</span>
+            <div className="flex items-center space-x-2 py-2">
+              <Phone className="h-4 w-4" /> <span>{order.shippingPhone}</span>
+            </div>
+
+            <div className="flex items-center space-x-2 py-2">
+              <MapPin className="h-4 w-4" />{" "}
+              <span>{order.shippingAddress}</span>
+            </div>
           </div>
         </div>
       </CardContent>
