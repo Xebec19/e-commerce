@@ -228,3 +228,71 @@ func (q *Queries) GetOrderItems(ctx context.Context, orderID sql.NullString) ([]
 	}
 	return items, nil
 }
+
+const getOrders = `-- name: GetOrders :many
+SELECT o.order_id, o.user_id, o.price, o.delivery_price, o.total,
+o.status, o.created_on, o.shipping_first_name, o.shipping_last_name, o.shipping_email,
+o.shipping_address, o.shipping_phone, o.discount_code, o.discount_amount 
+FROM public.orders o WHERE user_id = $1 limit $2 offset $3
+`
+
+type GetOrdersParams struct {
+	UserID sql.NullInt32 `json:"user_id"`
+	Limit  int32         `json:"limit"`
+	Offset int32         `json:"offset"`
+}
+
+type GetOrdersRow struct {
+	OrderID           string              `json:"order_id"`
+	UserID            sql.NullInt32       `json:"user_id"`
+	Price             sql.NullInt32       `json:"price"`
+	DeliveryPrice     sql.NullInt32       `json:"delivery_price"`
+	Total             sql.NullInt32       `json:"total"`
+	Status            NullEnumOrderStatus `json:"status"`
+	CreatedOn         sql.NullTime        `json:"created_on"`
+	ShippingFirstName string              `json:"shipping_first_name"`
+	ShippingLastName  string              `json:"shipping_last_name"`
+	ShippingEmail     string              `json:"shipping_email"`
+	ShippingAddress   sql.NullString      `json:"shipping_address"`
+	ShippingPhone     sql.NullString      `json:"shipping_phone"`
+	DiscountCode      sql.NullString      `json:"discount_code"`
+	DiscountAmount    sql.NullInt32       `json:"discount_amount"`
+}
+
+func (q *Queries) GetOrders(ctx context.Context, arg GetOrdersParams) ([]GetOrdersRow, error) {
+	rows, err := q.db.QueryContext(ctx, getOrders, arg.UserID, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetOrdersRow
+	for rows.Next() {
+		var i GetOrdersRow
+		if err := rows.Scan(
+			&i.OrderID,
+			&i.UserID,
+			&i.Price,
+			&i.DeliveryPrice,
+			&i.Total,
+			&i.Status,
+			&i.CreatedOn,
+			&i.ShippingFirstName,
+			&i.ShippingLastName,
+			&i.ShippingEmail,
+			&i.ShippingAddress,
+			&i.ShippingPhone,
+			&i.DiscountCode,
+			&i.DiscountAmount,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}

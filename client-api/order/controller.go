@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"log"
+	"strconv"
 	"strings"
 
 	db "github.com/Xebec19/e-commerce/client-api/db/sqlc"
@@ -239,5 +240,37 @@ func getOrder(c *fiber.Ctx) error {
 	}
 
 	c.Status(fiber.StatusOK).JSON(util.SuccessResponse(payload, "order details"))
+	return nil
+}
+
+// @Summary: it returns list of orders
+//
+// @Router /order/v1/get-orders [get]
+func getOrders(c *fiber.Ctx) error {
+
+	userId := c.Locals("userid").(int64)
+
+	page, err := strconv.Atoi(c.Query("page", "0"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
+	}
+
+	size, err := strconv.Atoi(c.Query("size", "0"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
+	}
+
+	args := db.GetOrdersParams{
+		Limit:  int32(size),
+		Offset: int32(page * size),
+		UserID: sql.NullInt32{Int32: int32(userId), Valid: true},
+	}
+
+	orderList, err := db.DBQuery.GetOrders(c.Context(), args)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(errors.New("orders not found")))
+	}
+
+	c.Status(fiber.StatusOK).JSON(util.SuccessResponse(orderList, "orders"))
 	return nil
 }

@@ -28,3 +28,9 @@ SELECT od.*, p.product_name, p.product_desc, p.category_id, pi2.image_url FROM p
 left join products p on p.product_id = od.product_id  
 left join product_images pi2 on pi2.product_id = od.product_id
 WHERE order_id = $1 and pi2.is_featured = true;
+
+-- name: GetOrders :many
+SELECT o.order_id, o.user_id, o.price, o.delivery_price, o.total,
+o.status, o.created_on, o.shipping_first_name, o.shipping_last_name, o.shipping_email,
+o.shipping_address, o.shipping_phone, o.discount_code, o.discount_amount 
+FROM public.orders o WHERE user_id = $1 limit $2 offset $3;

@@ -30,6 +30,7 @@ type Querier interface {
 	GetDiscountCount(ctx context.Context, arg GetDiscountCountParams) (int64, error)
 	GetOrder(ctx context.Context, orderID string) (GetOrderRow, error)
 	GetOrderItems(ctx context.Context, orderID sql.NullString) ([]GetOrderItemsRow, error)
+	GetOrders(ctx context.Context, arg GetOrdersParams) ([]GetOrdersRow, error)
 	GetProductImages(ctx context.Context, productID sql.NullInt32) ([]GetProductImagesRow, error)
 	InsertCartItem(ctx context.Context, arg InsertCartItemParams) error
 	ReadAllCategories(ctx context.Context) ([]ReadAllCategoriesRow, error)
