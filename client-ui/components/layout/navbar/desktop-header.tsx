@@ -87,16 +87,17 @@ export default function DesktopHeader() {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
               <DropdownMenuGroup>
-                <DropdownMenuItem className="space-x-2">
+                {/* <DropdownMenuItem className="space-x-2">
                   <User className="h-4 w-4" />
                   <span>View Profile</span>
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
 
-                <DropdownMenuItem className="space-x-2">
-                  <Package2 className="h-4 w-4" />
-                  <span>View Orders</span>
+                <DropdownMenuItem>
+                  <Link href={"/orders/list"} className="flex space-x-2">
+                    <Package2 className="h-4 w-4" />
+                    <span>View Orders</span>
+                  </Link>
                 </DropdownMenuItem>
-
                 <DropdownMenuItem className="space-x-2" onClick={handleLogout}>
                   <Power className="h-4 w-4" />
                   <span>Logout</span>

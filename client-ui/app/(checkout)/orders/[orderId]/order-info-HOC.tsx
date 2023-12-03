@@ -66,7 +66,9 @@ export default function OrderDetaisHOC() {
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-          <span className="text-xl prose font-bold">Processing</span>
+          <span className="text-xl prose uppercase font-medium">
+            {order?.orderInfo.status.enum_order_status}
+          </span>
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
