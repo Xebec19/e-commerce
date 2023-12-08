@@ -41,13 +41,13 @@ export default function OrderListHOC() {
       ))}
       {hasNextPage && (
         <div className="w-full flex justify-center items-center p-2">
-          {isFetchingNextPage ? (
-            <Loader2 className="animate-spin" />
-          ) : (
-            <Button variant={"ghost"} onClick={() => fetchNextPage()}>
-              Load more
-            </Button>
-          )}
+          <Button
+            variant={"ghost"}
+            onClick={() => fetchNextPage()}
+            disabled={isFetchingNextPage}
+          >
+            {isFetchingNextPage ? "Loading..." : "Load more"}
+          </Button>
         </div>
       )}
     </div>

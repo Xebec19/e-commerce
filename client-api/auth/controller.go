@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"context"
 	"database/sql"
 	"errors"
 	"strings"
@@ -36,7 +35,7 @@ func register(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
 	}
 
-	count, err := db.DBQuery.CountUser(context.Background(), strings.ToLower(req.Email))
+	count, err := db.DBQuery.CountUser(c.Context(), strings.ToLower(req.Email))
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
@@ -65,7 +64,7 @@ func register(c *fiber.Ctx) error {
 		Password:  passwordHash,
 	}
 	// save user in db
-	user, err := db.DBQuery.CreateUser(context.Background(), args)
+	user, err := db.DBQuery.CreateUser(c.Context(), args)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
@@ -84,7 +83,7 @@ func login(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
 	}
 	// Find a user with given email
-	user, err := db.DBQuery.FindUserOne(context.Background(), strings.ToLower(req.Email))
+	user, err := db.DBQuery.FindUserOne(c.Context(), strings.ToLower(req.Email))
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(util.ErrorResponse(errors.New("no user found")))
 	}

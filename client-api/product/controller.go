@@ -1,7 +1,6 @@
 package product
 
 import (
-	"context"
 	"database/sql"
 	"errors"
 	"strconv"
@@ -28,7 +27,7 @@ func readProducts(c *fiber.Ctx) error {
 		Offset: int32(page * size),
 	}
 
-	products, err := db.DBQuery.ReadAllProducts(context.Background(), args)
+	products, err := db.DBQuery.ReadAllProducts(c.Context(), args)
 
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
@@ -38,7 +37,7 @@ func readProducts(c *fiber.Ctx) error {
 }
 
 func readCategories(c *fiber.Ctx) error {
-	category, err := db.DBQuery.ReadAllCategories(context.Background())
+	category, err := db.DBQuery.ReadAllCategories(c.Context())
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
@@ -53,7 +52,7 @@ func readOneProduct(c *fiber.Ctx) error {
 	param := entities[len(entities)-1]
 	productId, err := strconv.Atoi(param)
 
-	product, err := db.DBQuery.ReadOneProduct(context.Background(), int32(productId))
+	product, err := db.DBQuery.ReadOneProduct(c.Context(), int32(productId))
 
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
@@ -78,7 +77,7 @@ func readNewProducts(c *fiber.Ctx) error {
 		Offset: int32(page * size),
 	}
 
-	products, err := db.DBQuery.ReadNewProducts(context.Background(), args)
+	products, err := db.DBQuery.ReadNewProducts(c.Context(), args)
 
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
@@ -117,7 +116,7 @@ func readSimilarProduct(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
 	}
 
-	categoryId, err := db.DBQuery.ReadCategory(context.Background(), int32(productId))
+	categoryId, err := db.DBQuery.ReadCategory(c.Context(), int32(productId))
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(errors.New("could not find product")))
@@ -130,7 +129,7 @@ func readSimilarProduct(c *fiber.Ctx) error {
 		Offset:     int32(page * size),
 	}
 
-	categoryItems, err := db.DBQuery.ReadSimilarItems(context.Background(), categoryParams)
+	categoryItems, err := db.DBQuery.ReadSimilarItems(c.Context(), categoryParams)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(errors.New("could not find category items")))
