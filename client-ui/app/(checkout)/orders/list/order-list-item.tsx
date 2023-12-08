@@ -85,7 +85,7 @@ export default function OrderListItem({
             <div className="flex justify-between py-2">
               <span>Delivery Total :</span>
               <span>{`${environment.CURRENCY_CODE} ${
-                order.price.toFixed(2) ?? 0
+                order.deliveryPrice.toFixed(2) ?? 0
               } ${environment.CURRENCY}`}</span>
             </div>
             {order.discountCode ? (
@@ -105,7 +105,7 @@ export default function OrderListItem({
             <div className="flex justify-between py-2">
               <span>Total :</span>
               <span>{`${environment.CURRENCY_CODE} ${
-                order.price.toFixed(2) ?? 0
+                order.total.toFixed(2) ?? 0
               } ${environment.CURRENCY}`}</span>
             </div>
           </div>
