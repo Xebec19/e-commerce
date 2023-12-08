@@ -44,7 +44,7 @@ export default function OrderListItem({
     <Card>
       <CardHeader>
         <CardTitle className="flex justify-between items-center">
-          <h3 className="text-xl font-medium uppercase">{order.orderId}</h3>
+          <div className="text-xl font-medium uppercase">{order.orderId}</div>
 
           <div className="flex space-x-2 items-center cursor-pointer">
             <TooltipProvider>
@@ -67,9 +67,9 @@ export default function OrderListItem({
           </div>
         </CardTitle>
         <CardDescription>
-          <p className="text-sm text-muted-foreground">
+          <span className="text-sm text-muted-foreground">
             {formatRelative(new Date(order.createdOn), new Date())}
-          </p>
+          </span>
         </CardDescription>
       </CardHeader>
 
@@ -85,7 +85,7 @@ export default function OrderListItem({
             <div className="flex justify-between py-2">
               <span>Delivery Total :</span>
               <span>{`${environment.CURRENCY_CODE} ${
-                order.price.toFixed(2) ?? 0
+                order.deliveryPrice.toFixed(2) ?? 0
               } ${environment.CURRENCY}`}</span>
             </div>
             {order.discountCode ? (
@@ -105,7 +105,7 @@ export default function OrderListItem({
             <div className="flex justify-between py-2">
               <span>Total :</span>
               <span>{`${environment.CURRENCY_CODE} ${
-                order.price.toFixed(2) ?? 0
+                order.total.toFixed(2) ?? 0
               } ${environment.CURRENCY}`}</span>
             </div>
           </div>

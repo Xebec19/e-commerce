@@ -42,13 +42,13 @@ export const getOrderDetails = async ({
 };
 
 export const getOrderList = async ({
-  page,
-  size,
+  pageParam,
+  size = 10,
 }: {
-  page: number;
-  size: number;
+  pageParam: number;
+  size?: number;
 }) => {
-  let url = `/order/v1/get-orders?page=${page}&size=${size}`;
+  let url = `/order/v1/get-orders?page=${pageParam}&size=${size}`;
 
   const { data } = await (requestAPI.get(url) as Promise<
     AxiosResponse<IOrderListResponse>
