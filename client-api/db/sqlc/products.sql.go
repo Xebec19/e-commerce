@@ -253,6 +253,58 @@ func (q *Queries) ReadProductQuantity(ctx context.Context, productID int32) (sql
 	return quantity, err
 }
 
+const readProductsWithLength = `-- name: ReadProductsWithLength :many
+SELECT product_id, product_name, image_url, quantity, product_desc, price, delivery_price, count(product_id) over () as total_count from v_products order by created_on desc limit $1 offset $2
+`
+
+type ReadProductsWithLengthParams struct {
+	Limit  int32 `json:"limit"`
+	Offset int32 `json:"offset"`
+}
+
+type ReadProductsWithLengthRow struct {
+	ProductID     int32          `json:"product_id"`
+	ProductName   string         `json:"product_name"`
+	ImageUrl      string         `json:"image_url"`
+	Quantity      sql.NullInt32  `json:"quantity"`
+	ProductDesc   sql.NullString `json:"product_desc"`
+	Price         sql.NullInt32  `json:"price"`
+	DeliveryPrice sql.NullInt32  `json:"delivery_price"`
+	TotalCount    int64          `json:"total_count"`
+}
+
+func (q *Queries) ReadProductsWithLength(ctx context.Context, arg ReadProductsWithLengthParams) ([]ReadProductsWithLengthRow, error) {
+	rows, err := q.db.QueryContext(ctx, readProductsWithLength, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ReadProductsWithLengthRow
+	for rows.Next() {
+		var i ReadProductsWithLengthRow
+		if err := rows.Scan(
+			&i.ProductID,
+			&i.ProductName,
+			&i.ImageUrl,
+			&i.Quantity,
+			&i.ProductDesc,
+			&i.Price,
+			&i.DeliveryPrice,
+			&i.TotalCount,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const readSimilarItems = `-- name: ReadSimilarItems :many
 SELECT product_id, product_name, image_url, quantity, product_desc, price, delivery_price from v_products where category_id = $1 and product_id != $2 limit $3 offset $4
 `

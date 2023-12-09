@@ -164,3 +164,32 @@ func readProductImages(c *fiber.Ctx) error {
 
 	return nil
 }
+
+// @Summary: returns array of product for infinite scroll
+//
+// @Route /product/v1/products-scroll [get]
+func readProductsScrolled(c *fiber.Ctx) error {
+	page, err := strconv.Atoi(c.Query("page", "0"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
+	}
+
+	size, err := strconv.Atoi(c.Query("size", "0"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
+	}
+
+	argv := db.ReadProductsWithLengthParams{
+		Limit:  int32(size),
+		Offset: int32(page * size),
+	}
+
+	products, err := db.DBQuery.ReadProductsWithLength(c.Context(), argv)
+	if err != nil {
+		c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(errors.New("could not fetch products")))
+		return err
+	}
+
+	c.Status(fiber.StatusOK).JSON(util.SuccessResponse(products, "products fetched"))
+	return nil
+}

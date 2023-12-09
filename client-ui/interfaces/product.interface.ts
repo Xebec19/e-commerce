@@ -19,21 +19,11 @@ export interface IProductPayload {
   price: INullableInt32;
   delivery_price: INullableInt32;
   is_featured?: boolean;
+  total_count?: number;
 }
 
 export interface IProductResponse extends IResponse {
   payload: IProductPayload;
-}
-export interface IProductPayload {
-  product_id: number;
-  product_name: string;
-  product_image: INullableString;
-  product_desc: INullableString;
-  price: INullableInt32;
-  quantity: INullableInt32;
-  delivery_price: INullableInt32;
-  category_id: number;
-  category_name: string;
 }
 
 export interface ISimilarProductResponse extends IResponse {

@@ -7,6 +7,7 @@ import {
 import { environment } from "..";
 import requestAPI from "./request";
 import { AxiosResponse } from "axios";
+import { z } from "zod";
 
 export const fetchCategories = () => {
   var requestOptions = {
@@ -76,4 +77,31 @@ export const getProductImages = ({
   let url = `/product/v1/product-images/${slug}`;
 
   return requestAPI.get(url);
+};
+
+const ProductSchema = z.object({
+  product_id: z.number(),
+  product_name: z.string(),
+  image_url: z.string(),
+  quantity: z.object({ Int32: z.number(), Valid: z.boolean() }),
+  product_desc: z.object({ String: z.string(), Valid: z.boolean() }),
+  price: z.object({ Int32: z.number(), Valid: z.boolean() }),
+  delivery_price: z.object({ Int32: z.number(), Valid: z.boolean() }),
+  total_count: z.number(),
+});
+
+export const getProductByPage = async ({
+  pageParam: page,
+  size = 10,
+}: {
+  pageParam: number;
+  size?: number;
+}) => {
+  let url = `/product/v1/products-scroll?page=${page}&size=${size}`;
+
+  const response = await (requestAPI.get(url) as Promise<
+    AxiosResponse<IProductResponse>
+  >);
+
+  return z.array(ProductSchema).parse(response.data.payload);
 };

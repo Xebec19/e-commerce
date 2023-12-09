@@ -1,15 +1,11 @@
 "use client";
 
 import { getOrderList } from "@/lib/http/order.http";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "next/navigation";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import OrderListItem from "./order-list-item";
-import { Fragment, useEffect, useState } from "react";
-import { Loader2 } from "lucide-react";
-import { queryClient } from "@/store/query.provider";
+import { Fragment } from "react";
 import { Button } from "@/components/ui/button";
 
-// todo add infinite scrolling here
 export default function OrderListHOC() {
   const {
     data: orders,
@@ -27,8 +23,6 @@ export default function OrderListHOC() {
     getPreviousPageParam: (firstPage, pages, firstPageParams) =>
       firstPageParams <= 1 ? undefined : firstPageParams - 1,
   });
-
-  console.log({ orders });
 
   return (
     <div className="space-y-2">

@@ -1,6 +1,7 @@
 import ProductImages from "@/components/carousel/product-images";
 import PriceLabel from "@/components/labels/price-label";
 import CartActions from "@/components/product/cart-actions.component";
+import NewProducts from "@/components/product/new-products";
 import ProductCard from "@/components/product/product-card";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -97,25 +98,7 @@ export default async function ProductPage({
         </section>
       </div>
 
-      <div className="py-4">
-        <h3 className="prose text-xl font-bold mb-2">New Arrivals</h3>
-        <section
-          role="similar products"
-          className="flex space-x-2 overflow-x-auto w-full"
-        >
-          {categoryResponse.payload.map((product, index) => (
-            <div
-              key={product.product_id}
-              className="aspect-square w-[80vw] md:w-[33vw] h-[400px] border"
-            >
-              <ProductCard
-                payload={product}
-                sizes="(min-width: 768px) 33vw, 80vw"
-              />
-            </div>
-          ))}
-        </section>
-      </div>
+      <NewProducts />
     </>
   );
 }
