@@ -1,7 +1,6 @@
 package order
 
 import (
-	"context"
 	"database/sql"
 	"errors"
 	"log"
@@ -39,14 +38,14 @@ func createOrder(c *fiber.Ctx) error {
 
 	userId := c.Locals("userid").(int64)
 
-	cartId, err := db.DBQuery.GetCartID(context.Background(), sql.NullInt32{Int32: int32(userId), Valid: true})
+	cartId, err := db.DBQuery.GetCartID(c.Context(), sql.NullInt32{Int32: int32(userId), Valid: true})
 
 	if err != nil {
 		c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
 		return err
 	}
 
-	cartDetails, err := db.DBQuery.GetCartDetails(context.Background(), sql.NullInt32{Int32: int32(userId), Valid: true})
+	cartDetails, err := db.DBQuery.GetCartDetails(c.Context(), sql.NullInt32{Int32: int32(userId), Valid: true})
 
 	if err != nil {
 		c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
@@ -79,7 +78,7 @@ func createOrder(c *fiber.Ctx) error {
 	}
 
 	if cartDetails.DiscountCode.String != "" {
-		discount, _ := db.DBQuery.GetDiscount(context.Background(), strings.ToLower(cartDetails.DiscountCode.String))
+		discount, _ := db.DBQuery.GetDiscount(c.Context(), strings.ToLower(cartDetails.DiscountCode.String))
 
 		if discount.Type.EnumType == "voucher" {
 			discountTotal = discount.Value.Int32
@@ -195,7 +194,7 @@ func confirmOrder(c *fiber.Ctx) error {
 
 	userId := c.Locals("userid").(int64)
 
-	cartId, err := db.DBQuery.GetCartID(context.Background(), sql.NullInt32{Int32: int32(userId), Valid: true})
+	cartId, err := db.DBQuery.GetCartID(c.Context(), sql.NullInt32{Int32: int32(userId), Valid: true})
 
 	if err != nil {
 		c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))

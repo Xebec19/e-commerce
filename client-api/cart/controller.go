@@ -1,7 +1,6 @@
 package cart
 
 import (
-	"context"
 	"database/sql"
 	"errors"
 	"strings"
@@ -27,21 +26,21 @@ func addProductIntoCart(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
 	}
 
-	cartCount, err := db.DBQuery.CountCartId(context.Background(), sql.NullInt32{Int32: int32(userId), Valid: true})
+	cartCount, err := db.DBQuery.CountCartId(c.Context(), sql.NullInt32{Int32: int32(userId), Valid: true})
 
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
 	}
 
 	if cartCount == 0 {
-		err := db.DBQuery.CreateCart(context.Background(), sql.NullInt32{Int32: int32(userId), Valid: true})
+		err := db.DBQuery.CreateCart(c.Context(), sql.NullInt32{Int32: int32(userId), Valid: true})
 
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
 		}
 	}
 
-	cartId, err := db.DBQuery.GetCartID(context.Background(), sql.NullInt32{Int32: int32(userId), Valid: true})
+	cartId, err := db.DBQuery.GetCartID(c.Context(), sql.NullInt32{Int32: int32(userId), Valid: true})
 
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
@@ -103,7 +102,7 @@ func deleteProduct(c *fiber.Ctx) error {
 		c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
 	}
 
-	cartId, err := db.DBQuery.GetCartID(context.Background(), sql.NullInt32{Int32: int32(userId), Valid: true})
+	cartId, err := db.DBQuery.GetCartID(c.Context(), sql.NullInt32{Int32: int32(userId), Valid: true})
 
 	if err != nil {
 		c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
@@ -133,7 +132,7 @@ func removeProductFromCart(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
 	}
 
-	cartId, err := db.DBQuery.GetCartID(context.Background(), sql.NullInt32{Int32: int32(userId), Valid: true})
+	cartId, err := db.DBQuery.GetCartID(c.Context(), sql.NullInt32{Int32: int32(userId), Valid: true})
 
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
@@ -199,7 +198,7 @@ func addDiscount(c *fiber.Ctx) error {
 		c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
 	}
 
-	discountCode, err := db.DBQuery.GetDiscount(context.Background(), req.DiscountCode)
+	discountCode, err := db.DBQuery.GetDiscount(c.Context(), req.DiscountCode)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(errors.New("invalid code")))
@@ -211,7 +210,7 @@ func addDiscount(c *fiber.Ctx) error {
 	}
 
 	// check if given discount has been applied previously
-	discountCount, err := db.DBQuery.GetDiscountCount(context.Background(), args)
+	discountCount, err := db.DBQuery.GetDiscountCount(c.Context(), args)
 
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
@@ -222,7 +221,7 @@ func addDiscount(c *fiber.Ctx) error {
 		return nil
 	}
 
-	cartId, err := db.DBQuery.GetCartID(context.Background(), sql.NullInt32{Int32: int32(userId), Valid: true})
+	cartId, err := db.DBQuery.GetCartID(c.Context(), sql.NullInt32{Int32: int32(userId), Valid: true})
 
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
@@ -233,7 +232,7 @@ func addDiscount(c *fiber.Ctx) error {
 		CartID:       cartId,
 	}
 
-	db.DBQuery.AddDiscount(context.Background(), addDiscountParams)
+	db.DBQuery.AddDiscount(c.Context(), addDiscountParams)
 
 	c.Status(fiber.StatusCreated).JSON(util.SuccessResponse(nil, "Discount Added"))
 	return nil
@@ -242,7 +241,7 @@ func addDiscount(c *fiber.Ctx) error {
 func removeDiscount(c *fiber.Ctx) error {
 	userId := c.Locals("userid").(int64)
 
-	cartId, err := db.DBQuery.GetCartID(context.Background(), sql.NullInt32{Int32: int32(userId), Valid: true})
+	cartId, err := db.DBQuery.GetCartID(c.Context(), sql.NullInt32{Int32: int32(userId), Valid: true})
 
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
@@ -253,7 +252,7 @@ func removeDiscount(c *fiber.Ctx) error {
 		UserID: sql.NullInt32{Int32: int32(userId), Valid: true},
 	}
 
-	db.DBQuery.RemoveDiscount(context.Background(), removeDiscountParams)
+	db.DBQuery.RemoveDiscount(c.Context(), removeDiscountParams)
 
 	c.Status(fiber.StatusOK).JSON(util.SuccessResponse(nil, "Discount Removed"))
 
@@ -263,19 +262,19 @@ func removeDiscount(c *fiber.Ctx) error {
 func getCartDetails(c *fiber.Ctx) error {
 	userId := c.Locals("userid").(int64)
 
-	cartId, err := db.DBQuery.GetCartID(context.Background(), sql.NullInt32{Int32: int32(userId), Valid: true})
+	cartId, err := db.DBQuery.GetCartID(c.Context(), sql.NullInt32{Int32: int32(userId), Valid: true})
 
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
 	}
 
-	cartDetails, err := db.DBQuery.GetCartDetails(context.Background(), sql.NullInt32{Int32: int32(userId), Valid: true})
+	cartDetails, err := db.DBQuery.GetCartDetails(c.Context(), sql.NullInt32{Int32: int32(userId), Valid: true})
 
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
 	}
 
-	cartItems, err := db.DBQuery.GetCartItems(context.Background(), sql.NullInt32{Int32: cartId, Valid: true})
+	cartItems, err := db.DBQuery.GetCartItems(c.Context(), sql.NullInt32{Int32: cartId, Valid: true})
 
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
@@ -298,7 +297,7 @@ func getCartDetails(c *fiber.Ctx) error {
 	}
 
 	if cartDetails.DiscountCode.String != "" {
-		discount, _ := db.DBQuery.GetDiscount(context.Background(), strings.ToLower(cartDetails.DiscountCode.String))
+		discount, _ := db.DBQuery.GetDiscount(c.Context(), strings.ToLower(cartDetails.DiscountCode.String))
 
 		if discount.Type.EnumType == "voucher" {
 			discountTotal = discount.Value.Int32

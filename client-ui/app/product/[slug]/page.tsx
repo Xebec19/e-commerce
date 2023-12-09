@@ -1,6 +1,7 @@
 import ProductImages from "@/components/carousel/product-images";
 import PriceLabel from "@/components/labels/price-label";
 import CartActions from "@/components/product/cart-actions.component";
+import NewProducts from "@/components/product/new-products";
 import ProductCard from "@/components/product/product-card";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -96,6 +97,8 @@ export default async function ProductPage({
           ))}
         </section>
       </div>
+
+      <NewProducts />
     </>
   );
 }

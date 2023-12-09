@@ -11,4 +11,5 @@ func SetRoute(app *fiber.App) {
 	router.Get("/v1/details/:slug", readOneProduct)
 	router.Get("/v1/similar-products/:slug", readSimilarProduct)
 	router.Get("/v1/product-images/:slug", readProductImages)
+	router.Get("/v1/products-scroll", readProductsScrolled)
 }
