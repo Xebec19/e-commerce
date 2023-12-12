@@ -4,6 +4,10 @@ import {
   IResponse,
 } from "./general.interface";
 
+export interface ICategoryResponse extends IResponse {
+  payload: ICategoryPayload[];
+}
+
 export interface ICategoryPayload {
   category_id: string;
   category_name: string;
