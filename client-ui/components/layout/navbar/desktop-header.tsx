@@ -52,7 +52,7 @@ export default function DesktopHeader() {
           <span className="text-lg font-bold">{environment.SITE_NAME}</span>
         </Link>
         <span className="space-x-2 flex">
-          {categories?.slice(0, 2).map((category: ICategoryPayload) => (
+          {categories?.slice(0, 2).map((category) => (
             <Link
               key={category.category_id}
               href={`search?category=${category.category_id}`}

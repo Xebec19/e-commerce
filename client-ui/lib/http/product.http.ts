@@ -3,22 +3,30 @@ import {
   IProductPayload,
   IProductResponse,
   IProductImagesResponse,
+  ICategoryResponse,
 } from "@/interfaces/product.interface";
 import { environment } from "..";
 import requestAPI from "./request";
 import { AxiosResponse } from "axios";
 import { z } from "zod";
 
-export const fetchCategories = () => {
-  var requestOptions = {
-    method: "GET",
-  };
+const CategorySchema = z.object({
+  category_id: z.number(),
+  category_name: z.string(),
+  image_url: z.object({
+    String: z.string(),
+    Valid: z.boolean(),
+  }),
+});
 
+export const fetchCategories = async () => {
   let url = `${environment.BASE_URL}/product/v1/category-list`;
 
-  return fetch(url, requestOptions)
-    .then((response) => response.json())
-    .then((response) => response.payload);
+  const response = await (requestAPI.get(url) as Promise<
+    AxiosResponse<ICategoryResponse>
+  >);
+
+  return z.array(CategorySchema).parse(response.data.payload);
 };
 
 export const fetchNewProducts = (): Promise<IProductPayload[]> => {
