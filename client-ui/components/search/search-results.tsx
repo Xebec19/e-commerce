@@ -8,6 +8,8 @@ import {
 } from "@/lib/environment";
 import algoliasearch from "algoliasearch/lite";
 import { Highlight, Hits, InstantSearch, SearchBox } from "react-instantsearch";
+import ProductCard from "../product/product-card";
+import { IProductPayload } from "@/interfaces/product.interface";
 
 const searchClient = algoliasearch(
   ALGOLIA_APPLICATION_KEY,
@@ -29,13 +31,22 @@ type HitProps = {
 };
 
 function Hit({ hit }: { hit: HitProps }) {
+  let payload: IProductPayload = {
+    product_id: hit.product_id,
+    product_name: hit.product_name,
+    product_desc: { String: hit.product_desc, Valid: true },
+    price: { Int32: hit.price, Valid: true },
+    delivery_price: { Int32: hit.delivery_price, Valid: true },
+    image_url: hit.image_url,
+    quantity: { Int32: hit.quantity, Valid: true },
+  };
   return (
-    <article>
-      <img src={hit.image_url} alt={hit.product_name} />
-      <p>{hit.category_name}</p>
-      <h1>{hit.product_name}</h1>
-      <p>{hit.price}</p>
-    </article>
+    <div
+      key={payload.product_id}
+      className="aspect-square w-full md:w-[32vw] h-[350px] my-2"
+    >
+      <ProductCard payload={payload} sizes="(min-width: 768px) 32vw, 80vw" />
+    </div>
   );
 }
 
@@ -47,7 +58,12 @@ export default function SearchResults() {
       insights
     >
       <SearchBox />
-      <Hits hitComponent={Hit} />
+      <section
+        role="search results"
+        className="flex w-full justify-center md:justify-start"
+      >
+        <Hits hitComponent={Hit} />
+      </section>
     </InstantSearch>
   );
 }
