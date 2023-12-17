@@ -43,8 +43,10 @@ export default function OrderListItem({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex justify-between items-center">
-          <div className="text-xl font-medium uppercase">{order.orderId}</div>
+        <CardTitle className="flex justify-between items-center flex-wrap">
+          <div className="text-sm md:text-xl font-medium uppercase">
+            {order.orderId}
+          </div>
 
           <div className="flex space-x-2 items-center cursor-pointer">
             <TooltipProvider>
@@ -61,7 +63,7 @@ export default function OrderListItem({
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-            <span className="text-xl prose uppercase font-medium">
+            <span className="text-sm md:text-xl prose uppercase font-medium">
               {order.status}
             </span>
           </div>
@@ -74,7 +76,7 @@ export default function OrderListItem({
       </CardHeader>
 
       <CardContent>
-        <div className="flex flex-wrap justify-between space-x-4">
+        <div className="flex flex-col md:flex-row flex-wrap justify-between md:space-x-4 space-y-2 md:space-y-0">
           <div className="border flex-1 divide-y-2 space-y-2 rounded-md p-2">
             <div className="flex justify-between py-2">
               <span>Sub total :</span>
@@ -110,7 +112,7 @@ export default function OrderListItem({
             </div>
           </div>
 
-          <div className="divide-y-2 space-y-2">
+          <div className="divide-y-2 space-y-2 border p-2 rounded-md">
             <div className="flex items-center space-x-2 py-2">
               <Mail className="h-4 w-4" /> <span>{order.shippingEmail}</span>
             </div>
