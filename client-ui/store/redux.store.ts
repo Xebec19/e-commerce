@@ -4,6 +4,7 @@ import authReducer from "./auth.slice";
 import checkoutReducer from "./checkout.slice";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+import searchSlice from "./search.slice";
 
 const persistConfig = {
   key: "root",
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   user: userReducer,
   auth: authReducer,
   checkout: checkoutReducer,
+  searches: searchSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
