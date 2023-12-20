@@ -24,6 +24,7 @@ export interface IProductPayload {
   delivery_price: INullableInt32;
   is_featured?: boolean;
   total_count?: number;
+  category_name?: string;
 }
 
 export interface IProductResponse extends IResponse {

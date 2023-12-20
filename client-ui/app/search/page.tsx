@@ -1,51 +1,24 @@
 "use client";
 
-import SearchDialog from "@/components/search/search-dialog";
-
-import { environment } from "@/lib";
-import algoliasearch from "algoliasearch";
 import { useState } from "react";
-
-const algoliaClient = algoliasearch(
-  environment.ALGOLIA_APPLICATION_KEY,
-  environment.ALGOLIA_SEARCH_ONLY_KEY
-);
-const algoliaIndex = algoliaClient.initIndex(
-  environment.ALGOLIA_INDEX_NAME + ""
-);
+import SearchDialog from "@/components/search/search-dialog";
+import { Slider } from "@/components/ui/slider";
 
 export default function Page() {
   const [query, setQuery] = useState<string>("");
   const [error, setError] = useState<string>("");
 
-  const handleSearch = async () => {
-    try {
-      console.log("hit");
-      const { hits } = await algoliaIndex.search(query);
-      console.log({ hits });
-    } catch (error: any) {
-      console.log(error.stack);
-      setError(error.message);
-    }
-  };
-
   return (
     <article role="search">
       <div className="my-2 space-y-2">
-        <div className="flex w-full max-w-sm items-center space-x-2">
-          {/* <Input
-            type="search"
-            placeholder="Search Products"
-            onClick={(e: any) => setQuery(e.target.value)}
-          />
-          <Button
-            variant="ghost"
-            disabled={!!!query.trim()}
-            onClick={handleSearch}
-          >
-            <Search />
-          </Button> */}
-          <SearchDialog />
+        <h3 className="prose text-xl font-bold mb-2">Search</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="bg-background h-full border p-2 md:px-4">
+            <div></div>
+            <Slider defaultValue={[50]} max={100} step={1} />
+          </div>
+
+          <div className="md:col-span-2">Search pages</div>
         </div>
       </div>
     </article>

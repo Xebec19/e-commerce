@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/sheet";
 import useLogout from "@/hooks/use-logout";
 import { RootState } from "@/store/redux.store";
-import { Menu, Package2, Power } from "lucide-react";
+import { Home, Menu, Package2, Power, Search } from "lucide-react";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 
@@ -33,10 +33,20 @@ export function Sidebar() {
         <div className="flex flex-col justify-between items-stretch h-full">
           <Separator className="my-2" />
           <div className="space-y-2 flex-1 divide-y">
+            <Link href={"/"} className="flex space-x-2 items-center py-2">
+              <Home className="h-4 w-4" />
+              <span>Home</span>
+            </Link>
+
+            <Link href={"/search"} className="flex space-x-2 items-center py-2">
+              <Search className="h-4 w-4" />
+              <span>Search</span>
+            </Link>
+
             {auth.authenticated && (
               <Link
                 href={"/orders/list"}
-                className="flex space-x-2 items-center"
+                className="flex space-x-2 items-center py-2"
               >
                 <Package2 className="h-4 w-4" />
                 <span>View Orders</span>
@@ -44,7 +54,7 @@ export function Sidebar() {
             )}
 
             {auth.authenticated && (
-              <div className="flex items-center pt-2" onClick={handleLogout}>
+              <div className="flex items-center py-2" onClick={handleLogout}>
                 <Power className="h-4 w-4 mr-2" />
                 <p>Logout</p>
               </div>

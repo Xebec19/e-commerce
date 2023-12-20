@@ -1,66 +1,67 @@
 "use client";
 
-import { useState } from "react";
-import {
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-  CommandShortcut,
-} from "@/components/ui/command";
-import { History, Search, User } from "lucide-react";
+import { useEffect, useState } from "react";
+import { History, Search, X } from "lucide-react";
 import { Input } from "../ui/input";
-import algoliaIndex from "@/lib/algolia";
+import { querySearch } from "@/lib/algolia";
 import { IProductPayload } from "@/interfaces/product.interface";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/store/redux.store";
+import { addSearch, removeSearch } from "@/store/search.slice";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
+import Image from "next/image";
+import { ellipsis, environment } from "@/lib";
+import { Badge } from "../ui/badge";
+import Link from "next/link";
+import RecentSearches from "./recent-searches";
+import SearchResults from "./search-results";
+import { encode } from "punycode";
+import { useRouter } from "next/navigation";
+import { Button } from "../ui/button";
 
 var timer: any;
 
-type HitProps = {
-  objectID: string;
-  product_name: string;
-  product_id: number;
-  image_url: string;
-  quantity: number;
-  price: number;
-  delivery_price: number;
-  product_desc: string;
-  gender: string;
-  category_name: string;
-  created_on: string;
-};
-
-function translateHit(hit: HitProps) {
-  return {
-    product_id: hit.product_id,
-    product_name: hit.product_name,
-    product_desc: { String: hit.product_desc, Valid: true },
-    price: { Int32: hit.price, Valid: true },
-    delivery_price: { Int32: hit.delivery_price, Valid: true },
-    image_url: hit.image_url,
-    quantity: { Int32: hit.quantity, Valid: true },
-  };
-}
-
 export default function SearchDialog() {
-  const [open, setOpen] = useState<boolean>(false);
+  const [query, setQuery] = useState<string>("");
   const [results, setResults] = useState<IProductPayload[]>([]);
+  const lastSearches = useSelector(
+    (state: RootState) => state.searches.searches
+  );
+  const router = useRouter();
+  const dispatch = useDispatch();
 
-  async function handleSearch(query: string) {
-    const { hits } = await algoliaIndex.search(query);
-    const temp = hits.map((hit: any) => ({
-      product_id: hit.product_id,
-      product_name: hit.product_name,
-      product_desc: { String: hit.product_desc, Valid: true },
-      price: { Int32: hit.price, Valid: true },
-      delivery_price: { Int32: hit.delivery_price, Valid: true },
-      image_url: hit.image_url,
-      quantity: { Int32: hit.quantity, Valid: true },
-    }));
+  function handleRemoveSearch(idx: number) {
+    dispatch({ type: removeSearch, payload: idx });
+  }
 
-    setResults(temp);
+  function handleInput(qry: string) {
+    setQuery(qry);
+
+    debounce(qry);
+  }
+
+  function handleSearch(qry: string) {
+    if (!!!qry) {
+      return;
+    }
+
+    querySearch(qry).then((res) => {
+      setResults(res);
+      dispatch({ type: addSearch, payload: qry });
+    });
+  }
+
+  function visitProduct(product: IProductPayload) {
+    let url = encodeURIComponent(
+      product.product_name.toLowerCase() + "_" + product.product_id
+    );
+    router.push(`/product/${url}`);
   }
 
   // below func clears last timer and sets a new timer to trigger after 500ms
@@ -72,59 +73,50 @@ export default function SearchDialog() {
   }
 
   return (
-    <>
-      <div className="relative w-full">
-        <Input
-          type="search"
-          placeholder="Search Products"
-          className="relative"
-          onClick={() => setOpen(true)}
-        />
-        <Search className="absolute right-4 top-3 h-4 w-4" />
-      </div>
-      <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput
-          placeholder="Type a command or search..."
-          onValueChange={debounce}
-        />
-        <CommandList>
-          <CommandEmpty>No results found.</CommandEmpty>
-          <CommandGroup heading="Recent Searches">
-            <CommandItem>
-              <History className="mr-2 h-4 w-4" />
-              <span>Calendar</span>
-            </CommandItem>
-            <CommandItem>
-              <History className="mr-2 h-4 w-4" />
-              <span>Calendar</span>
-            </CommandItem>
-            <CommandItem>
-              <History className="mr-2 h-4 w-4" />
-              <span>Calendar</span>
-            </CommandItem>
-          </CommandGroup>
-          <CommandSeparator />
-          <CommandGroup heading="Results">
-            <CommandItem>
-              <User className="mr-2 h-4 w-4" />
-              <span>Profile</span>
-              <CommandShortcut>⌘P</CommandShortcut>
-            </CommandItem>
-
-            <CommandItem>
-              <User className="mr-2 h-4 w-4" />
-              <span>Profile</span>
-              <CommandShortcut>⌘P</CommandShortcut>
-            </CommandItem>
-
-            <CommandItem>
-              <User className="mr-2 h-4 w-4" />
-              <span>Profile</span>
-              <CommandShortcut>⌘P</CommandShortcut>
-            </CommandItem>
-          </CommandGroup>
-        </CommandList>
-      </CommandDialog>
-    </>
+    <Dialog>
+      <DialogTrigger asChild>
+        <div className="flex space-x-2">
+          <Input
+            type="search"
+            placeholder="Search Products"
+            className="w-full hidden md:block md:min-w-[20rem]"
+            value={query}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              handleInput(e.target.value)
+            }
+          />
+          <Button variant={"ghost"} size={"icon"}>
+            <Search />
+          </Button>
+        </div>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Search Products</DialogTitle>
+        </DialogHeader>
+        <div className="w-full flex flex-col space-y-2">
+          <Input
+            type="search"
+            placeholder="Search..."
+            className="w-full"
+            value={query}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              handleInput(e.target.value)
+            }
+          />
+          <div className="overflow-y-auto max-h-[50vh]">
+            <RecentSearches
+              searches={lastSearches}
+              handleSelect={(qry: string) => handleInput(qry)}
+              handleRemove={(idx: number) => handleRemoveSearch(idx)}
+            />
+            <SearchResults
+              results={results.slice(0, 5)}
+              handleSelect={visitProduct}
+            />
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

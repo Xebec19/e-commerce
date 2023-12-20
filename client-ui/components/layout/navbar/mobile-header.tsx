@@ -9,6 +9,7 @@ import Link from "next/link";
 import { RootState } from "@/store/redux.store";
 import { useSelector } from "react-redux";
 import { usePathname } from "next/navigation";
+import SearchDialog from "@/components/search/search-dialog";
 
 export default function MobileHeader() {
   const auth = useSelector((state: RootState) => state.auth);
@@ -29,16 +30,8 @@ export default function MobileHeader() {
           <span className="font-medium">{environment.SITE_NAME}</span>
         </Link>
       </span>
-      <div className="space-x-2">
-        {!pathname.includes("search") ? (
-          <Link href={"/search"}>
-            <Button variant="outline" size="icon">
-              <Search />
-            </Button>
-          </Link>
-        ) : (
-          <></>
-        )}
+      <div className="space-x-2 flex">
+        <SearchDialog />
         {auth.authenticated ? (
           <Link href={"/cart"}>
             <Button variant="outline" size="icon">

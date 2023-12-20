@@ -27,6 +27,7 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import useLogout from "@/hooks/use-logout";
+import SearchDialog from "@/components/search/search-dialog";
 
 export default function DesktopHeader() {
   const { data: categories } = useQuery({
@@ -62,7 +63,7 @@ export default function DesktopHeader() {
           ))}
         </span>
       </span>
-      <SearchInput />
+      <SearchDialog />
       <span className="space-x-2 flex">
         <ThemeToggle />
         {auth.authenticated ? (
