@@ -28,12 +28,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import useLogout from "@/hooks/use-logout";
 import SearchDialog from "@/components/search/search-dialog";
+import { usePathname } from "next/navigation";
 
 export default function DesktopHeader() {
   const { data: categories } = useQuery({
     queryKey: ["categories"],
     queryFn: fetchCategories,
   });
+
+  const pathname = usePathname();
 
   const handleLogout = useLogout();
 
@@ -63,7 +66,7 @@ export default function DesktopHeader() {
           ))}
         </span>
       </span>
-      <SearchDialog />
+      {!pathname.includes("search") && <SearchDialog />}
       <span className="space-x-2 flex">
         <ThemeToggle />
         {auth.authenticated ? (
