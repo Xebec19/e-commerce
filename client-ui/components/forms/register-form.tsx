@@ -12,6 +12,7 @@ import { useState } from "react";
 import { registerHttp } from "@/lib/http/auth.http";
 import { useMutation } from "@tanstack/react-query";
 import { useToast } from "../ui/use-toast";
+import { useRouter } from "next/navigation";
 
 const validationSchema = Yup.object({
   firstName: Yup.string().required("Required"),
@@ -45,6 +46,7 @@ export default function LoginForm() {
   const [confirmPasswordType, setConfirmPasswordType] = useState<
     "text" | "password"
   >("password");
+  const router = useRouter();
 
   const { toast } = useToast();
 
@@ -56,6 +58,7 @@ export default function LoginForm() {
           title: "Registered successfully!",
         });
         formik.resetForm();
+        router.push("/auth/login");
       } else {
         toast({
           variant: "destructive",
