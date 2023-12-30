@@ -29,16 +29,14 @@ export async function querySearch(query: string): Promise<IProductPayload[]> {
 export async function querySearchWithFilters({
   query,
   categories,
-  order,
 }: {
   query: string;
   categories: string[];
-  order: string[];
 }): Promise<IProductPayload[]> {
   const { hits } = await algoliaIndex.search(query, {
-    filters: `category_name:${categories.join(" OR category_name:")}`,
-    facets: ["category_name"],
-    facetFilters: [`category_name:${categories.join(" OR category_name:")}`],
+    filters: categories.length
+      ? `category_name:'${categories.join("' OR category_name:'") + "'"}`
+      : undefined,
     attributesToRetrieve: [
       "product_id",
       "product_name",
@@ -53,7 +51,6 @@ export async function querySearchWithFilters({
     attributesToSnippet: ["product_desc:10"],
     hitsPerPage: 10,
     page: 0,
-    order: order.join(","),
   });
 
   const result = hits.map((hit: any) => ({

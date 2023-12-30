@@ -21,14 +21,14 @@ export default function CartActions({ product }: { product: IProductPayload }) {
       if (!response?.status) {
         toast({
           variant: "destructive",
-          title: "item could not be added",
+          title: "Item could not be added to cart",
         });
 
         return;
       }
 
       toast({
-        title: "item added",
+        title: "Item added to cart",
       });
 
       queryClient.invalidateQueries({ queryKey: ["/cart"] });
@@ -47,14 +47,14 @@ export default function CartActions({ product }: { product: IProductPayload }) {
       if (!response?.status) {
         toast({
           variant: "destructive",
-          title: "item could not be removed",
+          title: "Item could not be removed from cart",
         });
 
         return;
       }
 
       toast({
-        title: "item removed",
+        title: "Item removed from cart",
       });
 
       queryClient.invalidateQueries({ queryKey: ["/cart"] });

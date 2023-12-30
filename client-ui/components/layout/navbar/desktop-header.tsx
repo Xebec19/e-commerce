@@ -1,6 +1,5 @@
 "use client";
 
-import SearchInput from "@/components/search/search-input";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { environment } from "@/lib";
@@ -10,12 +9,10 @@ import {
   Package2,
   Power,
   ShoppingCart,
-  User,
 } from "lucide-react";
 import Image from "next/image";
 import { fetchCategories } from "@/lib/http/product.http";
 import Link from "next/link";
-import { ICategoryPayload } from "@/interfaces/product.interface";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/redux.store";
 import { useQuery } from "@tanstack/react-query";
@@ -59,7 +56,7 @@ export default function DesktopHeader() {
           {categories?.slice(0, 2).map((category) => (
             <Link
               key={category.category_id}
-              href={`search?category=${category.category_id}`}
+              href={`search?category=${category.category_name}`}
             >
               {category.category_name}
             </Link>

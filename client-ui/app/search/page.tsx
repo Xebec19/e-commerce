@@ -19,14 +19,13 @@ import { querySearch, querySearchWithFilters } from "@/lib/algolia";
 import { fetchCategories, fetchNewProducts } from "@/lib/http/product.http";
 import { addSearch } from "@/store/search.slice";
 import { useQuery } from "@tanstack/react-query";
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
 export default function Page() {
   const [query, setQuery] = useState<string>("");
-  const [priceOrder, setPriceOrder] = useState<string>("order asc");
   const [selectedCat, setSelectedCat] = useState<string[]>([]);
   const [hits, setHits] = useState<IProductPayload[]>([]);
 
@@ -54,26 +53,39 @@ export default function Page() {
     let payload = {
       query,
       categories: selectedCat,
-      order: [priceOrder],
     };
 
     const results = await querySearchWithFilters(payload);
     setHits(results);
 
-    dispatch({ type: addSearch, payload: query });
+    if (!!query) {
+      dispatch({ type: addSearch, payload: query });
+    }
+  }
+
+  function clearFilters() {
+    setSelectedCat([]);
   }
 
   useEffect(() => {
     let params = new URLSearchParams();
-    params.append("order", priceOrder);
+    // params.append("order", priceOrder);
     params.append("category", selectedCat.toString());
 
     router.push(pathname + "?" + params.toString());
-  }, [priceOrder, router, pathname, selectedCat]);
+  }, [router, pathname, selectedCat]);
+
+  useEffect(() => {
+    let categoryParams = searchParams.get("category");
+    if (categoryParams) {
+      setSelectedCat(categoryParams.split(","));
+      handleSearch();
+    }
+  }, [searchParams]);
 
   return (
     <article role="search">
-      <div className="my-2 space-y-2">
+      <div className="my-2 space-y-4">
         <h3 className="prose text-xl font-bold mb-2">Search</h3>
         <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 justify-between items-center">
           <div className="flex space-x-2">
@@ -90,21 +102,15 @@ export default function Page() {
           </div>
 
           {/* <div className="flex space-x-2 justify-start items-center"> */}
-          <Select
-            value={priceOrder}
-            onValueChange={(value) => setPriceOrder(value)}
+          <Button
+            variant={"ghost"}
+            className="min-w-[11rem]"
+            disabled={!selectedCat.length}
+            onClick={clearFilters}
           >
-            <SelectTrigger id="price" className="max-w-[11rem]">
-              <SelectValue placeholder="Order by price" />
-            </SelectTrigger>
-
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="order asc">Price: Low to High</SelectItem>
-                <SelectItem value="order desc">Price: High to Low</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+            <X className="w-4 h-4" />
+            &nbsp; Clear all filters
+          </Button>
           {/* </div> */}
         </div>
 
