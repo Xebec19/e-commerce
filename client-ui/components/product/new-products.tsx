@@ -19,8 +19,6 @@ export default function NewProducts() {
       lastPage[0].total_count > pages.flat().length
         ? lastPageParam + 1
         : undefined,
-    getPreviousPageParam: (firstPage, pages, firstPageParams) =>
-      firstPageParams <= 1 ? undefined : firstPageParams - 1,
   });
 
   useEffect(() => {
@@ -38,7 +36,7 @@ export default function NewProducts() {
     document.addEventListener("scroll", handleScroll);
 
     return () => document.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   return (
     <div className="py-4">

@@ -28,6 +28,7 @@ import { Button } from "../ui/button";
 var timer: any;
 
 export default function SearchDialog() {
+  const [open, setOpen] = useState<boolean>(false);
   const [query, setQuery] = useState<string>("");
   const [results, setResults] = useState<IProductPayload[]>([]);
   const lastSearches = useSelector(
@@ -61,6 +62,7 @@ export default function SearchDialog() {
     let url = encodeURIComponent(
       product.product_name.toLowerCase() + "_" + product.product_id
     );
+    setOpen(false);
     router.push(`/product/${url}`);
   }
 
@@ -73,7 +75,7 @@ export default function SearchDialog() {
   }
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={(value) => setOpen(value)}>
       <DialogTrigger asChild>
         <div className="flex space-x-2">
           <Input

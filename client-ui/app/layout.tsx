@@ -17,6 +17,17 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: environment.SITE_NAME,
   description: `${environment.SITE_NAME} website build by Rohan`,
+  metadataBase: new URL(environment.APP_URL),
+  alternates: {
+    canonical: "/",
+    languages: {
+      "en-US": "/en-US",
+      "de-DE": "/de-DE",
+    },
+  },
+  openGraph: {
+    images: environment.OG_IMG,
+  },
 };
 
 export default function RootLayout({

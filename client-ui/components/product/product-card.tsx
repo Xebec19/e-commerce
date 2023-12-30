@@ -15,7 +15,8 @@ export default function ProductCard({
   );
 
   return (
-    <div
+    <Link
+      href={`/product/${slug}`}
       className={`group aspect-square flex h-full w-full items-center justify-center overflow-hidden rounded-lg border bg-white hover:border-blue-600 dark:bg-black relative border-neutral-200 dark:border-neutral-800 ${
         payload.is_featured
           ? "md:col-span-4 md:row-span-2"
@@ -23,18 +24,18 @@ export default function ProductCard({
       }`}
     >
       {" "}
-      <Link href={`/product/${slug}`}>
-        <Image
-          className="relative h-full w-full object-contain transition duration-300 ease-in-out group-hover:scale-105"
-          src={payload.image_url}
-          fill
-          alt={payload.product_name}
-          sizes={sizes}
-        />
-        <div className="absolute bottom-0 left-0 flex w-full px-4 pb-4">
-          <ProductLabel payload={payload} />
-        </div>
-      </Link>
-    </div>
+      {/* <Link href={`/product/${slug}`}> */}
+      <Image
+        className="relative h-full w-full object-contain transition duration-300 ease-in-out group-hover:scale-105"
+        src={payload.image_url}
+        fill
+        alt={payload.product_name}
+        sizes={sizes}
+      />
+      <div className="absolute bottom-0 left-0 flex w-full px-4 pb-4">
+        <ProductLabel payload={payload} />
+      </div>
+      {/* </Link> */}
+    </Link>
   );
 }

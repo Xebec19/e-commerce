@@ -7,9 +7,10 @@ export const CLARITY_KEY = process.env.NEXT_PUBLIC_CLARITY_KEY;
 export const ADDRESS = process.env.NEXT_PUBLIC_ADDRESS;
 export const PHONE_NUMBER = process.env.NEXT_PUBLIC_PHONE_NUMBER;
 export const LOGO = process.env.NEXT_PUBLIC_SITE_LOGO;
-export const APP_URL = process.env.NEXT_PUBLIC_URL;
+export const APP_URL = process.env.NEXT_PUBLIC_URL + "";
 export const ALGOLIA_SEARCH_ONLY_KEY =
   process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_ONLY_KEY + "";
 export const ALGOLIA_APPLICATION_KEY =
   process.env.NEXT_PUBLIC_ALGOLIA_APPLICATION_KEY + "";
 export const ALGOLIA_INDEX_NAME = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME;
+export const OG_IMG = process.env.NEXT_PUBLIC_OG_IMG + "";

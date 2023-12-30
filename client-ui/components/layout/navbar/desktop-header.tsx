@@ -56,7 +56,7 @@ export default function DesktopHeader() {
           {categories?.slice(0, 2).map((category) => (
             <Link
               key={category.category_id}
-              href={`search?category=${category.category_name}`}
+              href={`/search?category=${category.category_name}`}
             >
               {category.category_name}
             </Link>

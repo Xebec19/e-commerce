@@ -5,23 +5,14 @@ import NoSearchFound from "@/components/search/no-search-found";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { IProductPayload } from "@/interfaces/product.interface";
-import { querySearch, querySearchWithFilters } from "@/lib/algolia";
+import { querySearchWithFilters } from "@/lib/algolia";
 import { fetchCategories, fetchNewProducts } from "@/lib/http/product.http";
 import { addSearch } from "@/store/search.slice";
 import { useQuery } from "@tanstack/react-query";
 import { Search, X } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
 export default function Page() {
@@ -49,7 +40,7 @@ export default function Page() {
     }
   }
 
-  async function handleSearch() {
+  const handleSearch = useCallback(async () => {
     let payload = {
       query,
       categories: selectedCat,
@@ -61,7 +52,7 @@ export default function Page() {
     if (!!query) {
       dispatch({ type: addSearch, payload: query });
     }
-  }
+  }, [dispatch, query, selectedCat]);
 
   function clearFilters() {
     setSelectedCat([]);
@@ -132,11 +123,11 @@ export default function Page() {
             hits.map((hit) => (
               <div
                 key={hit.product_id}
-                className="aspect-square w-[80vw] md:w-[33vw] h-[400px] border"
+                className="aspect-square w-[80vw] md:w-[33vw] h-[400px] border relative"
               >
                 <ProductCard
                   payload={hit}
-                  sizes="(min-width: 768px) 33vw, 80vw"
+                  sizes="(min-width: 768px) 25vw, 80vw"
                 />
               </div>
             ))
