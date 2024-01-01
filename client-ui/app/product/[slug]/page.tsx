@@ -2,6 +2,7 @@ import ProductImages from "@/components/carousel/product-images";
 import PriceLabel from "@/components/labels/price-label";
 import CartActions from "@/components/product/cart-actions.component";
 import NewProducts from "@/components/product/new-products";
+import NoProductFound from "@/components/product/no-product-found";
 import ProductCard from "@/components/product/product-card";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -18,7 +19,11 @@ export async function generateMetadata({
 }: {
   params: { slug: string };
 }): Promise<Metadata> {
-  const { data: product } = await getProduct({ slug: params.slug });
+  const { data: product } = (await getProduct({ slug: params.slug })) || {};
+
+  if (!product) {
+    return {};
+  }
 
   const indexable = product.payload.quantity.Int32 > 0;
 
@@ -41,7 +46,13 @@ export default async function ProductPage({
 }: {
   params: { slug: string };
 }) {
-  const { data: productResponse } = await getProduct({ slug: params.slug });
+  const { data: productResponse } =
+    (await getProduct({ slug: params.slug })) || {};
+
+  if (!productResponse) {
+    return <NoProductFound />;
+  }
+
   const { data: categoryResponse } = await getSimilarItems({
     slug: params.slug,
     page: 0,

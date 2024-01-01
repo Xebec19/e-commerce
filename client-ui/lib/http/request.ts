@@ -4,7 +4,6 @@ import { environment } from "..";
 
 const config = {
   baseURL: environment.BASE_URL,
-  timeout: 1000,
 };
 
 const requestAPI = axios.create(config);
@@ -22,6 +21,7 @@ requestAPI.interceptors.request.use(
     return config;
   },
   function (error) {
+    console.error({ error });
     return Promise.reject(error);
   }
 );
@@ -32,6 +32,7 @@ requestAPI.interceptors.response.use(
     return response;
   },
   (error) => {
+    console.error({ error });
     if (error.response && error.response.status === 401) {
       if (typeof window !== "undefined") {
         localStorage.clear();
