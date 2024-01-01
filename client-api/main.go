@@ -62,12 +62,7 @@ func main() {
 	app.Use(logger.New())
 
 	// set up cors
-	app.Use(cors.New(cors.Config{
-		AllowHeaders:     "*",
-		AllowOrigins:     "*",
-		AllowCredentials: true,
-		AllowMethods:     "GET,POST,HEAD,PUT,DELETE,PATCH,OPTIONS",
-	}))
+	app.Use(cors.New())
 
 	// set up cache
 	// app.Use(cache.New())

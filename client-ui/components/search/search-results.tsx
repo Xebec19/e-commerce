@@ -15,7 +15,7 @@ export default function SearchResults({
     <div className="my-2 space-y-2">
       <div className="flex justify-between">
         <span className="text-sm text-foreground">Search Results</span>
-        <Link href={"/search"} className="text-sm">
+        <Link href={"/search"} className="text-sm hidden md:block">
           View all
         </Link>
       </div>
