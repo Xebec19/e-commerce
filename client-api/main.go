@@ -15,7 +15,6 @@ import (
 	"github.com/Xebec19/e-commerce/client-api/webhook"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/swagger"
 )
@@ -53,9 +52,9 @@ func main() {
 	app.Get("/swagger/*", swagger.HandlerDefault)
 
 	// set up rate limiter
-	if config.Env != "development" {
-		app.Use(limiter.New())
-	}
+	// if config.Env != "development" {
+	// 	app.Use(limiter.New())
+	// }
 
 	// set up logger
 	app.Use(logger.New(loggerConfig))
