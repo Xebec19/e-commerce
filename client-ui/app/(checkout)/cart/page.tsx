@@ -16,7 +16,7 @@ export const metadata = {
     type: "website",
     images: [
       {
-        url: "/icons8-shopaholic-color-96.png",
+        url: "https://ecommerce-rohan-admin.s3.ap-south-1.amazonaws.com/khushi-logo1.png",
         width: 96,
         height: 96,
       },
