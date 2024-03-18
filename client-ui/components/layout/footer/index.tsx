@@ -1,5 +1,6 @@
 import { environment } from "@/lib";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -12,25 +13,31 @@ export default function Footer() {
           alt={environment.SITE_NAME + ""}
         />
         <div className="flex flex-col leading-10">
-          <span className="text-md cursor-pointer hover:underline">Home</span>
-          <span className="text-md cursor-pointer hover:underline">About</span>
-          <span className="text-md cursor-pointer hover:underline">
+          <Link className="text-md cursor-pointer hover:underline" href={"/"}>
+            Home
+          </Link>
+          <Link
+            className="text-md cursor-pointer hover:underline"
+            href={"/terms-and-conditions"}
+          >
             Terms & Conditions
-          </span>
-          <span className="text-md cursor-pointer hover:underline">
-            Shipping & Return Policy
-          </span>
-          <span className="text-md cursor-pointer hover:underline">FAQ</span>
+          </Link>
+          <Link
+            className="text-md cursor-pointer hover:underline"
+            href={"/privacy-policy"}
+          >
+            Privacy Policy
+          </Link>
         </div>
 
         <div className="col-span-2 flex flex-col justify-start items-start md:items-end">
-          <span>+91 9898998989</span>
+          <span>{environment.PHONE_NUMBER}</span>
           <address>{environment.ADDRESS}</address>
         </div>
       </div>
       <div className="p-4 flex-col md:flex-row flex justify-between border-t border-neutral-200">
-        <span>© 2023 All rights reserved</span>
-        <span>Developed by Rohan Thakur</span>
+        <span>© 2024 All rights reserved</span>
+        {/* <span>Developed by Rohan Thakur</span> */}
       </div>
     </footer>
   );

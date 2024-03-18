@@ -52,7 +52,7 @@ export default function ShippingForm() {
           <Label htmlFor="firstName">First Name</Label>
           <Input
             id="firstName"
-            placeholder="John"
+            placeholder="Enter Your First Name"
             onChange={formik.handleChange}
             value={formik.values.firstName}
           />
@@ -69,7 +69,7 @@ export default function ShippingForm() {
           <Label htmlFor="lastName">Last Name</Label>
           <Input
             id="lastName"
-            placeholder="Doe"
+            placeholder="Enter Your Last Name"
             onChange={formik.handleChange}
             value={formik.values.lastName}
           />
@@ -86,7 +86,7 @@ export default function ShippingForm() {
           <Label htmlFor="email">Email</Label>
           <Input
             id="email"
-            placeholder="you@example.com"
+            placeholder="Enter Your Email"
             onChange={formik.handleChange}
             value={formik.values.email}
           />
@@ -103,7 +103,7 @@ export default function ShippingForm() {
           <Label htmlFor="phoneNum">Phone Number</Label>
           <Input
             id="phoneNum"
-            placeholder="98XXX XXXXX"
+            placeholder="Enter Your Phone Number"
             onChange={formik.handleChange}
             value={formik.values.phoneNum}
           />
@@ -120,7 +120,7 @@ export default function ShippingForm() {
           <Label htmlFor="address">Address</Label>
           <Textarea
             id="address"
-            placeholder="1234 Main St"
+            placeholder="Enter Your Address"
             onChange={formik.handleChange}
             value={formik.values.address}
           />

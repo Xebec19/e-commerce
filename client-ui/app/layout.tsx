@@ -16,7 +16,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: environment.SITE_NAME,
-  description: `${environment.SITE_NAME} website build by Rohan`,
+  description: `Welcome to ${environment.SITE_NAME}, your go-to destination for premium garments crafted by a local artisan. Explore our curated collection of high-quality clothing designed to elevate your style. Each piece reflects the skill and dedication of our talented local seller. Shop confidently with secure payment options and enjoy hassle-free shopping. Discover the charm of locally-made fashion at ${environment.SITE_NAME} today!`,
   metadataBase: new URL(environment.APP_URL),
   alternates: {
     canonical: "/",

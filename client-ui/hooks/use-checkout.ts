@@ -94,7 +94,6 @@ export default function useCheckout() {
           title: "Payment failed",
           description: response.message,
         });
-        console.log({ response });
       });
 
       return rzp1.open();
@@ -104,8 +103,6 @@ export default function useCheckout() {
         title: "Payment failed",
         description: error.message,
       });
-
-      console.log({ error });
     }
   };
 
