@@ -45,7 +45,7 @@ export default function NewProducts() {
         role="new products"
         className="w-full grid grid-cols-1 md:grid-cols-3 gap-4 m-auto"
       >
-        {newProducts?.pages?.map((page, index) => (
+        {(newProducts?.pages || [])?.map((page, index) => (
           <Fragment key={index}>
             {page.map((product) => (
               <div

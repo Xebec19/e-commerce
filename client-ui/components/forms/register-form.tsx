@@ -101,7 +101,7 @@ export default function LoginForm() {
           <Label htmlFor="firstName">First Name</Label>
           <Input
             id="firstName"
-            placeholder="John"
+            placeholder="Enter Your First Name"
             onChange={formik.handleChange}
             value={formik.values.firstName}
           />
@@ -118,7 +118,7 @@ export default function LoginForm() {
           <Label htmlFor="lastName">Last Name</Label>
           <Input
             id="lastName"
-            placeholder="Doe"
+            placeholder="Enter Your Last Name"
             onChange={formik.handleChange}
             value={formik.values.lastName}
           />
@@ -134,7 +134,7 @@ export default function LoginForm() {
           <Label htmlFor="email">Email</Label>
           <Input
             id="email"
-            placeholder="you@domain.com"
+            placeholder="Enter Your Email"
             onChange={formik.handleChange}
             value={formik.values.email}
           />
@@ -151,7 +151,7 @@ export default function LoginForm() {
           <Label htmlFor="phone">Phone Number</Label>
           <Input
             id="phone"
-            placeholder="+1 (123) 456-7890"
+            placeholder="Enter Your Phone Number"
             onChange={formik.handleChange}
             value={formik.values.phone}
           />

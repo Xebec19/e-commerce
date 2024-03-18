@@ -52,7 +52,7 @@ export default function BillingForm() {
           <Label htmlFor="firstName">First Name</Label>
           <Input
             id="firstName"
-            placeholder="John"
+            placeholder="Enter First Name"
             onChange={formik.handleChange}
             value={formik.values.firstName}
           />
@@ -69,7 +69,7 @@ export default function BillingForm() {
           <Label htmlFor="lastName">Last Name</Label>
           <Input
             id="lastName"
-            placeholder="Doe"
+            placeholder="Enter Last Name"
             onChange={formik.handleChange}
             value={formik.values.lastName}
           />
@@ -86,7 +86,7 @@ export default function BillingForm() {
           <Label htmlFor="email">Email</Label>
           <Input
             id="email"
-            placeholder="you@example.com"
+            placeholder="Enter Your Email"
             onChange={formik.handleChange}
             value={formik.values.email}
           />
@@ -103,7 +103,7 @@ export default function BillingForm() {
           <Label htmlFor="address">Address</Label>
           <Textarea
             id="address"
-            placeholder="1234 Main St"
+            placeholder="Enter Your Address"
             onChange={formik.handleChange}
             value={formik.values.address}
           />
@@ -127,10 +127,9 @@ export default function BillingForm() {
             </SelectTrigger>
 
             <SelectContent>
-              <SelectItem value="New Delhi">New Delhi</SelectItem>
-              <SelectItem value="Amritsar">Amritsar</SelectItem>
-              <SelectItem value="Patna">Patna</SelectItem>
-              <SelectItem value="Chennai">Chennai</SelectItem>
+              <SelectItem value="Delhi">Delhi</SelectItem>
+              <SelectItem value="Haryana">Haryana</SelectItem>
+              <SelectItem value="UP">Uttar Pradesh</SelectItem>
             </SelectContent>
           </Select>
           {formik.touched.state && formik.errors.state ? (
