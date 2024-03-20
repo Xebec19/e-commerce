@@ -30,7 +30,6 @@ const validationSchema = Yup.object({
 export default function BillingForm() {
   const dispatch = useDispatch();
   const { billingAddress } = useSelector((state: RootState) => state.checkout);
-  const router = useRouter();
   const handleCheckout = useCheckout();
 
   const formik = useFormik({

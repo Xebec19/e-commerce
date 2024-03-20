@@ -12,7 +12,7 @@ const initialState: ICheckoutSlice = {
     email: "",
     phoneNum: "",
     address: "",
-    state: "New Delhi",
+    state: "Delhi",
     zip: "",
   },
   shippingAddress: {
@@ -21,7 +21,7 @@ const initialState: ICheckoutSlice = {
     email: "",
     phoneNum: "",
     address: "",
-    state: "New Delhi",
+    state: "Delhi",
     zip: "",
     isSameAddressForBilling: false,
   },
@@ -37,6 +37,7 @@ const checkoutSlice = createSlice({
     ) => {
       state.shippingAddress = action.payload;
       if (action.payload.isSameAddressForBilling) {
+        // console.log({ payload: action.payload });
         state.billingAddress = {
           firstName: action.payload.firstName,
           lastName: action.payload.lastName,
