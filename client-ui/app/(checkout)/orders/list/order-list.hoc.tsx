@@ -5,6 +5,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import OrderListItem from "./order-list-item";
 import { Fragment } from "react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function OrderListHOC() {
   const {
@@ -29,7 +30,9 @@ export default function OrderListHOC() {
       {orders?.pages?.map((page, index) => (
         <Fragment key={index}>
           {page.map((order) => (
-            <OrderListItem key={order.orderId} order={order} />
+            <Link key={order.orderId} href={"/orders/" + order.orderId}>
+              <OrderListItem order={order} />
+            </Link>
           ))}
         </Fragment>
       ))}
