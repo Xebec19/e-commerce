@@ -17,12 +17,22 @@ export default function useCheckout() {
     billingFirstName: checkOutDetails.billingAddress.firstName,
     billingLastName: checkOutDetails.billingAddress.lastName + "",
     billingEmail: checkOutDetails.billingAddress.email,
-    billingAddress: checkOutDetails.billingAddress.address,
+    billingAddress:
+      checkOutDetails.billingAddress.address +
+      " " +
+      checkOutDetails.billingAddress.state +
+      " " +
+      checkOutDetails.billingAddress.zip,
     billingPhone: checkOutDetails.billingAddress.phoneNum,
     shippingFirstName: checkOutDetails.shippingAddress.firstName,
     shippingLastName: checkOutDetails.shippingAddress.lastName + "",
     shippingEmail: checkOutDetails.shippingAddress.email,
-    shippingAddress: checkOutDetails.shippingAddress.address,
+    shippingAddress:
+      checkOutDetails.shippingAddress.address +
+      " " +
+      checkOutDetails.shippingAddress.state +
+      " " +
+      checkOutDetails.shippingAddress.zip,
     shippingPhone: checkOutDetails.shippingAddress.phoneNum,
   };
 

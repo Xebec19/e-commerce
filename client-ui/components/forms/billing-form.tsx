@@ -8,14 +8,9 @@ import { Textarea } from "../ui/textarea";
 import { Select, SelectContent, SelectItem, SelectValue } from "../ui/select";
 import { SelectTrigger } from "@radix-ui/react-select";
 import { Button } from "../ui/button";
-import { Checkbox } from "../ui/checkbox";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/redux.store";
-import {
-  updateBillingAddress,
-  updateShippingAddress,
-} from "@/store/checkout.slice";
-import { useRouter } from "next/navigation";
+import { updateBillingAddress } from "@/store/checkout.slice";
 import useCheckout from "@/hooks/use-checkout";
 
 const validationSchema = Yup.object({
@@ -30,7 +25,6 @@ const validationSchema = Yup.object({
 export default function BillingForm() {
   const dispatch = useDispatch();
   const { billingAddress } = useSelector((state: RootState) => state.checkout);
-  const router = useRouter();
   const handleCheckout = useCheckout();
 
   const formik = useFormik({
@@ -38,6 +32,7 @@ export default function BillingForm() {
     validationSchema,
     onSubmit: (values) => {
       dispatch({ type: updateBillingAddress, payload: values });
+      handleCheckout();
     },
   });
 
@@ -159,11 +154,7 @@ export default function BillingForm() {
         </div>
 
         <div className="md:col-span-2">
-          <Button
-            type="submit"
-            className="w-full uppercase"
-            onClick={handleCheckout}
-          >
+          <Button type="submit" className="w-full uppercase">
             Checkout
           </Button>
         </div>

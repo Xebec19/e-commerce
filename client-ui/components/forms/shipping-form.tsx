@@ -144,10 +144,9 @@ export default function ShippingForm() {
             </SelectTrigger>
 
             <SelectContent>
-              <SelectItem value="New Delhi">New Delhi</SelectItem>
-              <SelectItem value="Amritsar">Amritsar</SelectItem>
-              <SelectItem value="Patna">Patna</SelectItem>
-              <SelectItem value="Chennai">Chennai</SelectItem>
+              <SelectItem value="Delhi">Delhi</SelectItem>
+              <SelectItem value="Haryana">Haryana</SelectItem>
+              <SelectItem value="UP">Uttar Pradesh</SelectItem>
             </SelectContent>
           </Select>
           {formik.touched.state && formik.errors.state ? (
