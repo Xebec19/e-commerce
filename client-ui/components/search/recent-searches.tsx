@@ -20,7 +20,7 @@ export default function RecentSearches({
       </div>
 
       <div className="flex flex-col">
-        {searches.slice(0, 5).map((query, index) => (
+        {searches.slice(0, 3).map((query, index) => (
           <div key={query + index} className="flex items-center py-2">
             <History className="w-4 h-4 mr-2" />
             <span className="flex-1" onClick={() => handleSelect(query)}>

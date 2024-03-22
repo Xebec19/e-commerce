@@ -14,3 +14,4 @@ export const ALGOLIA_APPLICATION_KEY =
   process.env.NEXT_PUBLIC_ALGOLIA_APPLICATION_KEY + "";
 export const ALGOLIA_INDEX_NAME = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME;
 export const OG_IMG = process.env.NEXT_PUBLIC_OG_IMG + "";
+export const TAWK = process.env.NEXT_PUBLIC_TAWKTO + "";

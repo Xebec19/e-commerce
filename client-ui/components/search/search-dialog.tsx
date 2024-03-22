@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { History, Search, X } from "lucide-react";
+import { useState } from "react";
+import { Search, X } from "lucide-react";
 import { Input } from "../ui/input";
 import { querySearch } from "@/lib/algolia";
 import { IProductPayload } from "@/interfaces/product.interface";
@@ -15,15 +15,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
-import Image from "next/image";
-import { ellipsis, environment } from "@/lib";
-import { Badge } from "../ui/badge";
-import Link from "next/link";
 import RecentSearches from "./recent-searches";
 import SearchResults from "./search-results";
-import { encode } from "punycode";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
+import AlgoliaRefer from "./algolia-refer";
 
 var timer: any;
 
@@ -99,23 +95,28 @@ export default function SearchDialog() {
         <div className="w-full flex flex-col space-y-2">
           <Input
             type="search"
-            placeholder="Search..."
+            placeholder="Search"
             className="w-full"
             value={query}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               handleInput(e.target.value)
             }
           />
+          <div className="flex justify-end w-full">
+            <AlgoliaRefer />
+          </div>
           <div className="overflow-y-auto max-h-[50vh]">
             <RecentSearches
               searches={lastSearches}
               handleSelect={(qry: string) => handleInput(qry)}
               handleRemove={(idx: number) => handleRemoveSearch(idx)}
             />
-            <SearchResults
-              results={results.slice(0, 5)}
-              handleSelect={visitProduct}
-            />
+            {query && (
+              <SearchResults
+                results={results.slice(0, 5)}
+                handleSelect={visitProduct}
+              />
+            )}
           </div>
         </div>
       </DialogContent>

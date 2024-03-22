@@ -1,6 +1,7 @@
 "use client";
 
 import ProductCard from "@/components/product/product-card";
+import AlgoliaRefer from "@/components/search/algolia-refer";
 import NoSearchFound from "@/components/search/no-search-found";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -77,7 +78,10 @@ export default function Page() {
   return (
     <article role="search">
       <div className="my-2 space-y-4">
-        <h3 className="prose text-xl font-bold mb-2">Search</h3>
+        <div className="flex items-center justify-between">
+          <h3 className="prose text-xl font-bold mb-2">Search</h3>
+          <AlgoliaRefer />
+        </div>
         <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 justify-between items-center">
           <div className="flex space-x-2">
             <Input
