@@ -11,10 +11,10 @@ migrateup:
 	migrate -path db/migrations -database "postgresql://root:root@localhost:5432/ecommerce?sslmode=disable" -verbose up
 
 new-migration:
-	atlas migrate new --dir "file://db/migration/" --var "destructive=true"
+	migrate create -ext sql -dir db/migrations -seq migration
 
 apply-migrate:
-	 sudo atlas schema apply --url "postgres://root:root@localhost:5432/ecommerce?sslmode=disable" --to "file://db/migration/20230215165719.sql" --dev-url "docker://postgres/12/khushi"
+	 migrate -path db/migrations -database "postgres://root:root@localhost:5432/ecommerce?sslmode=disable" -versbose up
 
 server:
 	go run main.go
