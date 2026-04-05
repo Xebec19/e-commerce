@@ -303,7 +303,7 @@ func getCartDetails(c *fiber.Ctx) error {
 			discountTotal = discount.Value.Int32
 		} else {
 			total := subTotal + deliveryPriceTotal
-			discountTotal = ((discount.Value.Int32) * 100) / total
+			discountTotal = ((discount.Value.Int32) * total) / 100
 		}
 	}
 
